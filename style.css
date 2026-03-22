@@ -113,24 +113,31 @@ h1 {
 }
 
 .link-btn {
-    /* Gradient כפתור בהיר יותר */
-    background: linear-gradient(145deg, #2a3145 0%, #1e2536 100%);
+    /* שינוי לגוון חום-פחם עמוק שמתאים ללהבות */
+    background: linear-gradient(145deg, #251a14 0%, #1a0f0a 100%);
     text-decoration: none;
-    padding: 18px 20px;
-    border-radius: 14px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 20px;
+    border-radius: 16px;
+    /* גבול עדין בזהב עמום */
+    border: 1px solid rgba(255, 204, 51, 0.15);
     transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     display: flex;
     align-items: center;
     justify-content: center;
     position: relative;
-    min-height: 65px;
-    
-    /* הוספת צל (Depth Shadow) לכל בלוק לינק */
-    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.25);
-    
+    min-height: 70px;
+    overflow: hidden;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
     opacity: 0;
     animation: fadeInUp 0.6s ease-out forwards;
+}
+
+.link-btn:hover {
+    transform: translateY(-8px) scale(1.02);
+    /* במעבר עכבר - הגוון נהיה מעט יותר חם */
+    background: linear-gradient(145deg, #35261d 0%, #251a14 100%);
+    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.6);
+    border-color: rgba(255, 204, 51, 0.4);
 }
 
 /* השהייה הדרגתית לכניסת הכפתורים */
@@ -187,14 +194,6 @@ footer {
     color: #a0aec0;
     font-size: 0.85rem;
     text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
-}
-
-/* === שיפור ה-Hover עם עומק נוסף === */
-.link-btn:hover {
-    transform: translateY(-7px) scale(1.03);
-    background: linear-gradient(145deg, #353d55 0%, #252d41 100%);
-    box-shadow: 0 12px 25px rgba(0, 0, 0, 0.4); /* צל עמוק יותר בזמן ריחוף */
-    border-color: rgba(255, 255, 255, 0.2);
 }
 
 /* Discord */
