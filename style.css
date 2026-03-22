@@ -65,28 +65,22 @@ h1 {
     justify-content: center;
     position: relative;
     min-height: 65px;
-    overflow: hidden; /* מבטיח שכלום לא יצא מגבולות הכפתור */
 }
 
 .icon {
     position: absolute;
     right: 20px;
-    font-size: 1.6rem;
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 32px;
-    height: 32px;
+    width: 35px;
+    height: 35px;
 }
 
-/* התיקון הקריטי ללוגו אינסטגרם ושאר התמונות */
 .original-logo {
-    max-width: 32px;  /* מונע מהתמונה לגדול מעבר לאייקון */
-    max-height: 32px;
-    width: auto;
-    height: auto;
+    max-width: 100%;
+    max-height: 100%;
     object-fit: contain;
-    display: block;
 }
 
 .btn-text {
@@ -111,8 +105,6 @@ footer {
     color: #6b7280;
     font-size: 0.8rem;
 }
-
-/* --- אפקט תנועה וצבעים קבועים + זוהר --- */
 
 .link-btn:hover {
     transform: translateY(-4px);
@@ -142,14 +134,20 @@ footer {
 .link-btn.instagram { color: #e1306c; }
 .link-btn.instagram:hover { border-color: #e1306c; box-shadow: 0 0 15px #e1306c; background-color: #e1306c10; }
 
-/* Reddit */
-.link-btn.reddit { color: #ff4500; }
-.link-btn.reddit:hover { border-color: #ff4500; box-shadow: 0 0 15px #ff4500; background-color: #ff450010; }
+/* Reddit - צבע כתום-אפרסק חי ומדויק */
+.link-btn.reddit { 
+    color: #ff6e2e; /* הגוון המדויק מהתמונה ששלחת, עם טיפה יותר עוצמה */
+}
 
-/* Shop Blue */
-.link-btn.shop-blue { color: #1e90ff; }
-.link-btn.shop-blue:hover { border-color: #1e90ff; box-shadow: 0 0 15px #1e90ff; background-color: #1e90ff10; }
+.link-btn.reddit:hover { 
+    border-color: #ff6e2e; 
+    box-shadow: 0 0 20px #ff6e2e; /* זוהר חזק יותר שתואם לצבע הלינק */
+    background-color: rgba(255, 110, 46, 0.15); /* רקע שקוף תואם */
+}
+/* כלבו יהודה - שחור עם זוהר לבן עדין */
+.link-btn.shop-black { color: #ffffff; }
+.link-btn.shop-black:hover { border-color: #ffffff; box-shadow: 0 0 15px #ffffff; background-color: #ffffff10; }
 
-/* ADA */
-.link-btn.ada { color: #ffa500; }
-.link-btn.ada:hover { border-color: #ffa500; box-shadow: 0 0 15px #ffa500; background-color: #ffa50010; }
+/* א.ד.א - כחול לוגו */
+.link-btn.ada { color: #00569e; }
+.link-btn.ada:hover { border-color: #00569e; box-shadow: 0 0 15px #00569e; background-color: #00569e10; }
