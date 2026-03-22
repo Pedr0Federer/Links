@@ -5,6 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PedroFederer - Links</title>
     
+    <link rel="preload" as="image" href="profile.jpg">
+    <link rel="preload" as="image" href="image.png">
+    <link rel="preload" as="image" href="image2.png">
+    
     <link rel="icon" type="image/jpg" href="profile.jpg">
     
     <link rel="stylesheet" href="style.css">
@@ -15,12 +19,12 @@
     <div class="page-layout">
         
         <aside class="side-column image-left">
-            <img src="image.png" alt="Image Left">
+            <img src="image.png" alt="Image Left" fetchpriority="high">
         </aside>
         
         <div class="container">
             <header>
-                <img src="profile.jpg" alt="PedroFederer" class="profile-img">
+                <img src="profile.jpg" alt="PedroFederer" class="profile-img" fetchpriority="high">
                 <h1>PedroFederer</h1>
                 <p class="subtitle">OFFICIAL LINKS</p>
             </header>
@@ -100,17 +104,7 @@
                     </div>
                 </a>
                 
-<!-- <a href="https://ada-electro.com/" class="link-btn ada" target="_blank">
-                    <span class="icon">
-                        <img src="ADA_logo.png" alt="א.ד.א" class="original-logo">
-                    </span>
-                    <div class="btn-text">
-                        <span class="main-text">א.ד.א</span>
-                        <span class="sub-text">קוד PF ל7% הנחה</span>
-                    </div>
-                </a> -->
-                
-            </main>
+</main>
 
             <footer>
                 <p>© 2026 Created by M4OR</p>
@@ -118,7 +112,7 @@
         </div>
 
         <aside class="side-column image-right">
-            <img src="image2.png" alt="Image Right">
+            <img src="image2.png" alt="Image Right" fetchpriority="high">
         </aside>
         
     </div>
