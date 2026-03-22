@@ -60,7 +60,7 @@ h1 {
     padding: 18px 20px;
     border-radius: 12px;
     border: 1px solid #1f2937;
-    transition: all 0.3s ease;
+    transition: all 0.3s ease-in-out; /* אנימציה חלקה */
     display: flex;
     align-items: center;
     justify-content: center;
@@ -68,16 +68,11 @@ h1 {
     min-height: 65px;
 }
 
-.link-btn:hover {
-    background-color: #1e2436;
-    border-color: #3b82f6;
-    transform: translateY(-3px);
-}
-
+/* הגדרת ברירת מחדל לאייקונים של FontAwesome */
 .icon {
     position: absolute;
     right: 20px;
-    font-size: 1.4rem;
+    font-size: 1.6rem;
 }
 
 .btn-text {
@@ -102,3 +97,78 @@ footer {
     color: #6b7280;
     font-size: 0.8rem;
 }
+
+/* =========================================
+   עיצוב אפקט הזוהר במעבר עכבר (Hover Effect)
+   ========================================= */
+
+/* ברירת מחדל למעבר עכבר: הזזה קלה למעלה */
+.link-btn:hover {
+    transform: translateY(-4px);
+}
+
+/* הגדרת צבעי מותג וזוהר */
+
+/* דיסקורד (סגול-כחול) */
+.link-btn.discord:hover {
+    background-color: #7289da20; /* רקע חצי שקוף */
+    border-color: #7289da;
+    box-shadow: 0 0 15px #7289da, 0 0 5px #7289da;
+}
+.link-btn.discord .icon { color: #7289da; } /* אייקון נשאר בצבע המותג */
+
+/* דיסקורד בשמים (סגול-בושם פחות כחול) */
+.link-btn.discord-frag:hover {
+    background-color: #9c5ac820;
+    border-color: #9c5ac8;
+    box-shadow: 0 0 15px #9c5ac8, 0 0 5px #9c5ac8;
+}
+.link-btn.discord-frag .icon { color: #9c5ac8; }
+
+/* KICK (ירוק ניאון) */
+.link-btn.kick:hover {
+    background-color: #00e70120;
+    border-color: #00e701;
+    box-shadow: 0 0 15px #00e701, 0 0 5px #00e701;
+}
+.link-btn.kick .icon { color: #00e701; }
+
+/* יוטיוב (אדום חזק) */
+.link-btn.youtube:hover {
+    background-color: #ff000020;
+    border-color: #ff0000;
+    box-shadow: 0 0 15px #ff0000, 0 0 5px #ff0000;
+}
+.link-btn.youtube .icon { color: #ff0000; }
+
+/* אינסטגרם (ורוד-כתום עז) */
+.link-btn.instagram:hover {
+    background-color: #c1358420;
+    border-color: #c13584;
+    box-shadow: 0 0 15px #c13584, 0 0 5px #c13584;
+}
+.link-btn.instagram .icon { color: #c13584; }
+
+/* Reddit (כתום-אדום) */
+.link-btn.reddit:hover {
+    background-color: #ff450020;
+    border-color: #ff4500;
+    box-shadow: 0 0 15px #ff4500, 0 0 5px #ff4500;
+}
+.link-btn.reddit .icon { color: #ff4500; }
+
+/* כלבו יהודה (כחול-טורקיז) */
+.link-btn.shop-blue:hover {
+    background-color: #1e90ff20;
+    border-color: #1e90ff;
+    box-shadow: 0 0 15px #1e90ff, 0 0 5px #1e90ff;
+}
+.link-btn.shop-blue .icon { color: #1e90ff; }
+
+/* א.ד.א (כתום-צהוב) */
+.link-btn.ada:hover {
+    background-color: #ffa50020;
+    border-color: #ffa500;
+    box-shadow: 0 0 15px #ffa500, 0 0 5px #ffa500;
+}
+.link-btn.ada .icon { color: #ffa500; }
