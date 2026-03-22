@@ -65,6 +65,7 @@ h1 {
     justify-content: center;
     position: relative;
     min-height: 65px;
+    overflow: hidden; /* מבטיח שכלום לא יצא מגבולות הכפתור */
 }
 
 .icon {
@@ -78,11 +79,14 @@ h1 {
     height: 32px;
 }
 
-/* עיצוב הלוגו המקורי */
+/* התיקון הקריטי ללוגו אינסטגרם ושאר התמונות */
 .original-logo {
-    width: 100%;
-    height: 100%;
+    max-width: 32px;  /* מונע מהתמונה לגדול מעבר לאייקון */
+    max-height: 32px;
+    width: auto;
+    height: auto;
     object-fit: contain;
+    display: block;
 }
 
 .btn-text {
@@ -130,15 +134,15 @@ footer {
 .link-btn.youtube { color: #ff0000; }
 .link-btn.youtube:hover { border-color: #ff0000; box-shadow: 0 0 15px #ff0000; background-color: #ff000010; }
 
-/* TikTok (צבע טורקיז קבוע + זוהר) */
+/* TikTok */
 .link-btn.tiktok { color: #00f2ea; }
 .link-btn.tiktok:hover { border-color: #00f2ea; box-shadow: 0 0 15px #00f2ea; background-color: #00f2ea10; }
 
-/* Instagram (צבע ורוד קבוע + זוהר) */
+/* Instagram */
 .link-btn.instagram { color: #e1306c; }
 .link-btn.instagram:hover { border-color: #e1306c; box-shadow: 0 0 15px #e1306c; background-color: #e1306c10; }
 
-/* Reddit (צבע כתום-אדום קבוע + זוהר - חדש!) */
+/* Reddit */
 .link-btn.reddit { color: #ff4500; }
 .link-btn.reddit:hover { border-color: #ff4500; box-shadow: 0 0 15px #ff4500; background-color: #ff450010; }
 
