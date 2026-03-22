@@ -10,38 +10,30 @@ body {
     color: #ffffff;
 }
 
-/* === הגדרות הפריסה === */
+/* === הגדרות הפריסה (שינוי מרכזי) === */
 .page-layout {
     display: flex;
     justify-content: center;
     align-items: flex-start;
     min-height: 100vh;
-    width: 100%;
 }
 
-/* עמודות הצד - מילוי מלא מקצה לקצה */
+/* הגדרות כלליות לעמודות הצד */
 .side-column {
-    flex: 1; 
-    height: 100vh; /* גובה מסך מלא */
+    flex: 1; /* תמונות הצד מתחלקות בשטח הנותר */
+    height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
-    position: sticky; 
+    position: sticky; /* התמונות מקובעות על המסך בזמן גלילה */
     top: 0;
-    padding: 0; /* ביטול מרווחים כדי שהתמונה תיצמד לקצוות */
-    overflow: hidden;
 }
 
 .side-column img {
-    height: 100%; /* מתיחה לגובה מלא */
-    width: 100%;  /* מתיחה לרוחב מלא */
-    object-fit: cover; /* מילוי השטח תוך שמירה על פרופורציות (חיתוך מינימלי) */
+    height: 100%;
+    width: 100%;
+    object-fit: cover; /* שומר על פרופורציה ומונע מתיחה */
     display: block;
-}
-
-/* התאמת מיקום התמונה למניעת חיתוך הראש */
-.image-left img, .image-right img {
-    object-position: center top; 
 }
 
 /* הגדרות עמודת הקישורים המרכזית */
