@@ -150,7 +150,7 @@ h1 {
 .link-btn:nth-child(6) { animation-delay: 0.6s; }
 .link-btn:nth-child(7) { animation-delay: 0.7s; }
 .link-btn:nth-child(8) { animation-delay: 0.8s; }
-.link-btn:nth-child(9) { animation-delay: 0.9s; }
+/*.link-btn:nth-child(9) { animation-delay: 0.9s; }*/
 
 .icon {
     position: absolute;
@@ -230,7 +230,8 @@ footer {
 .link-btn.shop-black:hover { box-shadow: 0 10px 25px rgba(255, 255, 255, 0.2); }
 
 /* א.ד.א */
-.link-btn.ada { color: #3182ce; }
+
+/*.link-btn.ada { color: #3182ce; }
 .link-btn.ada:hover { box-shadow: 0 10px 25px rgba(49, 130, 206, 0.3); }
 
 .link-btn.ada .original-logo {
@@ -238,7 +239,7 @@ footer {
     background-color: rgba(255, 255, 255, 0.1); 
     border-radius: 50%;
     padding: 2px;
-}
+} */
 
 /* מניעת חיתוך תמונות בנייד */
 @media (max-width: 1000px) {
