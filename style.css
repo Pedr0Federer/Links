@@ -18,45 +18,32 @@ body {
     min-height: 100vh;
 }
 
-/* === הגדרות עמודות הצד המעודכנות === */
+/* הגדרות כלליות לעמודות הצד */
 .side-column {
-    flex: 1; 
+    flex: 1; /* תמונות הצד מתחלקות בשטח הנותר */
     height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
-    position: sticky; 
+    position: sticky; /* התמונות מקובעות על המסך בזמן גלילה */
     top: 0;
-    padding: 0 10px; /* מרווח קטן מהצדדים */
-    overflow: hidden;
 }
 
 .side-column img {
-    max-height: 90vh; /* מקטין מעט את התמונה כדי שלא תיחנק בקצוות */
+    height: 100%;
     width: 100%;
-    object-fit: contain; /* זה הפתרון! מציג את כל התמונה בלי לחתוך אותה */
+    object-fit: cover; /* שומר על פרופורציה ומונע מתיחה */
     display: block;
-    transition: transform 0.3s ease;
 }
 
-/* התאמה ספציפית לצד שמאל כדי למנוע את החיתוך שסימנת */
-.image-left img {
-    object-position: left center; /* מצמיד לשמאל כדי לתת מרחק מהקישורים */
-}
-
-/* התאמה ספציפית לצד ימין */
-.image-right img {
-    object-position: right center; /* מצמיד לימין */
-}
-
-/* ביטול הרקע הקבוע של הקונטיינר כדי שהתמונות יוכלו "לנשום" לידו */
+/* הגדרות עמודת הקישורים המרכזית */
 .container {
     width: 100%;
-    max-width: 500px; /* הקטנתי מעט את הרוחב כדי לתת לתמונות יותר מקום */
+    max-width: 550px;
     text-align: center;
-    padding: 50px 10px;
-    z-index: 10;
-    background-color: transparent; 
+    padding: 50px 20px;
+    z-index: 10; /* מעל התמונות */
+    background-color: #0f111a; /* רקע קבוע כדי למנוע חפיפה */
 }
 
 header {
