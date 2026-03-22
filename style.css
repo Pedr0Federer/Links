@@ -67,15 +67,22 @@ h1 {
     min-height: 65px;
 }
 
-/* === הגדלת שטח הלוגו (השינוי המבוקש) === */
+/* === הגדלה משמעותית של הלוגואים (אדא ורדיט) === */
 .icon {
     position: absolute;
     right: 20px;
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 40px; /* הגדלה מ-32px ל-40px */
-    height: 40px; /* הגדלה מ-32px ל-40px */
+    width: 50px; /* הגדלה נוספת מ-40px ל-50px */
+    height: 50px;
+}
+
+.original-logo {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    display: block;
 }
 
 .original-logo {
@@ -138,20 +145,35 @@ footer {
 .link-btn.instagram { color: #e1306c; }
 .link-btn.instagram:hover { border-color: #e1306c; box-shadow: 0 0 15px #e1306c; background-color: #e1306c10; }
 
-/* Reddit */
-.link-btn.reddit { color: #ff6e2e; }
-.link-btn.reddit:hover { border-color: #ff6e2e; box-shadow: 0 0 20px #ff6e2e; background-color: rgba(255, 110, 46, 0.15); }
+/* --- Reddit --- */
+.link-btn.reddit { 
+    color: #ff6e2e; /* צבע כתום-אפרסק מהתמונה ששלחת */
+}
+.link-btn.reddit:hover { 
+    border-color: #ff6e2e; 
+    box-shadow: 0 0 20px #ff6e2e; 
+    background-color: rgba(255, 110, 46, 0.15); 
+}
 
 /* כלבו יהודה - שחור עם זוהר לבן (להגדיל את הזוהר) */
 .link-btn.shop-black { color: #ffffff; }
 .link-btn.shop-black:hover { border-color: #ffffff; box-shadow: 0 0 15px #ffffff; background-color: #ffffff10; }
 
-/* === תיקון א.ד.א - צבעים בהירים להבלטת הלוגו הכהה === */
+/* --- א.ד.א (ADA) - תיקון הבלטה מיוחד --- */
 .link-btn.ada { 
-    color: #4dcfff; /* כחול-טורקיז בהיר ונוצץ */
+    color: #4dcfff; /* צבע טקסט וזוהר בהיר */
 }
+
+/* הוספת רקע לבן עדין מאוד רק מאחורי הלוגו של אדא כדי שיבלוט */
+.link-btn.ada .original-logo {
+    background-color: rgba(255, 255, 255, 0.1); 
+    border-radius: 50%;
+    padding: 2px;
+    transform: scale(1.2); /* הגדלה ספציפית ללוגו הזה */
+}
+
 .link-btn.ada:hover { 
     border-color: #4dcfff; 
-    box-shadow: 0 0 15px #4dcfff; 
-    background-color: rgba(77, 207, 255, 0.1); 
+    box-shadow: 0 0 20px #4dcfff; 
+    background-color: rgba(77, 207, 255, 0.15); 
 }
