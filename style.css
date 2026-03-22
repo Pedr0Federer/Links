@@ -241,11 +241,16 @@ footer {
     padding: 2px;
 } */
 
-/* מניעת חיתוך תמונות בנייד */
+/* === התאמה לנייד - תיקון צבע הרקע === */
 @media (max-width: 1000px) {
-    .side-column { display: none; }
+    .side-column { 
+        display: none; 
+    }
     .container { 
-        max-width: 100%;
-        background-color: rgba(15, 17, 26, 0.95);
+        max-width: 100%; 
+        /* הסרנו את הרקע הכהה הקבוע כדי שהגראדיינט של ה-body ייראה */
+        background-color: transparent; 
+        border: none;
+        backdrop-filter: none;
     }
 }
