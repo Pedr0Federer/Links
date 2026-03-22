@@ -8,80 +8,42 @@
 body {
     background-color: #0f111a;
     color: #ffffff;
-    overflow-x: hidden; /* מונע גלילה אופקית מיותרת */
 }
 
-/* === הגדרות הפריסה === */
+/* === הגדרות הפריסה (שינוי מרכזי) === */
 .page-layout {
     display: flex;
     justify-content: center;
     align-items: flex-start;
     min-height: 100vh;
-    width: 100%;
 }
 
-/* === חלק ראשון: עדכון עמודות הצד === */
+/* הגדרות כלליות לעמודות הצד */
 .side-column {
-    flex: 1; 
+    flex: 1; /* תמונות הצד מתחלקות בשטח הנותר */
     height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
-    position: sticky; 
+    position: sticky; /* התמונות מקובעות על המסך בזמן גלילה */
     top: 0;
-    padding: 0;
-    overflow: hidden;
-    /* הגדלת המרווח הפנימי של עמודות הצד, מה שיגרום לתמונות להתכווץ מעט */
-    padding: 0 15px; 
 }
 
 .side-column img {
     height: 100%;
     width: 100%;
-    /* זה הפתרון! מציג את כל התמונה בלי לחתוך אותה */
-    object-fit: contain; 
+    object-fit: cover; /* שומר על פרופורציה ומונע מתיחה */
     display: block;
-    transition: transform 0.3s ease;
 }
 
-/* עדכון ספציפי לתמונה השמאלית */
-.image-left img {
-    /* הקטנה ל-90% מהגודל המקורי. אפשר לשנות ל-0.85 (85%) וכו' */
-    transform: scale(0.9); 
-    
-    /* מוודא שהתמונה נשארת צמודה לצד שמאל גם אחרי ההקטנה */
-    transform-origin: left center; 
-    
-    /* שומר על איכות התמונה */
-    object-fit: contain; 
-}
-
-/* מוודא שהעמודה עצמה לא חותכת את התמונה המוקטנת */
-.image-left {
-    display: flex;
-    justify-content: flex-start; /* מצמיד את תוכן העמודה לשמאל */
-    padding-left: 10px; /* מוסיף מרווח קטן מהקצה אם צריך */
-}
-
-/* === עדכון עמודת ימין (ליתר ביטחון שתהיה סימטרית) === */
-.image-right img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    /* הצמדה לימין כדי שגם כאן החיתוך יהיה רק בצד הפנימי */
-    object-position: right top;
-}
-
-/* === ביטול רוחב קונטיינר קבוע === */
+/* הגדרות עמודת הקישורים המרכזית */
 .container {
     width: 100%;
-    /* צמצום קל של הרוחב כדי לתת יותר נוכחות לתמונות */
-    max-width: 500px; 
+    max-width: 550px;
     text-align: center;
     padding: 50px 20px;
-    z-index: 10;
-    background-color: #0f111a; 
-    position: relative;
+    z-index: 10; /* מעל התמונות */
+    background-color: #0f111a; /* רקע קבוע כדי למנוע חפיפה */
 }
 
 header {
@@ -102,6 +64,7 @@ h1 {
     font-weight: 900;
     margin-bottom: 5px;
     letter-spacing: 1px;
+    
     background: linear-gradient(180deg, #ffb347 0%, #ff6e2e 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -141,8 +104,8 @@ h1 {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 45px; 
-    height: 45px;
+    width: 50px; 
+    height: 50px;
 }
 
 .original-logo {
@@ -175,10 +138,8 @@ footer {
     font-size: 0.8rem;
 }
 
-/* אפקטים של Hover וזוהר */
 .link-btn:hover {
     transform: translateY(-4px);
-    filter: brightness(1.2);
 }
 
 /* Discord */
@@ -222,13 +183,4 @@ footer {
     background-color: rgba(255, 255, 255, 0.1); 
     border-radius: 50%;
     padding: 2px;
-}
-/* התאמה לנייד - הסתרת תמונות הצד כדי למנוע צפיפות */
-@media (max-width: 1000px) {
-    .side-column {
-        display: none;
-    }
-    .container {
-        max-width: 100%;
-    }
 }
