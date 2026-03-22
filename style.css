@@ -10,12 +10,13 @@ body {
     color: #ffffff;
 }
 
-/* === הגדרות הפריסה (שינוי מרכזי) === */
+/* === הגדרות הפריסה === */
 .page-layout {
     display: flex;
     justify-content: center;
     align-items: flex-start;
     min-height: 100vh;
+    width: 100%;
 }
 
 /* עמודות הצד - מילוי מלא מקצה לקצה */
