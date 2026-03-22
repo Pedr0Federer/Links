@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PedroFederer - Links</title>
+    
+    <link rel="icon" type="image/jpg" href="profile.jpg">
+    
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;700;900&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <img src="profile.jpg" alt="PedroFederer" class="profile-img">
+            <h1>PedroFederer</h1>
+            <p class="subtitle">OFFICIAL LINKS</p>
+        </header>
+
+        <main class="links-container">
+            <a href="https://discord.com/invite/E6NmAAdjzJ" class="link-btn" target="_blank">
+                <span class="icon">👾</span>
+                <div class="btn-text">
+                    <span class="main-text">שרת הדיסקורד</span>
+                </div>
+            </a>
+
+            <a href="https://kick.com/pedrofederer" class="link-btn" target="_blank">
+                <span class="icon">🟩</span>
+                <div class="btn-text">
+                    <span class="main-text">לשידורים ב-KICK</span>
+                    <span class="sub-text">כמעט כל יום</span>
+                </div>
+            </a>
+
+            <a href="https://discord.com/invite/g49uJY7Mem" class="link-btn" target="_blank">
+                <span class="icon">🧴</span> <div class="btn-text">
+                    <span class="main-text">דיסקורד בשמים</span>
+                </div>
+            </a>
+
+            <a href="https://www.reddit.com/r/theshordybacks/" class="link-btn" target="_blank">
+                <span class="icon">🤖</span>
+                <div class="btn-text">
+                    <span class="main-text">Reddit</span>
+                </div>
+            </a>
+
+            <a href="https://ada-electro.com/" class="link-btn" target="_blank">
+                <span class="icon">💡</span> <div class="btn-text">
+                    <span class="main-text">א.ד.א</span>
+                    <span class="sub-text">קוד PF ל7% הנחה</span>
+                </div>
+            </a>
+
+            <a href="https://kolboyehuda.co.il/" class="link-btn" target="_blank">
+                <span class="icon">🛒</span>
+                <div class="btn-text">
+                    <span class="main-text">כלבו יהודה</span>
+                    <span class="sub-text">קוד קופון PF17</span>
+                </div>
+            </a>
+
+            <a href="https://www.youtube.com/@PedroFederer" class="link-btn" target="_blank">
+                <span class="icon">📺</span>
+                <div class="btn-text">
+                    <span class="main-text">YouTube – הערוץ הרשמי</span>
+                </div>
+            </a>
+
+            <a href="https://www.instagram.com/nick.seff/" class="link-btn" target="_blank">
+                <span class="icon">📸</span>
+                <div class="btn-text">
+                    <span class="main-text">אינסטגרם</span>
+                </div>
+            </a>
+        </main>
+
+        <footer>
+            <p>© 2026 PedroFederer | Created by M4OR</p>
+        </footer>
+    </div>
+</body>
+</html>

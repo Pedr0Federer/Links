@@ -1,0 +1,104 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Heebo', sans-serif;
+}
+
+body {
+    background-color: #0f111a; /* צבע רקע כהה */
+    color: #ffffff;
+    display: flex;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 50px 20px;
+}
+
+.container {
+    width: 100%;
+    max-width: 550px;
+    text-align: center;
+}
+
+header {
+    margin-bottom: 35px;
+}
+
+.profile-img {
+    width: 110px;
+    height: 110px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #1d4ed8;
+    margin-bottom: 15px;
+}
+
+h1 {
+    font-size: 2.2rem;
+    font-weight: 900;
+    margin-bottom: 5px;
+    letter-spacing: 1px;
+}
+
+.subtitle {
+    color: #8b949e;
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+}
+
+.links-container {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.link-btn {
+    background-color: #141824;
+    color: #ffffff;
+    text-decoration: none;
+    padding: 18px 20px;
+    border-radius: 12px;
+    border: 1px solid #1f2937;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    min-height: 65px;
+}
+
+.link-btn:hover {
+    background-color: #1e2436;
+    border-color: #3b82f6;
+    transform: translateY(-3px);
+}
+
+.icon {
+    position: absolute;
+    right: 20px;
+    font-size: 1.4rem;
+}
+
+.btn-text {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.main-text {
+    font-size: 1.1rem;
+    font-weight: 700;
+}
+
+.sub-text {
+    font-size: 0.8rem;
+    color: #9ca3af;
+    margin-top: 5px;
+}
+
+footer {
+    margin-top: 60px;
+    color: #6b7280;
+    font-size: 0.8rem;
+}
