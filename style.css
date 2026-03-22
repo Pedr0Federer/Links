@@ -8,45 +8,42 @@
 body {
     background-color: #0f111a;
     color: #ffffff;
+}
+
+/* === הגדרות הפריסה (שינוי מרכזי) === */
+.page-layout {
     display: flex;
     justify-content: center;
+    align-items: flex-start;
     min-height: 100vh;
-    padding: 50px 20px;
-    overflow-x: hidden; /* מונע פסי גלילה בגלל תמונות הצד */
-    position: relative;
 }
 
-/* === הגדרות תמונות הצד === */
-.side-image {
-    position: fixed;
-    top: 0;
+/* הגדרות כלליות לעמודות הצד */
+.side-column {
+    flex: 1; /* תמונות הצד מתחלקות בשטח הנותר */
     height: 100vh;
-    width: auto;
-    z-index: -1; /* מציב אותן מאחורי הכל */
-    object-fit: contain; /* שומר על רזולוציה בלי למתוח */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: sticky; /* התמונות מקובעות על המסך בזמן גלילה */
+    top: 0;
 }
 
-.left-side {
-    left: 0;
+.side-column img {
+    height: 100%;
+    width: 100%;
+    object-fit: cover; /* שומר על פרופורציה ומונע מתיחה */
+    display: block;
 }
 
-.right-side {
-    right: 0;
-}
-
-/* הסתרת התמונות בנייד כדי שלא יסתירו את התוכן */
-@media (max-width: 1100px) {
-    .side-image {
-        display: none;
-    }
-}
-
+/* הגדרות עמודת הקישורים המרכזית */
 .container {
     width: 100%;
     max-width: 550px;
     text-align: center;
-    position: relative;
-    z-index: 1;
+    padding: 50px 20px;
+    z-index: 10; /* מעל התמונות */
+    background-color: #0f111a; /* רקע קבוע כדי למנוע חפיפה */
 }
 
 header {
@@ -58,7 +55,7 @@ header {
     height: 110px;
     border-radius: 50%;
     object-fit: cover;
-    border: 3px solid #ff6e2e; /* שינוי לכתום שיתאים לכותרת */
+    border: 3px solid #1d4ed8;
     margin-bottom: 15px;
 }
 
@@ -88,11 +85,11 @@ h1 {
 }
 
 .link-btn {
-    background: linear-gradient(180deg, #1e2333 0%, #141824 100%);
+    background-color: #141824;
     text-decoration: none;
     padding: 18px 20px;
     border-radius: 12px;
-    border: 1px solid #2d364d;
+    border: 1px solid #1f2937;
     transition: all 0.3s ease-in-out;
     display: flex;
     align-items: center;
@@ -143,37 +140,40 @@ footer {
 
 .link-btn:hover {
     transform: translateY(-4px);
-    filter: brightness(1.15);
 }
 
-/* צבעים וזוהרים */
+/* Discord */
 .link-btn.discord { color: #7289da; }
-.link-btn.discord:hover { border-color: #7289da; box-shadow: 0 0 20px rgba(114, 137, 218, 0.4); }
+.link-btn.discord:hover { border-color: #7289da; box-shadow: 0 0 15px #7289da; background-color: #7289da10; }
 
+/* Discord Fragrance */
 .link-btn.discord-frag { color: #9c5ac8; }
-.link-btn.discord-frag:hover { border-color: #9c5ac8; box-shadow: 0 0 20px rgba(156, 90, 200, 0.4); }
+.link-btn.discord-frag:hover { border-color: #9c5ac8; box-shadow: 0 0 15px #9c5ac8; background-color: #9c5ac810; }
 
+/* Kick */
 .link-btn.kick { color: #00e701; }
-.link-btn.kick:hover { border-color: #00e701; box-shadow: 0 0 25px rgba(0, 231, 1, 0.5); }
+.link-btn.kick:hover { border-color: #00e701; box-shadow: 0 0 15px #00e701; background-color: #00e70110; }
 
+/* YouTube */
 .link-btn.youtube { color: #ff0000; }
-.link-btn.youtube:hover { border-color: #ff0000; box-shadow: 0 0 20px rgba(255, 0, 0, 0.4); }
+.link-btn.youtube:hover { border-color: #ff0000; box-shadow: 0 0 15px #ff0000; background-color: #ff000010; }
 
+/* TikTok */
 .link-btn.tiktok { color: #00f2ea; }
-.link-btn.tiktok:hover { border-color: #00f2ea; box-shadow: 0 0 20px rgba(0, 242, 234, 0.4); }
+.link-btn.tiktok:hover { border-color: #00f2ea; box-shadow: 0 0 15px #00f2ea; background-color: #00f2ea10; }
 
+/* Instagram */
 .link-btn.instagram { color: #e1306c; }
-.link-btn.instagram:hover { border-color: #e1306c; box-shadow: 0 0 20px rgba(225, 48, 108, 0.4); }
+.link-btn.instagram:hover { border-color: #e1306c; box-shadow: 0 0 15px #e1306c; background-color: #e1306c10; }
 
+/* Reddit */
 .link-btn.reddit { color: #ff6e2e; }
-.link-btn.reddit:hover { border-color: #ff6e2e; box-shadow: 0 0 25px rgba(255, 110, 46, 0.5); }
+.link-btn.reddit:hover { border-color: #ff6e2e; box-shadow: 0 0 20px #ff6e2e; background-color: rgba(255, 110, 46, 0.15); }
 
+/* כלבו יהודה */
 .link-btn.shop-black { color: #ffffff; }
-.link-btn.shop-black:hover { border-color: #ffffff; box-shadow: 0 0 20px rgba(255, 255, 255, 0.3); }
+.link-btn.shop-black:hover { border-color: #ffffff; box-shadow: 0 0 15px #ffffff; background-color: #ffffff10; }
 
-.link-btn.ada { color: #4dcfff; }
-.link-btn.ada:hover { border-color: #4dcfff; box-shadow: 0 0 20px rgba(77, 207, 255, 0.4); }
-
-.link-btn.ada .original-logo {
-    transform: scale(1.15);
-}
+/* א.ד.א */
+.link-btn.ada { color: #00569e; }
+.link-btn.ada:hover { border-color: #00569e; box-shadow: 0 0 15px #00569e; background-color: #00569e10; }
