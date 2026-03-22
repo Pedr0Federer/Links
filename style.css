@@ -1,371 +1,235 @@
+/* === הגדרות כלליות וטיפוגרפיה === */
 * {
-
     box-sizing: border-box;
-
     margin: 0;
-
     padding: 0;
-
     font-family: 'Heebo', sans-serif;
-
 }
-
-
 
 body {
-
-    background-color: #0f111a;
-
+    /* Gradient לרקע - משמאל לימין */
+    background: linear-gradient(90deg, #161a27 0%, #0f111a 100%);
     color: #ffffff;
-
-}
-
-
-
-/* === הגדרות הפריסה (שינוי מרכזי) === */
-
-.page-layout {
-
-    display: flex;
-
-    justify-content: center;
-
-    align-items: flex-start;
-
     min-height: 100vh;
-
 }
 
+/* === אנימציית כניסה === */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
 
-
-/* הגדרות כלליות לעמודות הצד */
+/* === הגדרות הפריסה === */
+.page-layout {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 100vh;
+}
 
 .side-column {
-
-    flex: 1; /* תמונות הצד מתחלקות בשטח הנותר */
-
+    flex: 1;
     height: 100vh;
-
     display: flex;
-
     justify-content: center;
-
     align-items: center;
-
-    position: sticky; /* התמונות מקובעות על המסך בזמן גלילה */
-
+    position: sticky;
     top: 0;
-
 }
-
-
 
 .side-column img {
-
     height: 100%;
-
     width: 100%;
-
-    object-fit: cover; /* שומר על פרופורציה ומונע מתיחה */
-
+    object-fit: cover;
     display: block;
-
 }
 
-
-
-/* הגדרות עמודת הקישורים המרכזית */
-
+/* === הקונטיינר המרכזי - אפקט זכוכית === */
 .container {
-
     width: 100%;
-
     max-width: 550px;
-
     text-align: center;
-
     padding: 50px 20px;
-
-    z-index: 10; /* מעל התמונות */
-
-    background-color: #0f111a; /* רקע קבוע כדי למנוע חפיפה */
-
+    z-index: 10;
+    /* אפקט זכוכית עדין */
+    background-color: rgba(15, 17, 26, 0.7);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-left: 1px solid rgba(255, 255, 255, 0.05);
+    border-right: 1px solid rgba(255, 255, 255, 0.05);
 }
-
-
 
 header {
-
     margin-bottom: 35px;
-
+    animation: fadeInUp 0.8s ease-out forwards;
 }
-
-
 
 .profile-img {
-
-    width: 110px;
-
-    height: 110px;
-
+    width: 115px;
+    height: 115px;
     border-radius: 50%;
-
     object-fit: cover;
-
     border: 3px solid #1d4ed8;
-
     margin-bottom: 15px;
-
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
 }
-
-
 
 h1 {
-
-    font-size: 2.2rem;
-
-    font-weight: 900;
-
+    font-size: 2.3rem;
+    font-weight: 900; /* טיפוגרפיה חזקה */
     margin-bottom: 5px;
-
     letter-spacing: 1px;
-
-    
-
     background: linear-gradient(180deg, #ffb347 0%, #ff6e2e 100%);
-
     -webkit-background-clip: text;
-
     -webkit-text-fill-color: transparent;
-
     filter: drop-shadow(0px 2px 4px rgba(0, 0, 0, 0.5));
-
 }
-
-
 
 .subtitle {
-
     color: #8b949e;
-
-    font-size: 0.85rem;
-
-    font-weight: 700;
-
+    font-size: 0.9rem;
+    font-weight: 800;
     letter-spacing: 2px;
-
 }
 
-
-
+/* === רשימת הקישורים === */
 .links-container {
-
     display: flex;
-
     flex-direction: column;
-
     gap: 16px;
-
 }
-
-
 
 .link-btn {
-
-    background-color: #141824;
-
+    /* Gradient עדין לכפתורים */
+    background: linear-gradient(145deg, #1a1f2e 0%, #141824 100%);
     text-decoration: none;
-
     padding: 18px 20px;
-
-    border-radius: 12px;
-
+    border-radius: 14px;
     border: 1px solid #1f2937;
-
-    transition: all 0.3s ease-in-out;
-
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     display: flex;
-
     align-items: center;
-
     justify-content: center;
-
     position: relative;
-
     min-height: 65px;
-
+    
+    /* אנימציית כניסה לכל כפתור */
+    opacity: 0;
+    animation: fadeInUp 0.6s ease-out forwards;
 }
 
-
+/* השהייה הדרגתית לכניסת הכפתורים */
+.link-btn:nth-child(1) { animation-delay: 0.1s; }
+.link-btn:nth-child(2) { animation-delay: 0.2s; }
+.link-btn:nth-child(3) { animation-delay: 0.3s; }
+.link-btn:nth-child(4) { animation-delay: 0.4s; }
+.link-btn:nth-child(5) { animation-delay: 0.5s; }
+.link-btn:nth-child(6) { animation-delay: 0.6s; }
+.link-btn:nth-child(7) { animation-delay: 0.7s; }
+.link-btn:nth-child(8) { animation-delay: 0.8s; }
+.link-btn:nth-child(9) { animation-delay: 0.9s; }
 
 .icon {
-
     position: absolute;
-
     right: 20px;
-
     display: flex;
-
     align-items: center;
-
     justify-content: center;
-
-    width: 50px; 
-
-    height: 50px;
-
+    width: 45px; 
+    height: 45px;
 }
-
-
 
 .original-logo {
-
     max-width: 100%;
-
     max-height: 100%;
-
     object-fit: contain;
-
     display: block;
-
 }
-
-
 
 .btn-text {
-
     display: flex;
-
     flex-direction: column;
-
     align-items: center;
-
 }
-
-
 
 .main-text {
-
-    font-size: 1.1rem;
-
-    font-weight: 700;
-
+    font-size: 1.15rem;
+    font-weight: 800;
 }
-
-
 
 .sub-text {
-
     font-size: 0.8rem;
-
-    margin-top: 5px;
-
-    opacity: 0.8;
-
+    margin-top: 4px;
+    opacity: 0.7;
 }
-
-
 
 footer {
-
     margin-top: 60px;
-
     color: #6b7280;
-
-    font-size: 0.8rem;
-
+    font-size: 0.85rem;
+    animation: fadeInUp 1s ease-out forwards;
 }
 
-
-
+/* === שיפור ה-Hover לכל כפתור === */
 .link-btn:hover {
-
-    transform: translateY(-4px);
-
+    transform: translateY(-5px) scale(1.02);
+    filter: brightness(1.2);
 }
-
-
 
 /* Discord */
-
 .link-btn.discord { color: #7289da; }
-
-.link-btn.discord:hover { border-color: #7289da; box-shadow: 0 0 15px #7289da; background-color: #7289da10; }
-
-
+.link-btn.discord:hover { border-color: #7289da; box-shadow: 0 0 20px rgba(114, 137, 218, 0.4); }
 
 /* Discord Fragrance */
-
 .link-btn.discord-frag { color: #9c5ac8; }
-
-.link-btn.discord-frag:hover { border-color: #9c5ac8; box-shadow: 0 0 15px #9c5ac8; background-color: #9c5ac810; }
-
-
+.link-btn.discord-frag:hover { border-color: #9c5ac8; box-shadow: 0 0 20px rgba(156, 90, 200, 0.4); }
 
 /* Kick */
-
 .link-btn.kick { color: #00e701; }
-
-.link-btn.kick:hover { border-color: #00e701; box-shadow: 0 0 15px #00e701; background-color: #00e70110; }
-
-
+.link-btn.kick:hover { border-color: #00e701; box-shadow: 0 0 20px rgba(0, 231, 1, 0.4); }
 
 /* YouTube */
-
 .link-btn.youtube { color: #ff0000; }
-
-.link-btn.youtube:hover { border-color: #ff0000; box-shadow: 0 0 15px #ff0000; background-color: #ff000010; }
-
-
+.link-btn.youtube:hover { border-color: #ff0000; box-shadow: 0 0 20px rgba(255, 0, 0, 0.4); }
 
 /* TikTok */
-
 .link-btn.tiktok { color: #00f2ea; }
-
-.link-btn.tiktok:hover { border-color: #00f2ea; box-shadow: 0 0 15px #00f2ea; background-color: #00f2ea10; }
-
-
+.link-btn.tiktok:hover { border-color: #00f2ea; box-shadow: 0 0 20px rgba(0, 242, 234, 0.4); }
 
 /* Instagram */
-
 .link-btn.instagram { color: #e1306c; }
-
-.link-btn.instagram:hover { border-color: #e1306c; box-shadow: 0 0 15px #e1306c; background-color: #e1306c10; }
-
-
+.link-btn.instagram:hover { border-color: #e1306c; box-shadow: 0 0 20px rgba(225, 48, 108, 0.4); }
 
 /* Reddit */
-
 .link-btn.reddit { color: #ff6e2e; }
-
-.link-btn.reddit:hover { border-color: #ff6e2e; box-shadow: 0 0 20px #ff6e2e; background-color: rgba(255, 110, 46, 0.15); }
-
-
+.link-btn.reddit:hover { border-color: #ff6e2e; box-shadow: 0 0 25px rgba(255, 110, 46, 0.4); }
 
 /* כלבו יהודה */
-
 .link-btn.shop-black { color: #ffffff; }
-
-.link-btn.shop-black:hover { border-color: #ffffff; box-shadow: 0 0 15px #ffffff; background-color: #ffffff10; }
-
-
+.link-btn.shop-black:hover { border-color: #ffffff; box-shadow: 0 0 20px rgba(255, 255, 255, 0.25); }
 
 /* א.ד.א */
-
 .link-btn.ada { color: #00569e; }
-
-.link-btn.ada:hover { border-color: #00569e; box-shadow: 0 0 15px #00569e; background-color: #00569e10; }
-
-
+.link-btn.ada:hover { border-color: #00569e; box-shadow: 0 0 20px rgba(0, 86, 158, 0.4); }
 
 .link-btn.ada .original-logo {
-
-    transform: scale(1.15); /* הגדלה נוספת ללוגו אדא */
-
+    transform: scale(1.15);
     background-color: rgba(255, 255, 255, 0.1); 
-
     border-radius: 50%;
-
     padding: 2px;
+}
 
+/* מניעת חיתוך תמונות בנייד */
+@media (max-width: 1000px) {
+    .side-column { display: none; }
+    .container { 
+        max-width: 100%;
+        background-color: #0f111a; /* ביטול שקיפות בנייד לשיפור קריאות */
+    }
 }
