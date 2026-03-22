@@ -18,22 +18,29 @@ body {
     min-height: 100vh;
 }
 
-/* הגדרות כלליות לעמודות הצד */
+/* עמודות הצד - מילוי מלא מקצה לקצה */
 .side-column {
-    flex: 1; /* תמונות הצד מתחלקות בשטח הנותר */
-    height: 100vh;
+    flex: 1; 
+    height: 100vh; /* גובה מסך מלא */
     display: flex;
     justify-content: center;
     align-items: center;
-    position: sticky; /* התמונות מקובעות על המסך בזמן גלילה */
+    position: sticky; 
     top: 0;
+    padding: 0; /* ביטול מרווחים כדי שהתמונה תיצמד לקצוות */
+    overflow: hidden;
 }
 
 .side-column img {
-    height: 100%;
-    width: 100%;
-    object-fit: cover; /* שומר על פרופורציה ומונע מתיחה */
+    height: 100%; /* מתיחה לגובה מלא */
+    width: 100%;  /* מתיחה לרוחב מלא */
+    object-fit: cover; /* מילוי השטח תוך שמירה על פרופורציות (חיתוך מינימלי) */
     display: block;
+}
+
+/* התאמת מיקום התמונה למניעת חיתוך הראש */
+.image-left img, .image-right img {
+    object-position: center top; 
 }
 
 /* הגדרות עמודת הקישורים המרכזית */
