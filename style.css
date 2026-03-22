@@ -7,8 +7,8 @@
 }
 
 body {
-    /* שינוי כיוון ל-180 מעלות (מלמעלה למטה) וסדר צבעים הפוך */
-    background: linear-gradient(180deg, #ffcc33, #ff8c00, #4d260b, #0a0a0a);
+    /* צהוב זהב (Gold), כתום שרוף (Burnt Orange), וחום-שוקולד כהה לבסיס */
+    background: linear-gradient(-45deg, #ffcc33, #ff8c00, #8b4513, #0a0a0a);
     background-size: 400% 400%;
     animation: gradientBG 15s ease infinite;
     color: #ffffff;
