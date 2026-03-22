@@ -7,8 +7,8 @@
 }
 
 body {
-    /* Gradient לרקע - משמאל לימין */
-    background: linear-gradient(90deg, #161a27 0%, #0f111a 100%);
+    /* Gradient בהיר ומודרני יותר */
+    background: linear-gradient(135deg, #2c344a 0%, #1a1f2e 100%);
     color: #ffffff;
     min-height: 100vh;
 }
@@ -50,19 +50,21 @@ body {
     display: block;
 }
 
-/* === הקונטיינר המרכזי - אפקט זכוכית === */
+/* === הקונטיינר המרכזי - אפקט זכוכית משודרג === */
 .container {
     width: 100%;
     max-width: 550px;
     text-align: center;
     padding: 50px 20px;
     z-index: 10;
-    /* אפקט זכוכית עדין */
-    background-color: rgba(15, 17, 26, 0.7);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border-left: 1px solid rgba(255, 255, 255, 0.05);
-    border-right: 1px solid rgba(255, 255, 255, 0.05);
+    /* רקע זכוכית מעט בהיר יותר */
+    background-color: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border-left: 1px solid rgba(255, 255, 255, 0.1);
+    border-right: 1px solid rgba(255, 255, 255, 0.1);
+    /* צל לקונטיינר המרכזי להוספת עומק */
+    box-shadow: 0 0 40px rgba(0, 0, 0, 0.3);
 }
 
 header {
@@ -77,25 +79,27 @@ header {
     object-fit: cover;
     border: 3px solid #1d4ed8;
     margin-bottom: 15px;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+    /* צל לתמונת הפרופיל */
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
 }
 
 h1 {
     font-size: 2.3rem;
-    font-weight: 900; /* טיפוגרפיה חזקה */
+    font-weight: 900;
     margin-bottom: 5px;
     letter-spacing: 1px;
     background: linear-gradient(180deg, #ffb347 0%, #ff6e2e 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    filter: drop-shadow(0px 2px 4px rgba(0, 0, 0, 0.5));
+    filter: drop-shadow(0px 3px 6px rgba(0, 0, 0, 0.4));
 }
 
 .subtitle {
-    color: #8b949e;
+    color: #cbd5e0; /* צבע טקסט בהיר יותר */
     font-size: 0.9rem;
     font-weight: 800;
     letter-spacing: 2px;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 /* === רשימת הקישורים === */
@@ -106,12 +110,12 @@ h1 {
 }
 
 .link-btn {
-    /* Gradient עדין לכפתורים */
-    background: linear-gradient(145deg, #1a1f2e 0%, #141824 100%);
+    /* Gradient כפתור בהיר יותר */
+    background: linear-gradient(145deg, #2a3145 0%, #1e2536 100%);
     text-decoration: none;
     padding: 18px 20px;
     border-radius: 14px;
-    border: 1px solid #1f2937;
+    border: 1px solid rgba(255, 255, 255, 0.1);
     transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     display: flex;
     align-items: center;
@@ -119,7 +123,9 @@ h1 {
     position: relative;
     min-height: 65px;
     
-    /* אנימציית כניסה לכל כפתור */
+    /* הוספת צל (Depth Shadow) לכל בלוק לינק */
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.25);
+    
     opacity: 0;
     animation: fadeInUp 0.6s ease-out forwards;
 }
@@ -143,6 +149,8 @@ h1 {
     justify-content: center;
     width: 45px; 
     height: 45px;
+    /* צל קטן לאייקון */
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
 }
 
 .original-logo {
@@ -156,6 +164,8 @@ h1 {
     display: flex;
     flex-direction: column;
     align-items: center;
+    /* צל לטקסט בתוך הכפתור */
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 .main-text {
@@ -166,57 +176,59 @@ h1 {
 .sub-text {
     font-size: 0.8rem;
     margin-top: 4px;
-    opacity: 0.7;
+    opacity: 0.85;
 }
 
 footer {
     margin-top: 60px;
-    color: #6b7280;
+    color: #a0aec0;
     font-size: 0.85rem;
-    animation: fadeInUp 1s ease-out forwards;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
 }
 
-/* === שיפור ה-Hover לכל כפתור === */
+/* === שיפור ה-Hover עם עומק נוסף === */
 .link-btn:hover {
-    transform: translateY(-5px) scale(1.02);
-    filter: brightness(1.2);
+    transform: translateY(-7px) scale(1.03);
+    background: linear-gradient(145deg, #353d55 0%, #252d41 100%);
+    box-shadow: 0 12px 25px rgba(0, 0, 0, 0.4); /* צל עמוק יותר בזמן ריחוף */
+    border-color: rgba(255, 255, 255, 0.2);
 }
 
 /* Discord */
-.link-btn.discord { color: #7289da; }
-.link-btn.discord:hover { border-color: #7289da; box-shadow: 0 0 20px rgba(114, 137, 218, 0.4); }
+.link-btn.discord { color: #8a9cf1; } /* גוון מעט בהיר יותר לקריאות */
+.link-btn.discord:hover { box-shadow: 0 10px 25px rgba(114, 137, 218, 0.4); }
 
 /* Discord Fragrance */
-.link-btn.discord-frag { color: #9c5ac8; }
-.link-btn.discord-frag:hover { border-color: #9c5ac8; box-shadow: 0 0 20px rgba(156, 90, 200, 0.4); }
+.link-btn.discord-frag { color: #b77de4; }
+.link-btn.discord-frag:hover { box-shadow: 0 10px 25px rgba(156, 90, 200, 0.4); }
 
 /* Kick */
-.link-btn.kick { color: #00e701; }
-.link-btn.kick:hover { border-color: #00e701; box-shadow: 0 0 20px rgba(0, 231, 1, 0.4); }
+.link-btn.kick { color: #00ff01; }
+.link-btn.kick:hover { box-shadow: 0 10px 25px rgba(0, 255, 1, 0.3); }
 
 /* YouTube */
-.link-btn.youtube { color: #ff0000; }
-.link-btn.youtube:hover { border-color: #ff0000; box-shadow: 0 0 20px rgba(255, 0, 0, 0.4); }
+.link-btn.youtube { color: #ff4d4d; }
+.link-btn.youtube:hover { box-shadow: 0 10px 25px rgba(255, 77, 77, 0.3); }
 
 /* TikTok */
 .link-btn.tiktok { color: #00f2ea; }
-.link-btn.tiktok:hover { border-color: #00f2ea; box-shadow: 0 0 20px rgba(0, 242, 234, 0.4); }
+.link-btn.tiktok:hover { box-shadow: 0 10px 25px rgba(0, 242, 234, 0.3); }
 
 /* Instagram */
-.link-btn.instagram { color: #e1306c; }
-.link-btn.instagram:hover { border-color: #e1306c; box-shadow: 0 0 20px rgba(225, 48, 108, 0.4); }
+.link-btn.instagram { color: #ff5c93; }
+.link-btn.instagram:hover { box-shadow: 0 10px 25px rgba(225, 48, 108, 0.3); }
 
 /* Reddit */
-.link-btn.reddit { color: #ff6e2e; }
-.link-btn.reddit:hover { border-color: #ff6e2e; box-shadow: 0 0 25px rgba(255, 110, 46, 0.4); }
+.link-btn.reddit { color: #ff8b57; }
+.link-btn.reddit:hover { box-shadow: 0 10px 25px rgba(255, 110, 46, 0.3); }
 
 /* כלבו יהודה */
 .link-btn.shop-black { color: #ffffff; }
-.link-btn.shop-black:hover { border-color: #ffffff; box-shadow: 0 0 20px rgba(255, 255, 255, 0.25); }
+.link-btn.shop-black:hover { box-shadow: 0 10px 25px rgba(255, 255, 255, 0.2); }
 
 /* א.ד.א */
-.link-btn.ada { color: #00569e; }
-.link-btn.ada:hover { border-color: #00569e; box-shadow: 0 0 20px rgba(0, 86, 158, 0.4); }
+.link-btn.ada { color: #3182ce; }
+.link-btn.ada:hover { box-shadow: 0 10px 25px rgba(49, 130, 206, 0.3); }
 
 .link-btn.ada .original-logo {
     transform: scale(1.15);
@@ -230,6 +242,6 @@ footer {
     .side-column { display: none; }
     .container { 
         max-width: 100%;
-        background-color: #0f111a; /* ביטול שקיפות בנייד לשיפור קריאות */
+        background-color: rgba(15, 17, 26, 0.95);
     }
 }
