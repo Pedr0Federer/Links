@@ -198,8 +198,8 @@ footer {
 }
 
 /* Discord */
-.link-btn.discord { color: #8a9cf1; } /* גוון מעט בהיר יותר לקריאות */
-.link-btn.discord:hover { box-shadow: 0 10px 25px rgba(114, 137, 218, 0.4); }
+.link-btn.discord { color: #5865F2; } 
+.link-btn.discord:hover { box-shadow: 0 10px 25px rgba(88, 101, 242, 0.4); }
 
 /* Discord Fragrance */
 .link-btn.discord-frag { color: #b77de4; }
@@ -218,8 +218,8 @@ footer {
 .link-btn.tiktok:hover { box-shadow: 0 10px 25px rgba(0, 242, 234, 0.3); }
 
 /* Instagram */
-.link-btn.instagram { color: #ff5c93; }
-.link-btn.instagram:hover { box-shadow: 0 10px 25px rgba(225, 48, 108, 0.3); }
+.link-btn.instagram { color: #833AB4; }
+.link-btn.instagram:hover { box-shadow: 0 10px 25px rgba(131, 58, 180, 0.4); }
 
 /* Reddit */
 .link-btn.reddit { color: #ff8b57; }
