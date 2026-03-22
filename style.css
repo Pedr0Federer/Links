@@ -53,12 +53,14 @@ h1 {
     gap: 16px;
 }
 
+/* === עיצוב כפתורים עם גרדיאנט (לכל האתר) === */
 .link-btn {
-    background-color: #141824;
+    /* אפקט עומק: צבע בהיר למעלה שהופך לכהה למטה */
+    background: linear-gradient(180deg, #1e2333 0%, #141824 100%);
     text-decoration: none;
     padding: 18px 20px;
     border-radius: 12px;
-    border: 1px solid #1f2937;
+    border: 1px solid #2d364d;
     transition: all 0.3s ease-in-out;
     display: flex;
     align-items: center;
@@ -67,22 +69,15 @@ h1 {
     min-height: 65px;
 }
 
-/* === הגדלה משמעותית של הלוגואים (אדא ורדיט) === */
+/* הגדלת שטח הלוגו כפי שביקשת */
 .icon {
     position: absolute;
     right: 20px;
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 50px; /* הגדלה נוספת מ-40px ל-50px */
+    width: 50px; 
     height: 50px;
-}
-
-.original-logo {
-    max-width: 100%;
-    max-height: 100%;
-    object-fit: contain;
-    display: block;
 }
 
 .original-logo {
@@ -115,65 +110,76 @@ footer {
     font-size: 0.8rem;
 }
 
+/* אפקט Hover כללי - הגברת בהירות */
 .link-btn:hover {
     transform: translateY(-4px);
+    filter: brightness(1.15);
 }
 
-/* --- צבעי מותג ואפקט זוהר --- */
+/* === הגדרות צבע וזוהר (Glow) ספציפיות לכל כפתור === */
 
 /* Discord */
 .link-btn.discord { color: #7289da; }
-.link-btn.discord:hover { border-color: #7289da; box-shadow: 0 0 15px #7289da; background-color: #7289da10; }
+.link-btn.discord:hover { 
+    border-color: #7289da; 
+    box-shadow: 0 0 20px rgba(114, 137, 218, 0.4); 
+}
 
 /* Discord Fragrance */
 .link-btn.discord-frag { color: #9c5ac8; }
-.link-btn.discord-frag:hover { border-color: #9c5ac8; box-shadow: 0 0 15px #9c5ac8; background-color: #9c5ac810; }
+.link-btn.discord-frag:hover { 
+    border-color: #9c5ac8; 
+    box-shadow: 0 0 20px rgba(156, 90, 200, 0.4); 
+}
 
 /* Kick */
 .link-btn.kick { color: #00e701; }
-.link-btn.kick:hover { border-color: #00e701; box-shadow: 0 0 15px #00e701; background-color: #00e70110; }
+.link-btn.kick:hover { 
+    border-color: #00e701; 
+    box-shadow: 0 0 25px rgba(0, 231, 1, 0.5); /* זוהר חזק כפי שמופיע בתמונה */
+}
 
 /* YouTube */
 .link-btn.youtube { color: #ff0000; }
-.link-btn.youtube:hover { border-color: #ff0000; box-shadow: 0 0 15px #ff0000; background-color: #ff000010; }
+.link-btn.youtube:hover { 
+    border-color: #ff0000; 
+    box-shadow: 0 0 20px rgba(255, 0, 0, 0.4); 
+}
 
 /* TikTok */
 .link-btn.tiktok { color: #00f2ea; }
-.link-btn.tiktok:hover { border-color: #00f2ea; box-shadow: 0 0 15px #00f2ea; background-color: #00f2ea10; }
+.link-btn.tiktok:hover { 
+    border-color: #00f2ea; 
+    box-shadow: 0 0 20px rgba(0, 242, 234, 0.4); 
+}
 
 /* Instagram */
 .link-btn.instagram { color: #e1306c; }
-.link-btn.instagram:hover { border-color: #e1306c; box-shadow: 0 0 15px #e1306c; background-color: #e1306c10; }
-
-/* --- Reddit --- */
-.link-btn.reddit { 
-    color: #ff6e2e; /* צבע כתום-אפרסק מהתמונה ששלחת */
+.link-btn.instagram:hover { 
+    border-color: #e1306c; 
+    box-shadow: 0 0 20px rgba(225, 48, 108, 0.4); 
 }
+
+/* Reddit - צבע כתום אפרסק בהתאמה אישית */
+.link-btn.reddit { color: #ff6e2e; }
 .link-btn.reddit:hover { 
     border-color: #ff6e2e; 
-    box-shadow: 0 0 20px #ff6e2e; 
-    background-color: rgba(255, 110, 46, 0.15); 
+    box-shadow: 0 0 25px rgba(255, 110, 46, 0.5); 
 }
 
-/* כלבו יהודה - שחור עם זוהר לבן (להגדיל את הזוהר) */
+/* כלבו יהודה */
 .link-btn.shop-black { color: #ffffff; }
-.link-btn.shop-black:hover { border-color: #ffffff; box-shadow: 0 0 15px #ffffff; background-color: #ffffff10; }
-
-/* --- א.ד.א (ADA) - תיקון הבלטה מיוחד --- */
-.link-btn.ada { 
-    color: #4dcfff; /* צבע טקסט וזוהר בהיר */
+.link-btn.shop-black:hover { 
+    border-color: #ffffff; 
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.3); 
 }
 
-/* הוספת רקע לבן עדין מאוד רק מאחורי הלוגו של אדא כדי שיבלוט */
-.link-btn.ada .original-logo {
-    background-color: rgba(255, 255, 255, 0.1); 
-    border-radius: 50%;
-    padding: 2px;
-    transform: scale(1.2); /* הגדלה ספציפית ללוגו הזה */
-}
-
+/* א.ד.א - כחול בהיר להבלטת לוגו כהה */
+.link-btn.ada { color: #4dcfff; }
 .link-btn.ada:hover { 
     border-color: #4dcfff; 
-    box-shadow: 0 0 20px #4dcfff; 
-    background-color: rgba(77, 207, 255, 0.15); 
+    box-shadow: 0 0 20px rgba(77, 207, 255, 0.4); 
+}
+.link-btn.ada .original-logo {
+    transform: scale(1.15); /* הגדלה נוספת ללוגו אדא */
 }
