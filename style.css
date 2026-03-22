@@ -76,14 +76,15 @@ header {
 }
 
 .profile-img {
-    width: 115px;
-    height: 115px;
+    width: 120px;
+    height: 120px;
     border-radius: 50%;
     object-fit: cover;
-    border: 3px solid #1d4ed8;
+    /* שינוי מ-1d4ed8 לכחול, לגוון זהב עמוק */
+    border: 3px solid #f1a403;
     margin-bottom: 15px;
-    /* צל לתמונת הפרופיל */
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+    /* הוספת הילה עדינה שמתאימה ללהבות */
+    box-shadow: 0 0 20px rgba(241, 164, 3, 0.4);
 }
 
 h1 {
