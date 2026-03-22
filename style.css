@@ -44,17 +44,32 @@ body {
     transition: transform 0.3s ease;
 }
 
-/* === חלק שני: התאמה ספציפית לצד שמאל (הפתרון לחיתוך) === */
-.image-left img {
-    /* object-position מגדיר מאיזה קצה של התמונה ה"גזירה" מתחילה. */
-    /* על ידי הגדרת left center, אנחנו אומרים לתמונה השמאלית: */
-    /* "תשמור על הצד השמאלי של הראש גלוי, ותחתוך מהצד הימני (שקרוב לקישורים)." */
-    object-position: left center;
+/* === עדכון עמודת שמאל בלבד === */
+.image-left {
+    flex: 1;
+    height: 100vh;
+    overflow: hidden;
+    position: sticky;
+    top: 0;
 }
 
-/* === התאמה ספציפית לצד ימין (אם תרצה לשפר גם אותה) === */
+.image-left img {
+    width: 100%;
+    height: 100%;
+    /* cover מבטיח שהתמונה תהיה גדולה ותמלא את כל הגובה */
+    object-fit: cover; 
+    /* left top גורם לתמונה להיצמד לשמאל ולמעלה - זה ימנע את חיתוך הראש */
+    object-position: left top; 
+    display: block;
+}
+
+/* === עדכון עמודת ימין (ליתר ביטחון שתהיה סימטרית) === */
 .image-right img {
-    object-position: right center; /* מצמיד את התמונה הימנית לימין */
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    /* הצמדה לימין כדי שגם כאן החיתוך יהיה רק בצד הפנימי */
+    object-position: right top;
 }
 
 /* === ביטול רוחב קונטיינר קבוע === */
