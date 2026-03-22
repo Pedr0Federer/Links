@@ -20,40 +20,53 @@ body {
     width: 100%;
 }
 
-/* עמודות הצד - מילוי מלא מקצה לקצה */
+/* === חלק ראשון: עדכון עמודות הצד === */
 .side-column {
     flex: 1; 
-    height: 100vh; /* גובה מסך מלא */
+    height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
     position: sticky; 
     top: 0;
-    padding: 0; /* ביטול מרווחים כדי שהתמונה תיצמד לקצוות */
+    padding: 0;
     overflow: hidden;
+    /* הגדלת המרווח הפנימי של עמודות הצד, מה שיגרום לתמונות להתכווץ מעט */
+    padding: 0 15px; 
 }
 
 .side-column img {
-    height: 100%; /* מתיחה לגובה מלא */
-    width: 100%;  /* מתיחה לרוחב מלא */
-    object-fit: cover; /* מילוי השטח תוך שמירה על פרופורציות (חיתוך מינימלי) */
+    height: 100%;
+    width: 100%;
+    /* זה הפתרון! מציג את כל התמונה בלי לחתוך אותה */
+    object-fit: contain; 
     display: block;
+    transition: transform 0.3s ease;
 }
 
-/* התאמת מיקום התמונה למניעת חיתוך הראש */
-.image-left img, .image-right img {
-    object-position: center top; 
+/* === חלק שני: התאמה ספציפית לצד שמאל (הפתרון לחיתוך) === */
+.image-left img {
+    /* object-position מגדיר מאיזה קצה של התמונה ה"גזירה" מתחילה. */
+    /* על ידי הגדרת left center, אנחנו אומרים לתמונה השמאלית: */
+    /* "תשמור על הצד השמאלי של הראש גלוי, ותחתוך מהצד הימני (שקרוב לקישורים)." */
+    object-position: left center;
 }
 
-/* עמודת הקישורים המרכזית */
+/* === התאמה ספציפית לצד ימין (אם תרצה לשפר גם אותה) === */
+.image-right img {
+    object-position: right center; /* מצמיד את התמונה הימנית לימין */
+}
+
+/* === ביטול רוחב קונטיינר קבוע === */
 .container {
     width: 100%;
-    max-width: 500px; /* צמצום קל כדי לתת יותר נוכחות לתמונות */
+    /* צמצום קל של הרוחב כדי לתת יותר נוכחות לתמונות */
+    max-width: 500px; 
     text-align: center;
-    padding: 40px 20px;
+    padding: 50px 20px;
     z-index: 10;
-    background-color: #0f111a; /* רקע אחיד למרכז */
-    min-height: 100vh;
+    background-color: #0f111a; 
+    position: relative;
 }
 
 header {
