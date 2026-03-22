@@ -1,160 +1,371 @@
 * {
+
     box-sizing: border-box;
+
     margin: 0;
+
     padding: 0;
+
     font-family: 'Heebo', sans-serif;
+
 }
+
+
 
 body {
-    /* רקע האתר עם מעבר צבע משמאל לימין */
-    background: linear-gradient(90deg, #1c2130 0%, #0f111a 100%);
+
+    background-color: #0f111a;
+
     color: #ffffff;
-    min-height: 100vh;
+
 }
 
-/* === הגדרות הפריסה === */
+
+
+/* === הגדרות הפריסה (שינוי מרכזי) === */
+
 .page-layout {
+
     display: flex;
+
     justify-content: center;
+
     align-items: flex-start;
+
     min-height: 100vh;
+
 }
+
+
+
+/* הגדרות כלליות לעמודות הצד */
 
 .side-column {
-    flex: 1;
+
+    flex: 1; /* תמונות הצד מתחלקות בשטח הנותר */
+
     height: 100vh;
+
     display: flex;
+
     justify-content: center;
+
     align-items: center;
-    position: sticky;
+
+    position: sticky; /* התמונות מקובעות על המסך בזמן גלילה */
+
     top: 0;
-    overflow: hidden;
+
 }
+
+
 
 .side-column img {
+
     height: 100%;
+
     width: 100%;
-    object-fit: cover;
+
+    object-fit: cover; /* שומר על פרופורציה ומונע מתיחה */
+
     display: block;
+
 }
 
-/* מניעת חיתוך הראש בתמונות הצד */
-.image-left img { object-position: left top; }
-.image-right img { object-position: right top; }
+
+
+/* הגדרות עמודת הקישורים המרכזית */
 
 .container {
+
     width: 100%;
-    max-width: 500px;
+
+    max-width: 550px;
+
     text-align: center;
+
     padding: 50px 20px;
-    z-index: 10;
-    background: transparent; 
+
+    z-index: 10; /* מעל התמונות */
+
+    background-color: #0f111a; /* רקע קבוע כדי למנוע חפיפה */
+
 }
 
-header { margin-bottom: 35px; }
+
+
+header {
+
+    margin-bottom: 35px;
+
+}
+
+
 
 .profile-img {
+
     width: 110px;
+
     height: 110px;
+
     border-radius: 50%;
+
     object-fit: cover;
+
     border: 3px solid #1d4ed8;
+
     margin-bottom: 15px;
+
 }
+
+
 
 h1 {
+
     font-size: 2.2rem;
+
     font-weight: 900;
+
     margin-bottom: 5px;
+
+    letter-spacing: 1px;
+
+    
+
     background: linear-gradient(180deg, #ffb347 0%, #ff6e2e 100%);
+
     -webkit-background-clip: text;
+
     -webkit-text-fill-color: transparent;
+
     filter: drop-shadow(0px 2px 4px rgba(0, 0, 0, 0.5));
+
 }
+
+
 
 .subtitle {
+
     color: #8b949e;
+
     font-size: 0.85rem;
+
     font-weight: 700;
+
     letter-spacing: 2px;
+
 }
+
+
 
 .links-container {
+
     display: flex;
+
     flex-direction: column;
+
     gap: 16px;
+
 }
 
-/* עיצוב כפתור הלינק - רקע מדורג מבלי לפגוע בצבע הטקסט */
+
+
 .link-btn {
-    background: linear-gradient(90deg, #1a1f2e 0%, #141824 100%);
+
+    background-color: #141824;
+
     text-decoration: none;
+
     padding: 18px 20px;
+
     border-radius: 12px;
+
     border: 1px solid #1f2937;
+
     transition: all 0.3s ease-in-out;
+
     display: flex;
+
     align-items: center;
+
     justify-content: center;
+
     position: relative;
+
     min-height: 65px;
+
 }
+
+
 
 .icon {
+
     position: absolute;
+
     right: 20px;
-    width: 45px; 
-    height: 45px;
+
     display: flex;
+
     align-items: center;
+
     justify-content: center;
+
+    width: 50px; 
+
+    height: 50px;
+
 }
+
+
 
 .original-logo {
+
     max-width: 100%;
+
     max-height: 100%;
+
     object-fit: contain;
+
+    display: block;
+
 }
+
+
 
 .btn-text {
+
     display: flex;
+
     flex-direction: column;
+
     align-items: center;
+
 }
 
-.main-text { font-size: 1.1rem; font-weight: 700; }
-.sub-text { font-size: 0.8rem; margin-top: 5px; opacity: 0.8; }
 
-/* === שמירה על צבעי הטקסט המקוריים לכל פלטפורמה === */
+
+.main-text {
+
+    font-size: 1.1rem;
+
+    font-weight: 700;
+
+}
+
+
+
+.sub-text {
+
+    font-size: 0.8rem;
+
+    margin-top: 5px;
+
+    opacity: 0.8;
+
+}
+
+
+
+footer {
+
+    margin-top: 60px;
+
+    color: #6b7280;
+
+    font-size: 0.8rem;
+
+}
+
+
+
+.link-btn:hover {
+
+    transform: translateY(-4px);
+
+}
+
+
+
+/* Discord */
+
 .link-btn.discord { color: #7289da; }
+
+.link-btn.discord:hover { border-color: #7289da; box-shadow: 0 0 15px #7289da; background-color: #7289da10; }
+
+
+
+/* Discord Fragrance */
+
 .link-btn.discord-frag { color: #9c5ac8; }
+
+.link-btn.discord-frag:hover { border-color: #9c5ac8; box-shadow: 0 0 15px #9c5ac8; background-color: #9c5ac810; }
+
+
+
+/* Kick */
+
 .link-btn.kick { color: #00e701; }
+
+.link-btn.kick:hover { border-color: #00e701; box-shadow: 0 0 15px #00e701; background-color: #00e70110; }
+
+
+
+/* YouTube */
+
 .link-btn.youtube { color: #ff0000; }
+
+.link-btn.youtube:hover { border-color: #ff0000; box-shadow: 0 0 15px #ff0000; background-color: #ff000010; }
+
+
+
+/* TikTok */
+
 .link-btn.tiktok { color: #00f2ea; }
+
+.link-btn.tiktok:hover { border-color: #00f2ea; box-shadow: 0 0 15px #00f2ea; background-color: #00f2ea10; }
+
+
+
+/* Instagram */
+
 .link-btn.instagram { color: #e1306c; }
+
+.link-btn.instagram:hover { border-color: #e1306c; box-shadow: 0 0 15px #e1306c; background-color: #e1306c10; }
+
+
+
+/* Reddit */
+
 .link-btn.reddit { color: #ff6e2e; }
+
+.link-btn.reddit:hover { border-color: #ff6e2e; box-shadow: 0 0 20px #ff6e2e; background-color: rgba(255, 110, 46, 0.15); }
+
+
+
+/* כלבו יהודה */
+
 .link-btn.shop-black { color: #ffffff; }
+
+.link-btn.shop-black:hover { border-color: #ffffff; box-shadow: 0 0 15px #ffffff; background-color: #ffffff10; }
+
+
+
+/* א.ד.א */
+
 .link-btn.ada { color: #00569e; }
 
-/* אפקטים של מעבר עכבר עם צבעי הזוהר המקוריים */
-.link-btn:hover {
-    transform: translateY(-4px);
-    background: linear-gradient(90deg, #232a3d 0%, #1a1f2e 100%);
-}
+.link-btn.ada:hover { border-color: #00569e; box-shadow: 0 0 15px #00569e; background-color: #00569e10; }
 
-.link-btn.discord:hover { border-color: #7289da; box-shadow: 0 0 15px rgba(114, 137, 218, 0.4); }
-.link-btn.discord-frag:hover { border-color: #9c5ac8; box-shadow: 0 0 15px rgba(156, 90, 200, 0.4); }
-.link-btn.kick:hover { border-color: #00e701; box-shadow: 0 0 15px rgba(0, 231, 1, 0.4); }
-.link-btn.youtube:hover { border-color: #ff0000; box-shadow: 0 0 15px rgba(255, 0, 0, 0.4); }
-.link-btn.tiktok:hover { border-color: #00f2ea; box-shadow: 0 0 15px rgba(0, 242, 234, 0.4); }
-.link-btn.instagram:hover { border-color: #e1306c; box-shadow: 0 0 15px rgba(225, 48, 108, 0.4); }
-.link-btn.reddit:hover { border-color: #ff6e2e; box-shadow: 0 0 15px rgba(255, 110, 46, 0.4); }
-.link-btn.shop-black:hover { border-color: #ffffff; box-shadow: 0 0 15px rgba(255, 255, 255, 0.2); }
-.link-btn.ada:hover { border-color: #00569e; box-shadow: 0 0 15px rgba(0, 86, 158, 0.4); }
 
-footer { margin-top: 60px; color: #6b7280; font-size: 0.8rem; }
 
-@media (max-width: 1000px) {
-    .side-column { display: none; }
-    .container { max-width: 100%; }
+.link-btn.ada .original-logo {
+
+    transform: scale(1.15); /* הגדלה נוספת ללוגו אדא */
+
+    background-color: rgba(255, 255, 255, 0.1); 
+
+    border-radius: 50%;
+
+    padding: 2px;
+
 }
