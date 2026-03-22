@@ -211,3 +211,8 @@ footer {
         border: none;
     }
 }
+.link-btn.ada .original-logo {
+    transform: scale(1.15); /* הגדלה נוספת ללוגו אדא */
+    background-color: rgba(255, 255, 255, 0.1); 
+    border-radius: 50%;
+    padding: 2px;
