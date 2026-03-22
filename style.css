@@ -7,8 +7,8 @@
 }
 
 body {
-    /* Gradient בהשראת לוגו הנמר: צהוב זהוב -> כתום -> אדום כהה */
-    background: linear-gradient(-45deg, #f1a403, #e65c00, #b33939, #1a1f2e);
+    /* צהוב זהב (Gold), כתום שרוף (Burnt Orange), וחום-שוקולד כהה לבסיס */
+    background: linear-gradient(-45deg, #ffcc33, #ff8c00, #8b4513, #0a0a0a);
     background-size: 400% 400%;
     animation: gradientBG 15s ease infinite;
     color: #ffffff;
