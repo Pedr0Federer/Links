@@ -8,42 +8,52 @@
 body {
     background-color: #0f111a;
     color: #ffffff;
+    overflow-x: hidden; /* מונע גלילה אופקית מיותרת */
 }
 
-/* === הגדרות הפריסה (שינוי מרכזי) === */
+/* === הגדרות הפריסה === */
 .page-layout {
     display: flex;
     justify-content: center;
     align-items: flex-start;
     min-height: 100vh;
+    width: 100%;
 }
 
-/* הגדרות כלליות לעמודות הצד */
+/* עמודות הצד - מילוי מלא מקצה לקצה */
 .side-column {
-    flex: 1; /* תמונות הצד מתחלקות בשטח הנותר */
-    height: 100vh;
+    flex: 1; 
+    height: 100vh; /* גובה מסך מלא */
     display: flex;
     justify-content: center;
     align-items: center;
-    position: sticky; /* התמונות מקובעות על המסך בזמן גלילה */
+    position: sticky; 
     top: 0;
+    padding: 0; /* ביטול מרווחים כדי שהתמונה תיצמד לקצוות */
+    overflow: hidden;
 }
 
 .side-column img {
-    height: 100%;
-    width: 100%;
-    object-fit: cover; /* שומר על פרופורציה ומונע מתיחה */
+    height: 100%; /* מתיחה לגובה מלא */
+    width: 100%;  /* מתיחה לרוחב מלא */
+    object-fit: cover; /* מילוי השטח תוך שמירה על פרופורציות (חיתוך מינימלי) */
     display: block;
 }
 
-/* הגדרות עמודת הקישורים המרכזית */
+/* התאמת מיקום התמונה למניעת חיתוך הראש */
+.image-left img, .image-right img {
+    object-position: center top; 
+}
+
+/* עמודת הקישורים המרכזית */
 .container {
     width: 100%;
-    max-width: 550px;
+    max-width: 500px; /* צמצום קל כדי לתת יותר נוכחות לתמונות */
     text-align: center;
-    padding: 50px 20px;
-    z-index: 10; /* מעל התמונות */
-    background-color: #0f111a; /* רקע קבוע כדי למנוע חפיפה */
+    padding: 40px 20px;
+    z-index: 10;
+    background-color: #0f111a; /* רקע אחיד למרכז */
+    min-height: 100vh;
 }
 
 header {
@@ -64,7 +74,6 @@ h1 {
     font-weight: 900;
     margin-bottom: 5px;
     letter-spacing: 1px;
-    
     background: linear-gradient(180deg, #ffb347 0%, #ff6e2e 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -104,8 +113,8 @@ h1 {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 50px; 
-    height: 50px;
+    width: 45px; 
+    height: 45px;
 }
 
 .original-logo {
@@ -138,8 +147,10 @@ footer {
     font-size: 0.8rem;
 }
 
+/* אפקטים של Hover וזוהר */
 .link-btn:hover {
     transform: translateY(-4px);
+    filter: brightness(1.2);
 }
 
 /* Discord */
@@ -183,4 +194,13 @@ footer {
     background-color: rgba(255, 255, 255, 0.1); 
     border-radius: 50%;
     padding: 2px;
+}
+/* התאמה לנייד - הסתרת תמונות הצד כדי למנוע צפיפות */
+@media (max-width: 1000px) {
+    .side-column {
+        display: none;
+    }
+    .container {
+        max-width: 100%;
+    }
 }
