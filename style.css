@@ -12,12 +12,41 @@ body {
     justify-content: center;
     min-height: 100vh;
     padding: 50px 20px;
+    overflow-x: hidden; /* מונע פסי גלילה בגלל תמונות הצד */
+    position: relative;
+}
+
+/* === הגדרות תמונות הצד === */
+.side-image {
+    position: fixed;
+    top: 0;
+    height: 100vh;
+    width: auto;
+    z-index: -1; /* מציב אותן מאחורי הכל */
+    object-fit: contain; /* שומר על רזולוציה בלי למתוח */
+}
+
+.left-side {
+    left: 0;
+}
+
+.right-side {
+    right: 0;
+}
+
+/* הסתרת התמונות בנייד כדי שלא יסתירו את התוכן */
+@media (max-width: 1100px) {
+    .side-image {
+        display: none;
+    }
 }
 
 .container {
     width: 100%;
     max-width: 550px;
     text-align: center;
+    position: relative;
+    z-index: 1;
 }
 
 header {
@@ -29,7 +58,7 @@ header {
     height: 110px;
     border-radius: 50%;
     object-fit: cover;
-    border: 3px solid #1d4ed8;
+    border: 3px solid #ff6e2e; /* שינוי לכתום שיתאים לכותרת */
     margin-bottom: 15px;
 }
 
@@ -39,12 +68,9 @@ h1 {
     margin-bottom: 5px;
     letter-spacing: 1px;
     
-    /* גרדיאנט כתום-צהוב עם עומק */
     background: linear-gradient(180deg, #ffb347 0%, #ff6e2e 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    
-    /* הבלטה של הטקסט על הרקע הכהה */
     filter: drop-shadow(0px 2px 4px rgba(0, 0, 0, 0.5));
 }
 
@@ -61,9 +87,7 @@ h1 {
     gap: 16px;
 }
 
-/* === עיצוב כפתורים עם גרדיאנט (לכל האתר) === */
 .link-btn {
-    /* אפקט עומק: צבע בהיר למעלה שהופך לכהה למטה */
     background: linear-gradient(180deg, #1e2333 0%, #141824 100%);
     text-decoration: none;
     padding: 18px 20px;
@@ -77,7 +101,6 @@ h1 {
     min-height: 65px;
 }
 
-/* הגדלת שטח הלוגו כפי שביקשת */
 .icon {
     position: absolute;
     right: 20px;
@@ -118,76 +141,39 @@ footer {
     font-size: 0.8rem;
 }
 
-/* אפקט Hover כללי - הגברת בהירות */
 .link-btn:hover {
     transform: translateY(-4px);
     filter: brightness(1.15);
 }
 
-/* === הגדרות צבע וזוהר (Glow) ספציפיות לכל כפתור === */
-
-/* Discord */
+/* צבעים וזוהרים */
 .link-btn.discord { color: #7289da; }
-.link-btn.discord:hover { 
-    border-color: #7289da; 
-    box-shadow: 0 0 20px rgba(114, 137, 218, 0.4); 
-}
+.link-btn.discord:hover { border-color: #7289da; box-shadow: 0 0 20px rgba(114, 137, 218, 0.4); }
 
-/* Discord Fragrance */
 .link-btn.discord-frag { color: #9c5ac8; }
-.link-btn.discord-frag:hover { 
-    border-color: #9c5ac8; 
-    box-shadow: 0 0 20px rgba(156, 90, 200, 0.4); 
-}
+.link-btn.discord-frag:hover { border-color: #9c5ac8; box-shadow: 0 0 20px rgba(156, 90, 200, 0.4); }
 
-/* Kick */
 .link-btn.kick { color: #00e701; }
-.link-btn.kick:hover { 
-    border-color: #00e701; 
-    box-shadow: 0 0 25px rgba(0, 231, 1, 0.5); /* זוהר חזק כפי שמופיע בתמונה */
-}
+.link-btn.kick:hover { border-color: #00e701; box-shadow: 0 0 25px rgba(0, 231, 1, 0.5); }
 
-/* YouTube */
 .link-btn.youtube { color: #ff0000; }
-.link-btn.youtube:hover { 
-    border-color: #ff0000; 
-    box-shadow: 0 0 20px rgba(255, 0, 0, 0.4); 
-}
+.link-btn.youtube:hover { border-color: #ff0000; box-shadow: 0 0 20px rgba(255, 0, 0, 0.4); }
 
-/* TikTok */
 .link-btn.tiktok { color: #00f2ea; }
-.link-btn.tiktok:hover { 
-    border-color: #00f2ea; 
-    box-shadow: 0 0 20px rgba(0, 242, 234, 0.4); 
-}
+.link-btn.tiktok:hover { border-color: #00f2ea; box-shadow: 0 0 20px rgba(0, 242, 234, 0.4); }
 
-/* Instagram */
 .link-btn.instagram { color: #e1306c; }
-.link-btn.instagram:hover { 
-    border-color: #e1306c; 
-    box-shadow: 0 0 20px rgba(225, 48, 108, 0.4); 
-}
+.link-btn.instagram:hover { border-color: #e1306c; box-shadow: 0 0 20px rgba(225, 48, 108, 0.4); }
 
-/* Reddit - צבע כתום אפרסק בהתאמה אישית */
 .link-btn.reddit { color: #ff6e2e; }
-.link-btn.reddit:hover { 
-    border-color: #ff6e2e; 
-    box-shadow: 0 0 25px rgba(255, 110, 46, 0.5); 
-}
+.link-btn.reddit:hover { border-color: #ff6e2e; box-shadow: 0 0 25px rgba(255, 110, 46, 0.5); }
 
-/* כלבו יהודה */
 .link-btn.shop-black { color: #ffffff; }
-.link-btn.shop-black:hover { 
-    border-color: #ffffff; 
-    box-shadow: 0 0 20px rgba(255, 255, 255, 0.3); 
-}
+.link-btn.shop-black:hover { border-color: #ffffff; box-shadow: 0 0 20px rgba(255, 255, 255, 0.3); }
 
-/* א.ד.א - כחול בהיר להבלטת לוגו כהה */
 .link-btn.ada { color: #4dcfff; }
-.link-btn.ada:hover { 
-    border-color: #4dcfff; 
-    box-shadow: 0 0 20px rgba(77, 207, 255, 0.4); 
-}
+.link-btn.ada:hover { border-color: #4dcfff; box-shadow: 0 0 20px rgba(77, 207, 255, 0.4); }
+
 .link-btn.ada .original-logo {
-    transform: scale(1.15); /* הגדלה נוספת ללוגו אדא */
+    transform: scale(1.15);
 }
