@@ -6,7 +6,7 @@
 }
 
 body {
-    background-color: #0f111a; /* צבע רקע כהה */
+    background-color: #0f111a;
     color: #ffffff;
     display: flex;
     justify-content: center;
@@ -55,12 +55,11 @@ h1 {
 
 .link-btn {
     background-color: #141824;
-    color: #ffffff;
     text-decoration: none;
     padding: 18px 20px;
     border-radius: 12px;
     border: 1px solid #1f2937;
-    transition: all 0.3s ease-in-out; /* אנימציה חלקה */
+    transition: all 0.3s ease-in-out;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -68,11 +67,22 @@ h1 {
     min-height: 65px;
 }
 
-/* הגדרת ברירת מחדל לאייקונים של FontAwesome */
 .icon {
     position: absolute;
     right: 20px;
     font-size: 1.6rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+}
+
+/* עיצוב הלוגו המקורי */
+.original-logo {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
 }
 
 .btn-text {
@@ -88,8 +98,8 @@ h1 {
 
 .sub-text {
     font-size: 0.8rem;
-    color: #9ca3af;
     margin-top: 5px;
+    opacity: 0.8;
 }
 
 footer {
@@ -98,85 +108,44 @@ footer {
     font-size: 0.8rem;
 }
 
-/* =========================================
-   עיצוב אפקט הזוהר במעבר עכבר (Hover Effect)
-   ========================================= */
+/* --- אפקט תנועה וצבעים קבועים + זוהר --- */
 
-/* ברירת מחדל למעבר עכבר: הזזה קלה למעלה */
 .link-btn:hover {
     transform: translateY(-4px);
 }
 
-/* הגדרת צבעי מותג וזוהר */
+/* Discord */
+.link-btn.discord { color: #7289da; }
+.link-btn.discord:hover { border-color: #7289da; box-shadow: 0 0 15px #7289da; background-color: #7289da10; }
 
-/* דיסקורד (סגול-כחול) */
-.link-btn.discord:hover {
-    background-color: #7289da20; /* רקע חצי שקוף */
-    border-color: #7289da;
-    box-shadow: 0 0 15px #7289da, 0 0 5px #7289da;
-}
-.link-btn.discord .icon { color: #7289da; } /* אייקון נשאר בצבע המותג */
+/* Discord Fragrance */
+.link-btn.discord-frag { color: #9c5ac8; }
+.link-btn.discord-frag:hover { border-color: #9c5ac8; box-shadow: 0 0 15px #9c5ac8; background-color: #9c5ac810; }
 
-/* דיסקורד בשמים (סגול-בושם פחות כחול) */
-.link-btn.discord-frag:hover {
-    background-color: #9c5ac820;
-    border-color: #9c5ac8;
-    box-shadow: 0 0 15px #9c5ac8, 0 0 5px #9c5ac8;
-}
-.link-btn.discord-frag .icon { color: #9c5ac8; }
+/* Kick */
+.link-btn.kick { color: #00e701; }
+.link-btn.kick:hover { border-color: #00e701; box-shadow: 0 0 15px #00e701; background-color: #00e70110; }
 
-/* KICK (ירוק ניאון) */
-.link-btn.kick:hover {
-    background-color: #00e70120;
-    border-color: #00e701;
-    box-shadow: 0 0 15px #00e701, 0 0 5px #00e701;
-}
-.link-btn.kick .icon { color: #00e701; }
+/* YouTube */
+.link-btn.youtube { color: #ff0000; }
+.link-btn.youtube:hover { border-color: #ff0000; box-shadow: 0 0 15px #ff0000; background-color: #ff000010; }
 
-/* יוטיוב (אדום חזק) */
-.link-btn.youtube:hover {
-    background-color: #ff000020;
-    border-color: #ff0000;
-    box-shadow: 0 0 15px #ff0000, 0 0 5px #ff0000;
-}
-.link-btn.youtube .icon { color: #ff0000; }
+/* TikTok (צבע טורקיז קבוע + זוהר) */
+.link-btn.tiktok { color: #00f2ea; }
+.link-btn.tiktok:hover { border-color: #00f2ea; box-shadow: 0 0 15px #00f2ea; background-color: #00f2ea10; }
 
-/* אינסטגרם (ורוד-כתום עז) */
-.link-btn.instagram:hover {
-    background-color: #c1358420;
-    border-color: #c13584;
-    box-shadow: 0 0 15px #c13584, 0 0 5px #c13584;
-}
-.link-btn.instagram .icon { color: #c13584; }
+/* Instagram (צבע ורוד קבוע + זוהר) */
+.link-btn.instagram { color: #e1306c; }
+.link-btn.instagram:hover { border-color: #e1306c; box-shadow: 0 0 15px #e1306c; background-color: #e1306c10; }
 
-/* Reddit (כתום-אדום) */
-.link-btn.reddit:hover {
-    background-color: #ff450020;
-    border-color: #ff4500;
-    box-shadow: 0 0 15px #ff4500, 0 0 5px #ff4500;
-}
-.link-btn.reddit .icon { color: #ff4500; }
+/* Reddit (צבע כתום-אדום קבוע + זוהר - חדש!) */
+.link-btn.reddit { color: #ff4500; }
+.link-btn.reddit:hover { border-color: #ff4500; box-shadow: 0 0 15px #ff4500; background-color: #ff450010; }
 
-/* כלבו יהודה (כחול-טורקיז) */
-.link-btn.shop-blue:hover {
-    background-color: #1e90ff20;
-    border-color: #1e90ff;
-    box-shadow: 0 0 15px #1e90ff, 0 0 5px #1e90ff;
-}
-.link-btn.shop-blue .icon { color: #1e90ff; }
+/* Shop Blue */
+.link-btn.shop-blue { color: #1e90ff; }
+.link-btn.shop-blue:hover { border-color: #1e90ff; box-shadow: 0 0 15px #1e90ff; background-color: #1e90ff10; }
 
-/* א.ד.א (כתום-צהוב) */
-.link-btn.ada:hover {
-    background-color: #ffa50020;
-    border-color: #ffa500;
-    box-shadow: 0 0 15px #ffa500, 0 0 5px #ffa500;
-}
-.link-btn.ada .icon { color: #ffa500; }
-
-/* TikTok (תכלת-טורקיז - חדש!) */
-.link-btn.tiktok:hover {
-    background-color: #00f2ea20; /* רקע חצי שקוף */
-    border-color: #00f2ea;
-    box-shadow: 0 0 15px #00f2ea, 0 0 5px #00f2ea;
-}
-.link-btn.tiktok .icon { color: #00f2ea; }
+/* ADA */
+.link-btn.ada { color: #ffa500; }
+.link-btn.ada:hover { border-color: #ffa500; box-shadow: 0 0 15px #ffa500; background-color: #ffa50010; }
