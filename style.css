@@ -6,14 +6,13 @@
 }
 
 body {
-    /* רקע מדורג משמאל לימין */
     background: linear-gradient(90deg, #1c2130 0%, #0f111a 100%);
     color: #ffffff;
     min-height: 100vh;
     overflow-x: hidden;
 }
 
-/* === אנימציית כניסה עדינה === */
+/* === אנימציית כניסה === */
 @keyframes fadeInUp {
     from {
         opacity: 0;
@@ -32,7 +31,7 @@ body {
     min-height: 100vh;
 }
 
-/* === עמודות הצד === */
+/* עמודות צד */
 .side-column {
     flex: 1;
     height: 100vh;
@@ -41,7 +40,7 @@ body {
     align-items: center;
     position: sticky;
     top: 0;
-    z-index: 1;
+    overflow: hidden;
 }
 
 .side-column img {
@@ -54,7 +53,7 @@ body {
 .image-left img { object-position: left top; }
 .image-right img { object-position: right top; }
 
-/* === הקונטיינר המרכזי (אפקט זכוכית) === */
+/* הקונטיינר המרכזי - אפקט זכוכית */
 .container {
     width: 100%;
     max-width: 500px;
@@ -86,7 +85,7 @@ header {
 
 h1 {
     font-size: 2.4rem;
-    font-weight: 900;
+    font-weight: 900; /* עובי מקסימלי */
     margin-bottom: 5px;
     background: linear-gradient(180deg, #ffb347 0%, #ff6e2e 100%);
     -webkit-background-clip: text;
@@ -99,15 +98,16 @@ h1 {
     font-size: 0.9rem;
     font-weight: 700;
     letter-spacing: 3px;
+    text-transform: uppercase;
 }
 
-/* === קישורים === */
 .links-container {
     display: flex;
     flex-direction: column;
     gap: 18px;
 }
 
+/* עיצוב כפתורים משודרג */
 .link-btn {
     background: linear-gradient(90deg, rgba(26, 31, 46, 0.8) 0%, rgba(20, 24, 36, 0.8) 100%);
     text-decoration: none;
@@ -120,11 +120,11 @@ h1 {
     justify-content: center;
     position: relative;
     min-height: 70px;
-    opacity: 0;
+    opacity: 0; /* להתחלת האנימציה */
     animation: fadeInUp 0.5s ease forwards;
 }
 
-/* השהיית אנימציה לכפתורים */
+/* השהיית אנימציה לכל כפתור ליצירת רצף */
 .link-btn:nth-child(1) { animation-delay: 0.1s; }
 .link-btn:nth-child(2) { animation-delay: 0.2s; }
 .link-btn:nth-child(3) { animation-delay: 0.3s; }
@@ -135,80 +135,73 @@ h1 {
 .link-btn:nth-child(8) { animation-delay: 0.8s; }
 .link-btn:nth-child(9) { animation-delay: 0.9s; }
 
-/* === תיקון הלוגואים (סופי) === */
-.icon {
-    position: absolute !important;
-    right: 20px !important;
-    top: 50% !important;
-    transform: translateY(-50%) !important;
-    width: 35px !important;
-    height: 35px !important;
-    display: flex !important;
-    align-items: center;
-    justify-content: center;
-    z-index: 5;
+.main-text {
+    font-size: 1.15rem;
+    font-weight: 800;
 }
 
-.link-btn img.original-logo {
-    width: 100% !important;
-    height: 100% !important;
-    max-width: 35px !important;
-    max-height: 35px !important;
-    object-fit: contain !important;
-    position: static !important;
-    display: block !important;
+.sub-text {
+    font-size: 0.8rem;
+    font-weight: 400;
+    margin-top: 4px;
+    opacity: 0.7;
 }
 
-.btn-text {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    z-index: 10;
-}
-
-.main-text { font-size: 1.15rem; font-weight: 800; }
-.sub-text { font-size: 0.8rem; margin-top: 4px; opacity: 0.7; }
-
-/* === צבעים ואפקטי Hover === */
+/* אפקטים של Hover */
 .link-btn:hover {
     transform: scale(1.03) translateY(-5px);
     background: linear-gradient(90deg, rgba(35, 42, 61, 0.9) 0%, rgba(26, 31, 46, 0.9) 100%);
+    border-color: rgba(255, 255, 255, 0.2);
 }
 
+/* צבעים וזוהר (Glow) */
 .link-btn.discord { color: #7289da; }
-.link-btn.discord:hover { box-shadow: 0 10px 20px rgba(114, 137, 218, 0.3); border-color: #7289da; }
+.link-btn.discord:hover { box-shadow: 0 10px 20px rgba(114, 137, 218, 0.3); }
 
 .link-btn.discord-frag { color: #9c5ac8; }
-.link-btn.discord-frag:hover { box-shadow: 0 10px 20px rgba(156, 90, 200, 0.3); border-color: #9c5ac8; }
+.link-btn.discord-frag:hover { box-shadow: 0 10px 20px rgba(156, 90, 200, 0.3); }
 
 .link-btn.kick { color: #00e701; }
-.link-btn.kick:hover { box-shadow: 0 10px 20px rgba(0, 231, 1, 0.3); border-color: #00e701; }
+.link-btn.kick:hover { box-shadow: 0 10px 20px rgba(0, 231, 1, 0.3); }
 
 .link-btn.youtube { color: #ff0000; }
-.link-btn.youtube:hover { box-shadow: 0 10px 20px rgba(255, 0, 0, 0.3); border-color: #ff0000; }
+.link-btn.youtube:hover { box-shadow: 0 10px 20px rgba(255, 0, 0, 0.3); }
 
 .link-btn.tiktok { color: #00f2ea; }
-.link-btn.tiktok:hover { box-shadow: 0 10px 20px rgba(0, 242, 234, 0.3); border-color: #00f2ea; }
+.link-btn.tiktok:hover { box-shadow: 0 10px 20px rgba(0, 242, 234, 0.3); }
 
 .link-btn.instagram { color: #e1306c; }
-.link-btn.instagram:hover { box-shadow: 0 10px 20px rgba(225, 48, 108, 0.3); border-color: #e1306c; }
+.link-btn.instagram:hover { box-shadow: 0 10px 20px rgba(225, 48, 108, 0.3); }
 
 .link-btn.reddit { color: #ff6e2e; }
-.link-btn.reddit:hover { box-shadow: 0 10px 20px rgba(255, 110, 46, 0.3); border-color: #ff6e2e; }
+.link-btn.reddit:hover { box-shadow: 0 10px 20px rgba(255, 110, 46, 0.3); }
 
 .link-btn.shop-black { color: #ffffff; }
-.link-btn.shop-black:hover { box-shadow: 0 10px 20px rgba(255, 255, 255, 0.15); border-color: #ffffff; }
+.link-btn.shop-black:hover { box-shadow: 0 10px 20px rgba(255, 255, 255, 0.15); }
 
 .link-btn.ada { color: #00569e; }
-.link-btn.ada:hover { box-shadow: 0 10px 20px rgba(0, 86, 158, 0.3); border-color: #00569e; }
+.link-btn.ada:hover { box-shadow: 0 10px 20px rgba(0, 86, 158, 0.3); }
+
+.icon {
+    position: absolute;
+    right: 25px;
+    width: 40px;
+    height: 40px;
+    transition: transform 0.3s ease;
+}
+
+.link-btn:hover .icon {
+    transform: rotate(-10deg) scale(1.1);
+}
 
 footer {
     margin-top: 80px;
     color: #6b7280;
     font-size: 0.85rem;
+    letter-spacing: 1px;
 }
 
-/* === התאמה לנייד === */
+/* התאמה לנייד */
 @media (max-width: 1000px) {
     .side-column { display: none; }
     .container { 
