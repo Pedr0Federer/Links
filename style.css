@@ -229,6 +229,13 @@ footer {
 .link-btn.shop-black { color: #ffffff; }
 .link-btn.shop-black:hover { box-shadow: 0 10px 25px rgba(255, 255, 255, 0.2); }
 
+/* קאי קולקטורס */
+.link-btn.kai { color: #ffcc00; }
+.link-btn.kai:hover { box-shadow: 0 10px 25px rgba(255, 204, 0, 0.4); }
+
+/* הוספת השהייה לכפתור התשיעי כדי שיכנס חלק */
+.link-btn:nth-child(9) { animation-delay: 0.9s; }
+
 /* א.ד.א */
 
 /*.link-btn.ada { color: #3182ce; }
