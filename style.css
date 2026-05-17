@@ -236,6 +236,82 @@ footer {
 /* הוספת השהייה לכפתור התשיעי כדי שיכנס חלק */
 .link-btn:nth-child(9) { animation-delay: 0.9s; }
 
+/* === הגדרות לפופ-אפ (Modal) === */
+.modal-overlay {
+    display: flex;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    /* רקע כהה חצי שקוף עם אפקט טשטוש */
+    background-color: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    z-index: 9999; /* תמיד יהיה מעל הכל */
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.5s ease, visibility 0.5s ease;
+}
+
+/* כשהמודעה קופצת */
+.modal-overlay.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+.modal-content {
+    position: relative;
+    max-width: 90%;
+    max-height: 85vh; /* מונע מהתמונה לגלוש מחוץ למסך בנייד */
+    transform: scale(0.7);
+    transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* אפקט קפיצה גמיש */
+}
+
+.modal-overlay.show .modal-content {
+    transform: scale(1);
+}
+
+.promo-image {
+    max-width: 100%;
+    max-height: 85vh;
+    border-radius: 15px;
+    box-shadow: 0 15px 50px rgba(0,0,0,0.6);
+    display: block;
+    /* מסגרת זהובה עדינה שתתאים לעיצוב של קאי קולקטורס */
+    border: 2px solid #ffcc00; 
+}
+
+/* עיצוב כפתור ה-X */
+.close-modal {
+    position: absolute;
+    top: -15px;
+    right: -15px;
+    background: linear-gradient(145deg, #251a14, #1a0f0a);
+    border: 2px solid #ffcc33;
+    color: #ffffff;
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 24px;
+    font-weight: bold;
+    cursor: pointer;
+    z-index: 10000;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+    transition: all 0.3s ease;
+}
+
+.close-modal:hover {
+    transform: scale(1.1) rotate(90deg); /* ה-X יסתובב ויגדל שעוברים עליו */
+    background: #ff4d4d; /* הופך לאדום באזהרה */
+    border-color: #ff4d4d;
+}
+
 /* א.ד.א */
 
 /*.link-btn.ada { color: #3182ce; }
