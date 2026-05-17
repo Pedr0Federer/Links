@@ -132,5 +132,36 @@
         </aside>
         
     </div>
+
+    <div id="promoModal" class="modal-overlay">
+        <div class="modal-content">
+            <span class="close-modal" id="closeModalBtn">&times;</span>
+            <img src="promo.jpg" alt="מבצע מיוחד" class="promo-image">
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const modal = document.getElementById("promoModal");
+            const closeBtn = document.getElementById("closeModalBtn");
+
+            // הפעלת הפופ-אפ שנייה אחת אחרי טעינת האתר (1000 מילישניות = 1 שנייה)
+            setTimeout(() => {
+                modal.classList.add("show");
+            }, 1000);
+
+            // סגירה בלחיצה על ה-X
+            closeBtn.addEventListener("click", function() {
+                modal.classList.remove("show");
+            });
+
+            // סגירה בלחיצה מחוץ לתמונה (על הרקע הכהה)
+            modal.addEventListener("click", function(event) {
+                if (event.target === modal) {
+                    modal.classList.remove("show");
+                }
+            });
+        });
+    </script>
 </body>
 </html>
