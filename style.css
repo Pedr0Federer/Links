@@ -203,17 +203,19 @@ footer {
 
 /* Discord Fragrance - דיסקורד בשמים */
 .link-btn.discord-frag { 
-    color: #00f5d4; /* שינוי צבע הטקסט לתכלת-מנטה זוהר וייחודי */
+    color: #ff00a0; /* צבע טקסט ורוד פוקסיה זוהר */
 }
+
 .link-btn.discord-frag:hover { 
-    /* אפקט הילה התואם לצבע החדש בעת מעבר עכבר */
-    box-shadow: 0 10px 25px rgba(0, 245, 212, 0.4); 
-    border-color: rgba(0, 245, 212, 0.6);
+    /* אפקט הילה התואם לצבע הורוד בעת מעבר עכבר */
+    box-shadow: 0 10px 25px rgba(255, 0, 160, 0.4); 
+    border-color: rgba(255, 0, 160, 0.6);
 }
-/* שינוי צבע הלוגו של הדיסקורד בתוך כפתור זה בלבד */
+
+/* שינוי צבע הלוגו של הדיסקורד בתוך כפתור זה בלבד לורוד */
 .link-btn.discord-frag .original-logo {
-    /* שימוש בפילטרים כדי להפוך את הלוגו הכחול המקורי לצבע המנטה החדש */
-    filter: brightness(0) saturate(100%) invert(84%) sepia(61%) saturate(2895%) corner-moding(0) hue-rotate(119deg) brightness(102%) contrast(102%);
+    /* פילטר שהופך את הלוגו למג'נטה/ורוד המדויק */
+    filter: brightness(0) saturate(100%) invert(27%) sepia(91%) saturate(3015%) hue-rotate(310deg) brightness(101%) contrast(103%);
 }
 
 /* Kick */
