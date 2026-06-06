@@ -16,29 +16,16 @@ body {
     overflow-x: hidden;
 }
 
-/* === אנימציות כניסה ותנועה === */
+/* === אנימציית כניסה === */
 @keyframes fadeInUp {
     from {
         opacity: 0;
-        transform: translateY(25px);
+        transform: translateY(20px);
     }
     to {
         opacity: 1;
         transform: translateY(0);
     }
-}
-
-@keyframes gradientBG {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
-}
-
-/* אנימציה לכותרת הראשית - החלפת צבעים דינמית */
-@keyframes textGradient {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
 }
 
 /* === הגדרות הפריסה === */
@@ -73,17 +60,19 @@ body {
     text-align: center;
     padding: 50px 20px;
     z-index: 10;
+    /* רקע זכוכית מעט בהיר יותר */
     background-color: rgba(255, 255, 255, 0.03);
     backdrop-filter: blur(15px);
     -webkit-backdrop-filter: blur(15px);
     border-left: 1px solid rgba(255, 255, 255, 0.1);
     border-right: 1px solid rgba(255, 255, 255, 0.1);
+    /* צל לקונטיינר המרכזי להוספת עומק */
     box-shadow: 0 0 40px rgba(0, 0, 0, 0.3);
 }
 
 header {
     margin-bottom: 35px;
-    animation: fadeInUp 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+    animation: fadeInUp 0.8s ease-out forwards;
 }
 
 .profile-img {
@@ -91,15 +80,11 @@ header {
     height: 120px;
     border-radius: 50%;
     object-fit: cover;
+    /* שינוי מ-1d4ed8 לכחול, לגוון זהב עמוק */
     border: 3px solid #f1a403;
     margin-bottom: 15px;
+    /* הוספת הילה עדינה שמתאימה ללהבות */
     box-shadow: 0 0 20px rgba(241, 164, 3, 0.4);
-    transition: transform 0.5s ease;
-}
-
-/* אפקט סיבוב קל לתמונת הפרופיל כשנוגעים בה */
-.profile-img:hover {
-    transform: scale(1.05) rotate(3deg);
 }
 
 h1 {
@@ -107,17 +92,14 @@ h1 {
     font-weight: 900;
     margin-bottom: 5px;
     letter-spacing: 1px;
-    /* כותרת זזה וחיננית */
-    background: linear-gradient(90deg, #ffb347, #ff6e2e, #ffcc33, #ff6e2e);
-    background-size: 300% auto;
+    background: linear-gradient(180deg, #ffb347 0%, #ff6e2e 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    animation: textGradient 6s linear infinite;
     filter: drop-shadow(0px 3px 6px rgba(0, 0, 0, 0.4));
 }
 
 .subtitle {
-    color: #cbd5e0;
+    color: #cbd5e0; /* צבע טקסט בהיר יותר */
     font-size: 0.9rem;
     font-weight: 800;
     letter-spacing: 2px;
@@ -132,12 +114,13 @@ h1 {
 }
 
 .link-btn {
+    /* שינוי לגוון חום-פחם עמוק שמתאים ללהבות */
     background: linear-gradient(145deg, #251a14 0%, #1a0f0a 100%);
     text-decoration: none;
     padding: 20px;
     border-radius: 16px;
+    /* גבול עדין בזהב עמום */
     border: 1px solid rgba(255, 204, 51, 0.15);
-    /* מעבר אלסטי וקפיצי (cubic-bezier) */
     transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     display: flex;
     align-items: center;
@@ -147,27 +130,27 @@ h1 {
     overflow: hidden;
     box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
     opacity: 0;
-    animation: fadeInUp 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+    animation: fadeInUp 0.6s ease-out forwards;
 }
 
-/* אפקט ריחוף פיזי וקפיצי קדימה */
 .link-btn:hover {
-    transform: translateY(-6px) scale(1.03);
+    transform: translateY(-8px) scale(1.02);
+    /* במעבר עכבר - הגוון נהיה מעט יותר חם */
     background: linear-gradient(145deg, #35261d 0%, #251a14 100%);
     box-shadow: 0 18px 40px rgba(0, 0, 0, 0.6);
     border-color: rgba(255, 204, 51, 0.4);
 }
 
-/* השהייה הדרגתית מדויקת לכניסת הכפתורים מלמעלה למטה */
-.link-btn:nth-child(1) { animation-delay: 0.15s; }
-.link-btn:nth-child(2) { animation-delay: 0.25s; }
-.link-btn:nth-child(3) { animation-delay: 0.35s; }
-.link-btn:nth-child(4) { animation-delay: 0.45s; }
-.link-btn:nth-child(5) { animation-delay: 0.55s; }
-.link-btn:nth-child(6) { animation-delay: 0.65s; }
-.link-btn:nth-child(7) { animation-delay: 0.75s; }
-.link-btn:nth-child(8) { animation-delay: 0.85s; }
-.link-btn:nth-child(9) { animation-delay: 0.95s; }
+/* השהייה הדרגתית לכניסת הכפתורים */
+.link-btn:nth-child(1) { animation-delay: 0.1s; }
+.link-btn:nth-child(2) { animation-delay: 0.2s; }
+.link-btn:nth-child(3) { animation-delay: 0.3s; }
+.link-btn:nth-child(4) { animation-delay: 0.4s; }
+.link-btn:nth-child(5) { animation-delay: 0.5s; }
+.link-btn:nth-child(6) { animation-delay: 0.6s; }
+.link-btn:nth-child(7) { animation-delay: 0.7s; }
+.link-btn:nth-child(8) { animation-delay: 0.8s; }
+/*.link-btn:nth-child(9) { animation-delay: 0.9s; }*/
 
 .icon {
     position: absolute;
@@ -177,13 +160,8 @@ h1 {
     justify-content: center;
     width: 45px; 
     height: 45px;
+    /* צל קטן לאייקון */
     filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
-    transition: transform 0.3s ease;
-}
-
-/* אפקט הגדלה עדין לאייקון בזמן ריחוף על הכפתור */
-.link-btn:hover .icon {
-    transform: scale(1.1);
 }
 
 .original-logo {
@@ -197,6 +175,7 @@ h1 {
     display: flex;
     flex-direction: column;
     align-items: center;
+    /* צל לטקסט בתוך הכפתור */
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
@@ -218,15 +197,26 @@ footer {
     text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
 }
 
-/* עיצובי צבע ייחודיים והילות בריחוף */
 /* Discord */
 .link-btn.discord { color: #5865F2; } 
 .link-btn.discord:hover { box-shadow: 0 10px 25px rgba(88, 101, 242, 0.4); }
 
-/* Discord Fragrance - דיסקורד בשמים (הצבע הורוד החדש!) */
-.link-btn.discord-frag { color: #ff00a0; }
-.link-btn.discord-frag:hover { box-shadow: 0 10px 25px rgba(255, 0, 160, 0.4); border-color: rgba(255, 0, 160, 0.6); }
-.link-btn.discord-frag .original-logo { filter: brightness(0) saturate(100%) invert(27%) sepia(91%) saturate(3015%) hue-rotate(310deg) brightness(101%) contrast(103%); }
+/* Discord Fragrance - דיסקורד בשמים */
+.link-btn.discord-frag { 
+    color: #ff00a0; /* צבע טקסט ורוד פוקסיה זוהר */
+}
+
+.link-btn.discord-frag:hover { 
+    /* אפקט הילה התואם לצבע הורוד בעת מעבר עכבר */
+    box-shadow: 0 10px 25px rgba(255, 0, 160, 0.4); 
+    border-color: rgba(255, 0, 160, 0.6);
+}
+
+/* שינוי צבע הלוגו של הדיסקורד בתוך כפתור זה בלבד לורוד */
+.link-btn.discord-frag .original-logo {
+    /* פילטר שהופך את הלוגו למג'נטה/ורוד המדויק */
+    filter: brightness(0) saturate(100%) invert(27%) sepia(91%) saturate(3015%) hue-rotate(310deg) brightness(101%) contrast(103%);
+}
 
 /* Kick */
 .link-btn.kick { color: #00ff01; }
@@ -256,6 +246,9 @@ footer {
 .link-btn.kai { color: #ffcc00; }
 .link-btn.kai:hover { box-shadow: 0 10px 25px rgba(255, 204, 0, 0.4); }
 
+/* הוספת השהייה לכפתור התשיעי כדי שיכנס חלק */
+.link-btn:nth-child(9) { animation-delay: 0.9s; }
+
 /* === הגדרות לפופ-אפ (Modal) === */
 .modal-overlay {
     display: flex;
@@ -264,10 +257,11 @@ footer {
     left: 0;
     width: 100%;
     height: 100%;
+    /* רקע כהה חצי שקוף עם אפקט טשטוש */
     background-color: rgba(0, 0, 0, 0.8);
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
-    z-index: 9999;
+    z-index: 9999; /* תמיד יהיה מעל הכל */
     justify-content: center;
     align-items: center;
     opacity: 0;
@@ -275,6 +269,7 @@ footer {
     transition: opacity 0.5s ease, visibility 0.5s ease;
 }
 
+/* כשהמודעה קופצת */
 .modal-overlay.show {
     opacity: 1;
     visibility: visible;
@@ -283,9 +278,9 @@ footer {
 .modal-content {
     position: relative;
     max-width: 90%;
-    max-height: 85vh;
+    max-height: 85vh; /* מונע מהתמונה לגלוש מחוץ למסך בנייד */
     transform: scale(0.7);
-    transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* אפקט קפיצה גמיש */
 }
 
 .modal-overlay.show .modal-content {
@@ -298,9 +293,11 @@ footer {
     border-radius: 15px;
     box-shadow: 0 15px 50px rgba(0,0,0,0.6);
     display: block;
+    /* מסגרת זהובה עדינה שתתאים לעיצוב של קאי קולקטורס */
     border: 2px solid #ffcc00; 
 }
 
+/* עיצוב כפתור ה-X */
 .close-modal {
     position: absolute;
     top: -15px;
@@ -323,18 +320,31 @@ footer {
 }
 
 .close-modal:hover {
-    transform: scale(1.1) rotate(90deg);
-    background: #ff4d4d;
+    transform: scale(1.1) rotate(90deg); /* ה-X יסתובב ויגדל שעוברים עליו */
+    background: #ff4d4d; /* הופך לאדום באזהרה */
     border-color: #ff4d4d;
 }
 
-/* === התאמה לנייד === */
+/* א.ד.א */
+
+/*.link-btn.ada { color: #3182ce; }
+.link-btn.ada:hover { box-shadow: 0 10px 25px rgba(49, 130, 206, 0.3); }
+
+.link-btn.ada .original-logo {
+    transform: scale(1.15);
+    background-color: rgba(255, 255, 255, 0.1); 
+    border-radius: 50%;
+    padding: 2px;
+} */
+
+/* === התאמה לנייד - תיקון צבע הרקע === */
 @media (max-width: 1000px) {
     .side-column { 
         display: none; 
     }
     .container { 
         max-width: 100%; 
+        /* הסרנו את הרקע הכהה הקבוע כדי שהגראדיינט של ה-body ייראה */
         background-color: transparent; 
         border: none;
         backdrop-filter: none;
