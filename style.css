@@ -201,9 +201,20 @@ footer {
 .link-btn.discord { color: #5865F2; } 
 .link-btn.discord:hover { box-shadow: 0 10px 25px rgba(88, 101, 242, 0.4); }
 
-/* Discord Fragrance */
-.link-btn.discord-frag { color: #b77de4; }
-.link-btn.discord-frag:hover { box-shadow: 0 10px 25px rgba(156, 90, 200, 0.4); }
+/* Discord Fragrance - דיסקורד בשמים */
+.link-btn.discord-frag { 
+    color: #00f5d4; /* שינוי צבע הטקסט לתכלת-מנטה זוהר וייחודי */
+}
+.link-btn.discord-frag:hover { 
+    /* אפקט הילה התואם לצבע החדש בעת מעבר עכבר */
+    box-shadow: 0 10px 25px rgba(0, 245, 212, 0.4); 
+    border-color: rgba(0, 245, 212, 0.6);
+}
+/* שינוי צבע הלוגו של הדיסקורד בתוך כפתור זה בלבד */
+.link-btn.discord-frag .original-logo {
+    /* שימוש בפילטרים כדי להפוך את הלוגו הכחול המקורי לצבע המנטה החדש */
+    filter: brightness(0) saturate(100%) invert(84%) sepia(61%) saturate(2895%) corner-moding(0) hue-rotate(119deg) brightness(102%) contrast(102%);
+}
 
 /* Kick */
 .link-btn.kick { color: #00ff01; }
