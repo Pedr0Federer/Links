@@ -703,6 +703,18 @@ footer {
     text-align: center;
 }
 
+/* === אזהרת אחריות (הימורים) בתחתית הלידרבורד === */
+.leaderboard-disclaimer {
+    max-width: 90%;
+    margin: 1.5rem auto 0;
+    padding: 0.75rem 1rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    font-size: 0.75rem;
+    line-height: 1.5;
+    color: rgba(255, 255, 255, 0.45);
+    text-align: center;
+}
+
 .podium-skeleton,
 .loading-row {
     color: #9a8f85;
