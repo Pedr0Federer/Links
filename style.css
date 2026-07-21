@@ -192,6 +192,27 @@ body {
     50% { transform: translate(-50%, -50%) scale(1.06); opacity: 0.28; }
 }
 
+/* בנייד, המעגל הענק (900px) גדול בהרבה מרוחב המסך ולכן נראה כתקריב מנופח ורווי-צבע על מרכז
+   התמונה. הופכים אותו לרקע מלא-מסך ומעומעם עם שכבת האפלה כהה, בלי לגעת כלל בהתנהגות בדסקטופ */
+@media (max-width: 768px) {
+    .bg-lion-mark {
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        border-radius: 0;
+        transform: none;
+        background-image: linear-gradient(rgba(10, 10, 12, 0.85), rgba(10, 10, 12, 0.85)), url("profile.jpg");
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        opacity: 1;
+        filter: blur(2px) saturate(1.1);
+        animation: none;
+    }
+}
+
 /* === זוהר עוקב אחר העכבר === */
 .cursor-glow {
     position: fixed;
@@ -759,11 +780,12 @@ footer {
     font-weight: 800;
 }
 
-/* לוגו CSGORoll בצד השני של הבאנר - אותו אילוץ גובה בדיוק כמו .csgoroll-hero-logo כדי שהשניים
-   יהיו בגודל זהה; מרחף בעדינות כמו לוגו PF5, עם עיכוב לתחושה אורגנית */
+/* לוגו CSGORoll בצד השני של הבאנר - קובץ המקור שלו כולל הרבה שוליים שקופים מובנים (הלוגו
+   בפועל תופס רק כ-64% מגובה הקנבס, לעומת כ-92% ב-PF5.png), כך שבאותו גובה קופסה בדיוק הוא
+   עדיין נראה קטן יותר. מגדילים את הגובה בפועל כדי שהמסה הוויזואלית של שני הלוגואים תהיה שווה */
 .csgoroll-hero-roll {
-    height: 60px;
-    max-height: 60px;
+    height: 84px;
+    max-height: 84px;
     width: auto;
     object-fit: contain;
     flex-shrink: 0;
@@ -780,10 +802,15 @@ footer {
         gap: 14px;
     }
 
-    .csgoroll-hero-logo,
-    .csgoroll-hero-roll {
+    .csgoroll-hero-logo {
         height: 48px;
         max-height: 48px;
+        width: auto;
+    }
+
+    .csgoroll-hero-roll {
+        height: 68px;
+        max-height: 68px;
         width: auto;
     }
 
