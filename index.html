@@ -12,27 +12,27 @@
 
     <!-- Preload/preconnect - מתחילים להוריד את הנכסים הקריטיים (וידאו האינטרו, תמונת הפרופיל, גופן חיצוני)
          מוקדם ככל האפשר, במקביל לפרסור ה-HTML, במקום לחכות שהדפדפן יגיע אליהם בהמשך המסמך -->
-    <link rel="preload" as="video" href="intro.mp4?v=20260721-v1.1.4" type="video/mp4">
+    <link rel="preload" as="video" href="intro.mp4?v=20260721-v1.1.5" type="video/mp4">
     <link rel="preload" as="image" href="profile.jpg">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-    <link rel="stylesheet" href="style.css?v=20260721-v1.1.4">
+    <link rel="stylesheet" href="style.css?v=20260721-v1.1.5">
     <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;700;900&display=swap" rel="stylesheet">
 
     <!-- script.js נטען מוקדם עם defer - מתחיל להוריד אותו מיד (במקביל לפרסור ה-HTML) במקום להמתין
          שהפרסר יגיע לתחתית הגוף, בלי לחסום את הרינדור (defer מריץ אותו רק אחרי שה-DOM מוכן) -->
-    <script src="script.js?v=20260721-v1.1.4" defer></script>
+    <script src="script.js?v=20260721-v1.1.5" defer></script>
 </head>
 <body>
 
-    <div id="version-badge">v1.1.4</div>
+    <div id="version-badge">v1.1.5</div>
 
     <div class="intro-splash" id="introSplash" aria-hidden="true">
         <video
             class="intro-video"
             id="introVideo"
-            src="intro.mp4?v=20260721-v1.1.4"
+            src="intro.mp4?v=20260721-v1.1.5"
             muted
             playsinline
             webkit-playsinline="true"
@@ -266,9 +266,8 @@
                 if (pageLayout) {
                     pageLayout.classList.add("site-ready");
                 }
-                setTimeout(() => {
-                    modal.classList.add("show");
-                }, 700);
+                // נפתח מיידית - בלי השהיה מלאכותית אחרי שהאינטרו כבר הסתיים
+                modal.classList.add("show");
             });
 
             // סגירה בלחיצה על ה-X
