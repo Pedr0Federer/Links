@@ -275,7 +275,7 @@ h1 {
     display: flex;
     gap: 6px;
     background: rgba(255, 255, 255, 0.035);
-    border: 1px solid rgba(181, 143, 94, 0.22);
+    border: 1px solid rgba(255, 204, 51, 0.18);
     padding: 6px;
     border-radius: 999px;
     margin-bottom: 28px;
@@ -305,23 +305,23 @@ h1 {
 }
 
 .tab-btn:hover {
-    color: #34d399;
-    background: rgba(16, 185, 129, 0.08);
-    border-color: rgba(16, 185, 129, 0.35);
-    box-shadow: 0 0 16px rgba(16, 185, 129, 0.2);
+    color: #ffcc33;
+    background: rgba(255, 204, 51, 0.1);
+    border-color: rgba(255, 204, 51, 0.35);
+    box-shadow: 0 0 16px rgba(255, 204, 51, 0.25);
 }
 
 .tab-btn.active {
-    /* גרדיאנט ברונזה כהה ומעודן + זוהר פנימי + זוהר אמרלד עדין מתחת לכרטיסייה - האקורד היחיד באתר */
-    background: linear-gradient(145deg, rgba(181, 143, 94, 0.9), rgba(110, 82, 50, 0.9));
-    color: #f5f1ea;
-    font-weight: 700;
-    border-color: rgba(16, 185, 129, 0.45);
+    /* גרדיאנט זהב/כתום עשיר + זוהר פנימי + זוהר ניאון חם מתחת לכרטיסייה */
+    background: linear-gradient(145deg, #ffd966, #ff8c00);
+    color: #1a0f0a;
+    font-weight: 900;
+    border-color: rgba(255, 204, 51, 0.7);
     box-shadow:
-        inset 0 1px 0 rgba(255, 255, 255, 0.18),
-        inset 0 -3px 8px rgba(0, 0, 0, 0.3),
-        0 8px 22px rgba(0, 0, 0, 0.35),
-        0 0 22px rgba(16, 185, 129, 0.3);
+        inset 0 1px 0 rgba(255, 255, 255, 0.5),
+        inset 0 -3px 8px rgba(120, 50, 0, 0.25),
+        0 8px 22px rgba(255, 140, 0, 0.45),
+        0 0 30px rgba(255, 204, 51, 0.35);
 }
 
 /* === רשימת הקישורים === */
@@ -395,17 +395,17 @@ h1 {
 }
 
 .link-btn {
-    /* אקורד אחיד לכל הכרטיסים - ירוק אמרלד עדין, המבטא נוכחות רק ברגעי אינטראקציה (hover) */
-    --brand: 16 185 129;
-    /* בסיס ברונזה/ענבר כהה ומעודן - אחיד לכל הכרטיסים, במקום גוון ייחודי לכל מותג */
-    background: linear-gradient(145deg, rgba(46, 36, 27, 0.55) 0%, rgba(22, 16, 11, 0.5) 100%);
+    /* ברירת מחדל - זהב, למקרה של כרטיס ללא מותג ספציפי; כל כרטיס גובר על המשתנה הזה בהמשך */
+    --brand: 255 204 51;
+    /* זכוכית כהה ושקופה כדי שהרקע המונפש ייראה מבעד לכפתור */
+    background: linear-gradient(145deg, rgba(37, 26, 20, 0.45) 0%, rgba(26, 15, 10, 0.35) 100%);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
     text-decoration: none;
     padding: 14px 8px;
     border-radius: 16px;
-    /* גבול ברונזה נקי ואחיד - לא עוד זוהר ניאון צבעוני לפי מותג */
-    border: 1px solid rgba(181, 143, 94, 0.28);
+    /* גבול דק וחד בגוון המותג הספציפי של כל כרטיס */
+    border: 1px solid rgb(var(--brand) / 0.28);
     transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     /* שלושה "משבצות" קבועות - אייקון / כותרת / תגית תחתונה - כדי שכל הכרטיסים יתיישרו זה עם זה
        בלי קשר לתוכן שיש או אין להם (למשל תגית LIVE או קוד קופון) */
@@ -417,8 +417,8 @@ h1 {
     position: relative;
     min-height: 108px;
     overflow: hidden;
-    /* צל עומק + טבעת גבול חדה בברונזה עדינה */
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(181, 143, 94, 0.12);
+    /* צל עומק + טבעת גבול חדה בגוון המותג */
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.35), 0 0 0 1px rgb(var(--brand) / 0.1);
     opacity: 0;
     will-change: transform;
     /* fadeInUp מטפל בכניסה (transform), cardFloat מקבל שליטה על transform רק אחרי שהכניסה מסתיימת לכל כרטיס (ראו עיכובים למטה) */
@@ -437,21 +437,21 @@ h1 {
     50% { transform: translate3d(0, -2px, 0); }
 }
 
-/* זוהר אמביינטי ברונזה נושם מאחורי התוכן - שכבה עצמאית שלא מתנגשת עם box-shadow של מעבר עכבר */
+/* זוהר אמביינטי נושם מאחורי התוכן, בגוון המותג של כל כרטיס - שכבה עצמאית שלא מתנגשת עם box-shadow של מעבר עכבר */
 .link-btn::before {
     content: "";
     position: absolute;
     inset: 0;
     z-index: -1;
     border-radius: inherit;
-    box-shadow: inset 0 0 18px rgba(181, 143, 94, 0.08);
+    box-shadow: inset 0 0 18px rgb(var(--brand) / 0.08);
     animation: ambientPulse 4s ease-in-out infinite;
     pointer-events: none;
 }
 
 @keyframes ambientPulse {
-    0%, 100% { box-shadow: inset 0 0 16px rgba(181, 143, 94, 0.06); }
-    50% { box-shadow: inset 0 0 30px rgba(181, 143, 94, 0.22); }
+    0%, 100% { box-shadow: inset 0 0 16px rgb(var(--brand) / 0.06); }
+    50% { box-shadow: inset 0 0 30px rgb(var(--brand) / 0.24); }
 }
 
 .link-btn:nth-child(3n+1)::before { animation-delay: 0s; }
@@ -522,9 +522,9 @@ h1 {
 }
 
 .link-btn:hover .icon {
-    /* קפיצה עדינה של האייקון + נגיעת זוהר אמרלד עדינה - האקורד היחיד באתר, אחיד לכל הלוגואים */
+    /* קפיצה עדינה של האייקון + זוהר בצבע המותג (currentColor מגיע מצבע הקישור הספציפי) */
     animation: iconBounce 0.55s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
-    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3)) drop-shadow(0 0 9px rgb(var(--brand)));
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3)) drop-shadow(0 0 10px currentColor);
 }
 
 @keyframes iconBounce {
@@ -550,14 +550,13 @@ h1 {
     justify-content: center;
     text-align: center;
     min-height: 2.6em;
-    /* טקסט כותרת נקי בלבן/אפור בהיר - ניגודיות גבוהה על בסיס הברונזה הכהה */
-    color: #edeae5;
+    /* צל לטקסט בתוך הכפתור */
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 .main-text {
     font-size: 1.15rem;
-    font-weight: 700;
+    font-weight: 900;
     line-height: 1.3;
 }
 
@@ -569,20 +568,20 @@ h1 {
     min-height: 24px;
 }
 
-/* שורת קוד קופון - תגית ברונזה עדינה, עקבית עם הפלטה החדשה (לא עוד זהב בוהק) */
+/* שורת קוד קופון - כל המשפט מודגש/זוהר באופן אחיד, לא רק הקוד עצמו */
 .sub-text {
     display: inline-flex;
     align-items: center;
     padding: 3px 12px;
     border-radius: 999px;
-    background: linear-gradient(145deg, rgba(181, 143, 94, 0.28), rgba(120, 90, 55, 0.2));
-    border: 1px solid rgba(181, 143, 94, 0.5);
-    color: #f0e9df;
+    background: linear-gradient(145deg, rgba(255, 204, 51, 0.28), rgba(255, 140, 0, 0.18));
+    border: 1px solid rgba(255, 204, 51, 0.55);
+    color: #ffcc33;
     font-size: 0.72rem;
-    font-weight: 700;
+    font-weight: 900;
     letter-spacing: 0.3px;
     text-shadow: none;
-    box-shadow: 0 0 10px rgba(181, 143, 94, 0.25);
+    box-shadow: 0 0 10px rgba(255, 204, 51, 0.3);
 }
 
 footer {
@@ -592,18 +591,25 @@ footer {
     text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
 }
 
-/* פלטת "Dark Mode" ברונזה אחידה - כל הכרטיסים חולקים אותו --brand (אמרלד) שהוגדר ב-.link-btn;
-   נשארו כאן רק ההתאמות שבאמת ייחודיות ללוגו הספציפי (לא צבע כרטיס/הילה) */
+/* צבעי המותג של כל כרטיס נקבעים דרך --brand (rgb triplet); הגבול, הזוהר האמביינטי, קרן האור וה-hover כולם נגזרים ממנו אוטומטית */
 
-/* Discord Fragrance - דיסקורד בשמים: הלוגו נשאר ורוד כדי להבדיל בבירור מהדיסקורד הראשי */
+/* Discord */
+.link-btn.discord { --brand: 88 101 242; color: #5865F2; }
+
+/* Discord Fragrance - דיסקורד בשמים */
+.link-btn.discord-frag {
+    --brand: 255 0 160;
+    color: #ff00a0; /* צבע טקסט ורוד פוקסיה זוהר */
+}
+
+/* שינוי צבע הלוגו של הדיסקורד בתוך כפתור זה בלבד לורוד */
 .link-btn.discord-frag .original-logo {
+    /* פילטר שהופך את הלוגו למג'נטה/ורוד המדויק */
     filter: brightness(0) saturate(100%) invert(27%) sepia(91%) saturate(3015%) hue-rotate(310deg) brightness(101%) contrast(103%);
 }
 
-/* Kick - נגיעה עדינה שמקרבת את הירוק הבוהק המקורי של הלוגו לגוון האמרלד המעודן של האתר */
-.link-btn.kick .original-logo {
-    filter: saturate(0.8) brightness(0.95) hue-rotate(6deg);
-}
+/* Kick */
+.link-btn.kick { --brand: 0 255 1; color: #00ff01; }
 
 /* === תגית סטטוס שידור חי (Kick) === */
 .live-pill {
@@ -630,16 +636,15 @@ footer {
     display: inline-block;
 }
 
-/* מצב "חי" - האקורד האמרלד היחיד באתר, כאן על הנקודה והטקסט */
 .live-pill.live {
-    color: #34d399;
-    border-color: rgba(16, 185, 129, 0.4);
-    background: rgba(16, 185, 129, 0.1);
+    color: #00ff66;
+    border-color: rgba(0, 255, 102, 0.4);
+    background: rgba(0, 255, 102, 0.08);
 }
 
 .live-pill.live .dot {
-    background: #34d399;
-    box-shadow: 0 0 8px rgba(16, 185, 129, 0.9);
+    background: #00ff66;
+    box-shadow: 0 0 8px rgba(0, 255, 102, 0.9);
     animation: dotPulse 1.4s ease-in-out infinite;
 }
 
@@ -647,6 +652,24 @@ footer {
     0%, 100% { opacity: 1; transform: scale(1); }
     50% { opacity: 0.5; transform: scale(1.3); }
 }
+
+/* YouTube */
+.link-btn.youtube { --brand: 255 77 77; color: #ff4d4d; }
+
+/* TikTok */
+.link-btn.tiktok { --brand: 0 242 234; color: #00f2ea; }
+
+/* Instagram */
+.link-btn.instagram { --brand: 131 58 180; color: #833AB4; }
+
+/* Reddit */
+.link-btn.reddit { --brand: 255 110 46; color: #ff8b57; }
+
+/* כלבו יהודה */
+.link-btn.shop-black { --brand: 255 255 255; color: #ffffff; }
+
+/* קאי קולקטורס */
+.link-btn.kai { --brand: 255 204 0; color: #ffcc00; }
 
 /* === לידרבורד (CODES & LEADERBOARDS) === */
 .leaderboard {
