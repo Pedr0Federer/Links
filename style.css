@@ -18,6 +18,9 @@ body {
 }
 
 /* === מסך פתיחה - וידאו אינטרו (Intro Splash) === */
+/* ברירת המחדל היא מוסתר ולא-חוסם לחלוטין (opacity:0 + pointer-events:none),
+   כך שהאתר הראשי תמיד מוצג וניתן ללחיצה מיידית מהרגע הראשון - גם אם ה-JS נכשל לגמרי.
+   האוברליי נחשף ע"י script.js אך ורק אחרי אירוע canplay/playing מאומת מהסרטון עצמו. */
 .intro-splash {
     position: fixed;
     inset: 0;
@@ -26,13 +29,14 @@ body {
     align-items: center;
     justify-content: center;
     background: radial-gradient(circle at center, #140d08 0%, #05070a 65%, #020304 100%);
-    opacity: 1;
-    transition: opacity 0.6s ease;
-}
-
-.intro-splash.intro-hidden {
     opacity: 0;
     pointer-events: none;
+    transition: opacity 0.5s ease;
+}
+
+.intro-splash.intro-visible {
+    opacity: 1;
+    pointer-events: auto;
 }
 
 /* וידאו האינטרו - מכסה את כל המסך (fullscreen), ללא "תיבה" קטנה במרכז; פילטרים מחדדים ומעצימים צבע */

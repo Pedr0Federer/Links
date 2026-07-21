@@ -16,17 +16,18 @@
 <body>
 
     <div class="intro-splash" id="introSplash" aria-hidden="true">
-        <video
-            class="intro-video"
-            id="introVideo"
-            src="Timeline%201.mp4"
-            muted
-            playsinline
-            autoplay
-            preload="auto"
-        ></video>
+        <video id="introVideo" class="intro-video" autoplay muted playsinline preload="auto" src="intro.mp4"></video>
         <button type="button" class="intro-skip-btn" id="introSkipBtn">Skip · קפוץ לאתר</button>
     </div>
+
+    <script src="script.js"></script>
+    <script>
+        // מתחילים את רצף האינטרו מוקדם ככל האפשר - מיד אחרי שהאלמנטים עצמם קיימים ב-DOM,
+        // בלי להמתין ל-DOMContentLoaded/window.onload של שאר הדף (שעדיין גדול וממשיך להיטען מתחת)
+        window.introSplashPromise = (typeof window.playIntroSplash === "function")
+            ? window.playIntroSplash()
+            : Promise.resolve();
+    </script>
 
     <canvas id="particles-bg"></canvas>
     <div class="glow-orb glow-orb-1"></div>
@@ -208,14 +209,14 @@
         </div>
     </div>
 
-    <script src="script.js"></script>
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             const modal = document.getElementById("promoModal");
             const closeBtn = document.getElementById("closeModalBtn");
 
-            // הפופ-אפ יופיע רק אחרי שמסך הפתיחה (script.js) נעלם לגמרי והאתר הראשי נחשף במלואו
-            window.playIntroSplash().then(() => {
+            // הפופ-אפ יופיע רק אחרי שמסך הפתיחה נעלם לגמרי והאתר הראשי נחשף במלואו.
+            // הרצף עצמו כבר הותחל מוקדם יותר (מיד אחרי אלמנט הווידאו) - כאן רק ממתינים לו.
+            window.introSplashPromise.then(() => {
                 setTimeout(() => {
                     modal.classList.add("show");
                 }, 1000);

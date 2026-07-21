@@ -1,52 +1,98 @@
 // === מסך פתיחה - וידאו אינטרו (Intro Splash) ===
+// עיצוב "fail-proof": האוברליי מוסתר כברירת מחדל דרך CSS (ר' style.css), ונחשף ע"י הקוד כאן
+// אך ורק אחרי שהסרטון מוכיח בפועל שהוא מתנגן (canplay/playing). הפונקציה נקראת מוקדם ככל האפשר
+// - מיד אחרי אלמנט הווידאו ב-index.html - ולא ממתינה ל-DOMContentLoaded/window.onload של שאר הדף.
 (function () {
     "use strict";
 
-    const INTRO_FAILSAFE_MS = 4500; // רשת ביטחון קשיחה - קריטי בהוסטינג כמו GitHub Pages: לעולם לא נתקעים על מסך שחור
-    const INTRO_FADE_MS = 600;      // משך דעיכת שכבת הפתיחה (תואם ל-transition ב-CSS)
+    const INTRO_SAFETY_MS = 5000; // טיימר ביטחון מוחלט - מכסה גם "לא התחיל בכלל" וגם "נתקע באמצע"
+    const INTRO_FADE_MS = 550;    // תואם למשך ה-transition ב-CSS
 
     function playIntroSplash() {
         return new Promise((resolve) => {
             const introEl = document.getElementById("introSplash");
             const videoEl = document.getElementById("introVideo");
             const skipBtn = document.getElementById("introSkipBtn");
+
             if (!introEl) { resolve(); return; }
 
             let finished = false;
-            let failsafeTimer = null;
+            let started = false;
+            let safetyTimer = null;
 
             function finishIntro() {
                 if (finished) return;
                 finished = true;
-                if (failsafeTimer) clearTimeout(failsafeTimer);
-                // דעיכה חלקה של שכבת הפתיחה, ואז הסרה מלאה מה-DOM כדי שלא תחסום קליקים.
-                // משתמשים בטיימר קבוע (לא ב-transitionend) כדי שהסרה תמיד תקרה גם אם ה-transition לא רץ מסיבה כלשהי.
-                introEl.classList.add("intro-hidden");
+                if (safetyTimer) clearTimeout(safetyTimer);
+                introEl.classList.remove("intro-visible");
+                // אם האוברליי מעולם לא הוצג בפועל - מסירים מיידית, בלי להמתין לדעיכה שלא קיימת
                 setTimeout(() => {
                     introEl.remove();
                     resolve();
-                }, INTRO_FADE_MS);
+                }, started ? INTRO_FADE_MS : 0);
             }
 
-            // רשת ביטחון קשיחה - לכל היותר 4.5 שניות, לא משנה מה קורה עם הסרטון (שגיאת רשת, autoplay חסום וכו')
-            failsafeTimer = setTimeout(finishIntro, INTRO_FAILSAFE_MS);
+            function revealIntro() {
+                if (finished || started) return;
+                started = true;
+                console.log("[intro] confirmed playback (canplay/playing) - revealing overlay");
+                introEl.classList.add("intro-visible");
+            }
 
-            // כפתור "דלג" - מאפשר למשתמש לחשוף את האתר מיידית אם הטעינה מתעכבת
+            // טיימר ביטחון מוחלט - יחיד, מכסה כל תרחיש (הדפדפן חוסם autoplay, קובץ נכשל, ניגון נתקע וכו')
+            safetyTimer = setTimeout(function () {
+                console.log("[intro] absolute 5s safety timer reached - clearing overlay");
+                finishIntro();
+            }, INTRO_SAFETY_MS);
+
             if (skipBtn) {
                 skipBtn.addEventListener("click", finishIntro);
             }
 
             if (!videoEl) { return; }
 
-            videoEl.addEventListener("ended", finishIntro);
-            videoEl.addEventListener("error", finishIntro);
-            videoEl.addEventListener("stalled", finishIntro);
+            videoEl.addEventListener("canplay", revealIntro);
+            videoEl.addEventListener("playing", revealIntro);
 
-            // אכיפה מפורשת של muted לפני play(), כדי לעמוד במדיניות ה-autoplay של הדפדפנים גם אם המאפיין בתגית לא נקלט
+            // מעבר מיידי ברגע שהסרטון נגמר - בלי המתנה נוספת
+            videoEl.addEventListener("ended", function () {
+                console.log("[intro] video ended event fired");
+                finishIntro();
+            });
+
+            videoEl.addEventListener("error", function (e) {
+                console.log("[intro] video error event fired", videoEl.error, e);
+                finishIntro();
+            });
+
+            videoEl.addEventListener("stalled", function () {
+                console.log("[intro] video stalled event fired");
+                finishIntro();
+            });
+
+            // אכיפה מפורשת - גם muted וגם defaultMuted - לפני קריאה ל-play(), כדי לעמוד במדיניות ה-autoplay
             videoEl.muted = true;
-            const playPromise = videoEl.play();
+            videoEl.defaultMuted = true;
+
+            let playPromise;
+            try {
+                playPromise = videoEl.play();
+                console.log("[intro] video.play() called");
+            } catch (err) {
+                console.log("[intro] video.play() threw synchronously", err);
+                finishIntro();
+                return;
+            }
+
             if (playPromise && typeof playPromise.catch === "function") {
-                playPromise.catch(finishIntro);
+                playPromise
+                    .then(function () {
+                        console.log("[intro] play() promise resolved");
+                    })
+                    .catch(function (err) {
+                        console.log("[intro] play() promise rejected", err);
+                        finishIntro();
+                    });
             }
         });
     }
