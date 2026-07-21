@@ -202,11 +202,15 @@ body {
         height: 100vh;
         border-radius: 0;
         transform: none;
-        background-image: linear-gradient(rgba(10, 10, 12, 0.85), rgba(10, 10, 12, 0.85)), url("profile.jpg");
+        /* z-index נמוך יותר מהחלקיקים וכתמי הזוהר (שנשארים ב--1) - כדי שהם יישארו גלויים
+           מעליו ולא יוסתרו ע"י הרקע המלא-מסך החדש (זה לא קרה לפני כן כי המעגל היה קטן מדי) */
+        z-index: -2;
+        background-image: linear-gradient(rgba(10, 10, 12, 0.88), rgba(10, 10, 12, 0.88)), url("profile.jpg");
         background-size: cover;
-        background-position: center;
+        background-position: center top;
         background-repeat: no-repeat;
-        background-attachment: fixed;
+        /* background-attachment:fixed מיותר כאן (האלמנט כבר position:fixed) ובנוסף ידוע
+           כגורם לבאגים ב-iOS Safari על אלמנטים fixed - מוסר בכוונה */
         opacity: 1;
         filter: blur(2px) saturate(1.1);
         animation: none;
@@ -796,28 +800,37 @@ footer {
 }
 
 @media (max-width: 768px) {
+    /* שורה אופקית אחת - בדיוק כמו בדסקטופ - עם שני הלוגואים המשקפים משני צידי הכותרת,
+       לא ערימה אנכית. הכותרת עצמה עדיין יכולה לגלוש לכמה שורות פנימיות (white-space: normal) */
     .csgoroll-hero {
-        flex-direction: column;
-        padding: 18px 16px;
-        gap: 14px;
+        display: flex;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        justify-content: center;
+        align-items: center;
+        align-content: center;
+        padding: 12px 10px;
+        gap: 8px;
     }
 
     .csgoroll-hero-logo {
+        height: 40px;
+        max-height: 40px;
+        width: auto;
+    }
+
+    .csgoroll-hero-roll {
         height: 48px;
         max-height: 48px;
         width: auto;
     }
 
-    .csgoroll-hero-roll {
-        height: 68px;
-        max-height: 68px;
-        width: auto;
-    }
-
     .csgoroll-hero-title {
-        font-size: 0.95rem;
+        font-size: 0.72rem;
+        letter-spacing: 0.8px;
         white-space: normal;
         text-align: center;
+        min-width: 0;
     }
 }
 
