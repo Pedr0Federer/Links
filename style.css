@@ -693,6 +693,78 @@ footer {
     to { --border-angle: 360deg; }
 }
 
+/* === כותרת CSGORoll + קוד קופון PF5, מעל הפודיום === */
+.csgoroll-header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    opacity: 0;
+    animation: fadeInUp 0.6s ease-out 0.1s forwards;
+}
+
+.csgoroll-title-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 8px 18px;
+    border-radius: 999px;
+    background: linear-gradient(135deg, rgba(255, 153, 0, 0.18), rgba(255, 204, 51, 0.08));
+    border: 1px solid rgba(255, 204, 51, 0.4);
+    box-shadow: 0 0 20px rgba(255, 153, 0, 0.22);
+}
+
+.csgoroll-title-text {
+    background: linear-gradient(90deg, #ffcc33, #ff8c00);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-weight: 900;
+    font-size: 0.82rem;
+    letter-spacing: 1.4px;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+
+.csgoroll-code-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 18px;
+    border-radius: 999px;
+    background: rgba(0, 255, 102, 0.1);
+    border: 1px solid rgba(0, 255, 102, 0.4);
+    box-shadow: 0 0 16px rgba(0, 255, 102, 0.25);
+    white-space: nowrap;
+}
+
+.csgoroll-code-label {
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.6px;
+    text-transform: uppercase;
+    color: #cbd5e0;
+}
+
+.csgoroll-code-value {
+    font-size: 0.92rem;
+    font-weight: 900;
+    letter-spacing: 1px;
+    color: #00ff66;
+    text-shadow: 0 0 10px rgba(0, 255, 102, 0.6);
+}
+
+@media (max-width: 480px) {
+    .csgoroll-title-text {
+        font-size: 0.72rem;
+        letter-spacing: 1px;
+    }
+
+    .csgoroll-title-badge,
+    .csgoroll-code-badge {
+        padding: 7px 14px;
+    }
+}
+
 .leaderboard-podium {
     display: flex;
     align-items: flex-end;
