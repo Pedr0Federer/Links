@@ -7,13 +7,117 @@
 }
 
 body {
-    /* צהוב זהב (Gold), כתום שרוף (Burnt Orange), וחום-שוקולד כהה לבסיס */
-    background: linear-gradient(-45deg, #ffcc33, #ff8c00, #8b4513, #0a0a0a);
-    background-size: 400% 400%;
-    animation: gradientBG 15s ease infinite;
+    /* בסיס כהה וסטייליש שעליו יושבים אפקטי הזוהר והחלקיקים */
+    background: #05070a;
     color: #ffffff;
     min-height: 100vh;
     overflow-x: hidden;
+    position: relative;
+    scrollbar-width: thin;
+    scrollbar-color: #ff9900 #0a0a0a;
+}
+
+/* === מסך פתיחה - וידאו אינטרו (Intro Splash) === */
+.intro-splash {
+    position: fixed;
+    inset: 0;
+    z-index: 100000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: radial-gradient(circle at center, #140d08 0%, #05070a 65%, #020304 100%);
+    opacity: 1;
+    transition: opacity 0.6s ease;
+}
+
+.intro-splash.intro-hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* וידאו האינטרו - מכסה את כל המסך (fullscreen), ללא "תיבה" קטנה במרכז; פילטרים מחדדים ומעצימים צבע */
+.intro-video {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 100001;
+    display: block;
+    width: 100vw;
+    height: 100vh;
+    object-fit: cover;
+    object-position: center;
+    background: #000;
+    filter: contrast(1.08) brightness(1.05) saturate(1.1);
+    opacity: 0;
+    animation: introVideoIn 0.5s ease-out forwards;
+}
+
+@keyframes introVideoIn {
+    to { opacity: 1; }
+}
+
+/* === פסי גלילה בעיצוב מותאם לצבעי האתר === */
+::-webkit-scrollbar {
+    width: 12px;
+    height: 12px;
+}
+
+::-webkit-scrollbar-track {
+    background: #0a0a0a;
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: linear-gradient(135deg, #ff9900, #ff5500);
+    border-radius: 10px;
+    border: 2px solid #0a0a0a;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(135deg, #ffcc33, #ff9900);
+}
+
+/* === רקע חלקיקים מונפש === */
+#particles-bg {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    pointer-events: none;
+}
+
+/* === כתמי זוהר עדינים בגוון הלוגו (זהב/כתום) === */
+.glow-orb {
+    position: fixed;
+    border-radius: 50%;
+    filter: blur(120px);
+    opacity: 0.28;
+    z-index: -1;
+    pointer-events: none;
+    animation: orbFloat 14s ease-in-out infinite;
+}
+
+.glow-orb-1 {
+    width: 480px;
+    height: 480px;
+    background: #ff8c00;
+    top: -120px;
+    left: -120px;
+}
+
+.glow-orb-2 {
+    width: 560px;
+    height: 560px;
+    background: #ffcc33;
+    bottom: -160px;
+    right: -160px;
+    animation-delay: -7s;
+}
+
+@keyframes orbFloat {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    50% { transform: translate(40px, -30px) scale(1.15); }
 }
 
 /* === אנימציית כניסה === */
@@ -36,29 +140,60 @@ body {
     min-height: 100vh;
 }
 
-.side-column {
-    flex: 1;
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    position: sticky;
-    top: 0;
+/* === סימן הלוגו הענק ברקע (אריה/נמר שואג) === */
+.bg-lion-mark {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    width: 900px;
+    height: 900px;
+    background-image: url("profile.jpg");
+    background-size: cover;
+    background-position: center;
+    border-radius: 50%;
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 0.18;
+    filter: blur(1px) saturate(1.7);
+    z-index: -1;
+    pointer-events: none;
+    animation: lionBreathe 10s ease-in-out infinite;
 }
 
-.side-column img {
-    height: 100%;
-    width: 100%;
-    object-fit: cover;
-    display: block;
+@keyframes lionBreathe {
+    0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.18; }
+    50% { transform: translate(-50%, -50%) scale(1.06); opacity: 0.28; }
+}
+
+/* === זוהר עוקב אחר העכבר === */
+.cursor-glow {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 260px;
+    height: 260px;
+    margin-left: -130px;
+    margin-top: -130px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255, 204, 51, 0.16) 0%, rgba(255, 140, 0, 0.08) 45%, rgba(255, 140, 0, 0) 75%);
+    z-index: -1;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    will-change: transform;
+}
+
+@media (max-width: 1000px) {
+    .cursor-glow {
+        display: none;
+    }
 }
 
 /* === הקונטיינר המרכזי - אפקט זכוכית משודרג === */
 .container {
     width: 100%;
-    max-width: 550px;
+    max-width: 1100px;
     text-align: center;
-    padding: 50px 20px;
+    padding: 60px 50px;
     z-index: 10;
     /* רקע זכוכית מעט בהיר יותר */
     background-color: rgba(255, 255, 255, 0.03);
@@ -75,6 +210,19 @@ header {
     animation: fadeInUp 0.8s ease-out forwards;
 }
 
+.profile-link {
+    position: relative;
+    display: inline-block;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: transform 0.3s ease-in-out;
+}
+
+.profile-link:hover,
+.profile-link:focus-visible {
+    transform: scale(1.08);
+}
+
 .profile-img {
     width: 120px;
     height: 120px;
@@ -83,8 +231,16 @@ header {
     /* שינוי מ-1d4ed8 לכחול, לגוון זהב עמוק */
     border: 3px solid #f1a403;
     margin-bottom: 15px;
-    /* הוספת הילה עדינה שמתאימה ללהבות */
+    display: block;
     box-shadow: 0 0 20px rgba(241, 164, 3, 0.4);
+    transition: box-shadow 0.3s ease-in-out, border-color 0.3s ease-in-out, filter 0.3s ease-in-out;
+}
+
+.profile-link:hover .profile-img,
+.profile-link:focus-visible .profile-img {
+    border-color: #ffcc33;
+    box-shadow: 0 0 30px rgba(255, 204, 51, 0.55);
+    filter: drop-shadow(0 0 14px rgba(255, 204, 51, 0.5));
 }
 
 h1 {
@@ -106,62 +262,266 @@ h1 {
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
+/* === ניווט טאבים (Home / Codes & Leaderboards) === */
+.tabs-nav {
+    display: flex;
+    gap: 6px;
+    background: rgba(255, 255, 255, 0.035);
+    border: 1px solid rgba(255, 204, 51, 0.18);
+    padding: 6px;
+    border-radius: 999px;
+    margin-bottom: 28px;
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    /* עומק לעטיפה החיצונית + הבהרה עדינה בקצה העליון לתחושת זכוכית */
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+.tab-btn {
+    flex: 1;
+    /* זכוכית מכוסת קרה לכרטיסייה הלא-פעילה */
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.07);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    color: #9a8f85;
+    font-family: inherit;
+    font-weight: 800;
+    font-size: 0.78rem;
+    letter-spacing: 0.3px;
+    padding: 12px 8px;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: all 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    white-space: nowrap;
+}
+
+.tab-btn:hover {
+    color: #ffcc33;
+    background: rgba(255, 204, 51, 0.1);
+    border-color: rgba(255, 204, 51, 0.35);
+    box-shadow: 0 0 16px rgba(255, 204, 51, 0.25);
+}
+
+.tab-btn.active {
+    /* גרדיאנט זהב/כתום עשיר + זוהר פנימי + זוהר ניאון חם מתחת לכרטיסייה */
+    background: linear-gradient(145deg, #ffd966, #ff8c00);
+    color: #1a0f0a;
+    font-weight: 900;
+    border-color: rgba(255, 204, 51, 0.7);
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.5),
+        inset 0 -3px 8px rgba(120, 50, 0, 0.25),
+        0 8px 22px rgba(255, 140, 0, 0.45),
+        0 0 30px rgba(255, 204, 51, 0.35);
+}
+
 /* === רשימת הקישורים === */
 .links-container {
-    display: flex;
+    position: relative;
+}
+
+.tab-panel {
+    display: none;
     flex-direction: column;
     gap: 16px;
 }
 
+.tab-panel.active {
+    display: flex;
+}
+
+/* === רשת קישורים לטאב הבית === */
+#tab-home.tab-panel.active {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+}
+
+@media (max-width: 640px) {
+    #tab-home.tab-panel.active {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 380px) {
+    #tab-home.tab-panel.active {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (min-width: 993px) {
+    #tab-home.tab-panel.active {
+        gap: 22px;
+    }
+
+    .link-btn {
+        min-height: 150px;
+        padding: 24px 16px;
+    }
+
+    .icon {
+        width: 56px;
+        height: 56px;
+    }
+
+    /* מקורות התמונה של Reddit ו-PFKAY כוללות שוליים שקופים/תוכן נוסף מובנה בקובץ,
+       כך שבאותה תיבת אייקון הן נראות קטנות יותר מהלוגואים האחרים - מגדילים את התיבה שלהן לאיזון ויזואלי */
+    .link-btn.reddit .icon {
+        width: 74px;
+        height: 74px;
+    }
+
+    .link-btn.kai .icon {
+        width: 84px;
+        height: 84px;
+    }
+
+    .main-text {
+        font-size: 1.15rem;
+    }
+
+    .leaderboard-podium {
+        gap: 24px;
+    }
+}
+
 .link-btn {
-    /* שינוי לגוון חום-פחם עמוק שמתאים ללהבות */
-    background: linear-gradient(145deg, #251a14 0%, #1a0f0a 100%);
+    /* ברירת מחדל - זהב, למקרה של כרטיס ללא מותג ספציפי; כל כרטיס גובר על המשתנה הזה בהמשך */
+    --brand: 255 204 51;
+    /* זכוכית כהה ושקופה כדי שהרקע המונפש ייראה מבעד לכפתור */
+    background: linear-gradient(145deg, rgba(37, 26, 20, 0.45) 0%, rgba(26, 15, 10, 0.35) 100%);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
     text-decoration: none;
-    padding: 20px;
+    padding: 18px 10px;
     border-radius: 16px;
-    /* גבול עדין בזהב עמום */
-    border: 1px solid rgba(255, 204, 51, 0.15);
+    /* גבול דק וחד בגוון המותג הספציפי של כל כרטיס */
+    border: 1px solid rgb(var(--brand) / 0.28);
     transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
+    gap: 8px;
     position: relative;
-    min-height: 70px;
+    min-height: 130px;
     overflow: hidden;
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
+    /* צל עומק + טבעת גבול חדה בגוון המותג */
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.35), 0 0 0 1px rgb(var(--brand) / 0.1);
     opacity: 0;
-    animation: fadeInUp 0.6s ease-out forwards;
+    will-change: transform;
+    /* fadeInUp מטפל בכניסה (transform), cardFloat מקבל שליטה על transform רק אחרי שהכניסה מסתיימת לכל כרטיס (ראו עיכובים למטה) */
+    animation: fadeInUp 0.6s ease-out forwards, cardFloat 11s ease-in-out infinite;
+}
+
+/* ריחוף עדין ומתמשך - "נשימה" שקטה ואיטית של הכרטיס (הזזה מינימלית, GPU-friendly) */
+@keyframes cardFloat {
+    0%, 100% { transform: translate3d(0, 0, 0); }
+    50% { transform: translate3d(0, -2px, 0); }
+}
+
+/* ריחוף כללי לשימוש חוזר - טיימר, טבלת הלידרבורד ומכולות נוספות */
+@keyframes float {
+    0%, 100% { transform: translate3d(0, 0, 0); }
+    50% { transform: translate3d(0, -2px, 0); }
+}
+
+/* זוהר אמביינטי נושם מאחורי התוכן, בגוון המותג של כל כרטיס - שכבה עצמאית שלא מתנגשת עם box-shadow של מעבר עכבר */
+.link-btn::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    border-radius: inherit;
+    box-shadow: inset 0 0 18px rgb(var(--brand) / 0.08);
+    animation: ambientPulse 4s ease-in-out infinite;
+    pointer-events: none;
+}
+
+@keyframes ambientPulse {
+    0%, 100% { box-shadow: inset 0 0 16px rgb(var(--brand) / 0.06); }
+    50% { box-shadow: inset 0 0 30px rgb(var(--brand) / 0.24); }
+}
+
+.link-btn:nth-child(3n+1)::before { animation-delay: 0s; }
+.link-btn:nth-child(3n+2)::before { animation-delay: 1.3s; }
+.link-btn:nth-child(3n)::before { animation-delay: 2.6s; }
+
+/* קרן אור אלכסונית שחולפת על פני הכרטיס במעבר עכבר */
+.link-btn::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -60%;
+    width: 45%;
+    height: 100%;
+    background: linear-gradient(120deg, transparent, rgba(255, 255, 255, 0.16), rgb(var(--brand) / 0.45), transparent);
+    transform: skewX(-20deg);
+    transition: left 0.7s ease;
+    pointer-events: none;
+    z-index: 2;
+}
+
+.link-btn:hover::after {
+    left: 130%;
 }
 
 .link-btn:hover {
-    transform: translateY(-8px) scale(1.02);
+    /* important כדי לנצח את אנימציית cardFloat הפעילה שמחזיקה ב-transform */
+    transform: translateY(-8px) scale(1.045) !important;
     /* במעבר עכבר - הגוון נהיה מעט יותר חם */
-    background: linear-gradient(145deg, #35261d 0%, #251a14 100%);
-    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.6);
-    border-color: rgba(255, 204, 51, 0.4);
+    background: linear-gradient(145deg, rgba(53, 38, 29, 0.55) 0%, rgba(37, 26, 20, 0.45) 100%);
+    /* עומק כהה + זוהר בגוון המותג יחד, לתחושת "hover depth" עשירה */
+    box-shadow: 0 20px 45px rgba(0, 0, 0, 0.45), 0 0 28px rgb(var(--brand) / 0.4);
+    border-color: rgb(var(--brand) / 0.6);
 }
 
-/* השהייה הדרגתית לכניסת הכפתורים */
-.link-btn:nth-child(1) { animation-delay: 0.1s; }
-.link-btn:nth-child(2) { animation-delay: 0.2s; }
-.link-btn:nth-child(3) { animation-delay: 0.3s; }
-.link-btn:nth-child(4) { animation-delay: 0.4s; }
-.link-btn:nth-child(5) { animation-delay: 0.5s; }
-.link-btn:nth-child(6) { animation-delay: 0.6s; }
-.link-btn:nth-child(7) { animation-delay: 0.7s; }
-.link-btn:nth-child(8) { animation-delay: 0.8s; }
-/*.link-btn:nth-child(9) { animation-delay: 0.9s; }*/
+/* השהייה הדרגתית לכניסת הכפתורים, ואחריה תחילת הריחוף האיטי לכל כרטיס בעיכוב מפוזר וטבעי */
+.link-btn:nth-child(1) { animation-delay: 0.1s, 0.7s; }
+.link-btn:nth-child(2) { animation-delay: 0.2s, 1.1s; }
+.link-btn:nth-child(3) { animation-delay: 0.3s, 1.5s; }
+.link-btn:nth-child(4) { animation-delay: 0.4s, 1.9s; }
+.link-btn:nth-child(5) { animation-delay: 0.5s, 2.3s; }
+.link-btn:nth-child(6) { animation-delay: 0.6s, 2.7s; }
+.link-btn:nth-child(7) { animation-delay: 0.7s, 3.1s; }
+.link-btn:nth-child(8) { animation-delay: 0.8s, 3.5s; }
+.link-btn:nth-child(9) { animation-delay: 0.9s, 3.9s; }
 
 .icon {
-    position: absolute;
-    right: 20px;
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 45px; 
-    height: 45px;
+    width: 48px;
+    height: 48px;
     /* צל קטן לאייקון */
     filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+    transition: transform 0.3s ease;
+}
+
+/* מקורות התמונה של Reddit ו-PFKAY כוללות שוליים שקופים/תוכן נוסף מובנה בקובץ,
+   כך שבאותה תיבת אייקון הן נראות קטנות יותר מהלוגואים האחרים - מגדילים את התיבה שלהן לאיזון ויזואלי */
+.link-btn.reddit .icon {
+    width: 64px;
+    height: 64px;
+}
+
+.link-btn.kai .icon {
+    width: 72px;
+    height: 72px;
+}
+
+.link-btn:hover .icon {
+    /* קפיצה עדינה של האייקון + זוהר בצבע המותג (currentColor מגיע מצבע הקישור הספציפי) */
+    animation: iconBounce 0.55s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3)) drop-shadow(0 0 10px currentColor);
+}
+
+@keyframes iconBounce {
+    0% { transform: scale(1) rotate(0deg); }
+    45% { transform: scale(1.32) rotate(-8deg); }
+    70% { transform: scale(1.05) rotate(2deg); }
+    100% { transform: scale(1.15) rotate(-3deg); }
 }
 
 .original-logo {
@@ -175,19 +535,31 @@ h1 {
     display: flex;
     flex-direction: column;
     align-items: center;
+    text-align: center;
     /* צל לטקסט בתוך הכפתור */
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 .main-text {
-    font-size: 1.15rem;
-    font-weight: 800;
+    font-size: 1.05rem;
+    font-weight: 900;
 }
 
+/* שורת קוד קופון - כל המשפט מודגש/זוהר באופן אחיד, לא רק הקוד עצמו */
 .sub-text {
-    font-size: 0.8rem;
-    margin-top: 4px;
-    opacity: 0.85;
+    display: inline-flex;
+    align-items: center;
+    margin-top: 6px;
+    padding: 3px 12px;
+    border-radius: 999px;
+    background: linear-gradient(145deg, rgba(255, 204, 51, 0.28), rgba(255, 140, 0, 0.18));
+    border: 1px solid rgba(255, 204, 51, 0.55);
+    color: #ffcc33;
+    font-size: 0.72rem;
+    font-weight: 900;
+    letter-spacing: 0.3px;
+    text-shadow: none;
+    box-shadow: 0 0 10px rgba(255, 204, 51, 0.3);
 }
 
 footer {
@@ -197,19 +569,15 @@ footer {
     text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
 }
 
+/* צבעי המותג של כל כרטיס נקבעים דרך --brand (rgb triplet); הגבול, הזוהר האמביינטי, קרן האור וה-hover כולם נגזרים ממנו אוטומטית */
+
 /* Discord */
-.link-btn.discord { color: #5865F2; } 
-.link-btn.discord:hover { box-shadow: 0 10px 25px rgba(88, 101, 242, 0.4); }
+.link-btn.discord { --brand: 88 101 242; color: #5865F2; }
 
 /* Discord Fragrance - דיסקורד בשמים */
-.link-btn.discord-frag { 
+.link-btn.discord-frag {
+    --brand: 255 0 160;
     color: #ff00a0; /* צבע טקסט ורוד פוקסיה זוהר */
-}
-
-.link-btn.discord-frag:hover { 
-    /* אפקט הילה התואם לצבע הורוד בעת מעבר עכבר */
-    box-shadow: 0 10px 25px rgba(255, 0, 160, 0.4); 
-    border-color: rgba(255, 0, 160, 0.6);
 }
 
 /* שינוי צבע הלוגו של הדיסקורד בתוך כפתור זה בלבד לורוד */
@@ -219,35 +587,668 @@ footer {
 }
 
 /* Kick */
-.link-btn.kick { color: #00ff01; }
-.link-btn.kick:hover { box-shadow: 0 10px 25px rgba(0, 255, 1, 0.3); }
+.link-btn.kick { --brand: 0 255 1; color: #00ff01; }
+
+/* === תגית סטטוס שידור חי (Kick) === */
+.live-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    margin-top: 4px;
+    font-size: 0.62rem;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+    padding: 2px 8px;
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #9a8f85;
+    text-shadow: none;
+    transition: all 0.3s ease;
+}
+
+.live-pill .dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #9a8f85;
+    display: inline-block;
+}
+
+.live-pill.live {
+    color: #00ff66;
+    border-color: rgba(0, 255, 102, 0.4);
+    background: rgba(0, 255, 102, 0.08);
+}
+
+.live-pill.live .dot {
+    background: #00ff66;
+    box-shadow: 0 0 8px rgba(0, 255, 102, 0.9);
+    animation: dotPulse 1.4s ease-in-out infinite;
+}
+
+@keyframes dotPulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(1.3); }
+}
 
 /* YouTube */
-.link-btn.youtube { color: #ff4d4d; }
-.link-btn.youtube:hover { box-shadow: 0 10px 25px rgba(255, 77, 77, 0.3); }
+.link-btn.youtube { --brand: 255 77 77; color: #ff4d4d; }
 
 /* TikTok */
-.link-btn.tiktok { color: #00f2ea; }
-.link-btn.tiktok:hover { box-shadow: 0 10px 25px rgba(0, 242, 234, 0.3); }
+.link-btn.tiktok { --brand: 0 242 234; color: #00f2ea; }
 
 /* Instagram */
-.link-btn.instagram { color: #833AB4; }
-.link-btn.instagram:hover { box-shadow: 0 10px 25px rgba(131, 58, 180, 0.4); }
+.link-btn.instagram { --brand: 131 58 180; color: #833AB4; }
 
 /* Reddit */
-.link-btn.reddit { color: #ff8b57; }
-.link-btn.reddit:hover { box-shadow: 0 10px 25px rgba(255, 110, 46, 0.3); }
+.link-btn.reddit { --brand: 255 110 46; color: #ff8b57; }
 
 /* כלבו יהודה */
-.link-btn.shop-black { color: #ffffff; }
-.link-btn.shop-black:hover { box-shadow: 0 10px 25px rgba(255, 255, 255, 0.2); }
+.link-btn.shop-black { --brand: 255 255 255; color: #ffffff; }
 
 /* קאי קולקטורס */
-.link-btn.kai { color: #ffcc00; }
-.link-btn.kai:hover { box-shadow: 0 10px 25px rgba(255, 204, 0, 0.4); }
+.link-btn.kai { --brand: 255 204 0; color: #ffcc00; }
 
-/* הוספת השהייה לכפתור התשיעי כדי שיכנס חלק */
-.link-btn:nth-child(9) { animation-delay: 0.9s; }
+/* === לידרבורד (CODES & LEADERBOARDS) === */
+.leaderboard {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    text-align: center;
+}
+
+.podium-skeleton,
+.loading-row {
+    color: #9a8f85;
+    font-size: 0.9rem;
+    padding: 30px 10px;
+}
+
+/* זווית מונפשת המשמשת לסובב את מסגרת הזהב סביב מקום ראשון וטיימר */
+@property --border-angle {
+    syntax: '<angle>';
+    inherits: false;
+    initial-value: 0deg;
+}
+
+@keyframes rotateBorderAngle {
+    to { --border-angle: 360deg; }
+}
+
+.leaderboard-podium {
+    display: flex;
+    align-items: flex-end;
+    gap: 12px;
+    position: relative;
+    z-index: 0;
+}
+
+/* כתמי אור עדינים שמרחפים מאחורי הפודיום ומעניקים עומק תלת-ממדי */
+.leaderboard-podium::before,
+.leaderboard-podium::after {
+    content: "";
+    position: absolute;
+    width: 220px;
+    height: 220px;
+    border-radius: 50%;
+    filter: blur(70px);
+    z-index: -1;
+    pointer-events: none;
+    animation: podiumGlowFloat 8s ease-in-out infinite;
+}
+
+.leaderboard-podium::before {
+    background: rgba(255, 153, 0, 0.35);
+    top: -50px;
+    left: 5%;
+}
+
+.leaderboard-podium::after {
+    background: rgba(255, 204, 51, 0.3);
+    bottom: -50px;
+    right: 5%;
+    animation-delay: -4s;
+}
+
+@keyframes podiumGlowFloat {
+    0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.6; }
+    50% { transform: translate(12px, -10px) scale(1.15); opacity: 0.9; }
+}
+
+.podium-card {
+    position: relative;
+    top: 0;
+    flex: 1;
+    min-width: 0;
+    background: linear-gradient(145deg, #251a14 0%, #1a0f0a 100%);
+    border: 1px solid rgba(255, 204, 51, 0.15);
+    border-radius: 16px;
+    padding: 16px 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
+    opacity: 0;
+    margin-top: 24px;
+    will-change: top;
+    /* transform נשאר חופשי לריחוף מעבר עכבר וההגבהה הקבועה של מקום ראשון (translateY סטטי) - הכניסה זזה דרך margin-top, והריחוף האיטי והעדין דרך top, כך ששתי האנימציות לא מתנגשות ב-transform */
+    animation: podiumFadeIn 0.6s ease-out forwards, cardFloatTop 11s ease-in-out 0.6s infinite;
+    transition: transform 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275), border-color 0.3s ease;
+}
+
+@keyframes podiumFadeIn {
+    from { opacity: 0; margin-top: 24px; }
+    to { opacity: 1; margin-top: 0; }
+}
+
+/* ריחוף עדין, איטי ומתמשך של כרטיסי הפודיום - הזזה מינימלית בלבד */
+@keyframes cardFloatTop {
+    0%, 100% { top: 0; }
+    50% { top: -2px; }
+}
+
+/* זוהר ריחוף עצמאי (שכבה נפרדת) כדי לא להתנגש עם הבהוב הזוהר הקבוע של מקום ראשון */
+.podium-card::after {
+    content: "";
+    position: absolute;
+    inset: -3px;
+    border-radius: 18px;
+    opacity: 0;
+    box-shadow: 0 0 26px rgba(255, 204, 51, 0.5);
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+}
+
+.podium-card:hover {
+    transform: translateY(-5px) scale(1.03);
+    border-color: rgba(255, 204, 51, 0.5);
+}
+
+.podium-card:hover::after {
+    opacity: 1;
+}
+
+/* מקום שני ושלישי - הבהוב עדין של קו המסגרת + זוהר פנימי נושם */
+.podium-card.rank-2 {
+    order: 1;
+    animation:
+        podiumFadeIn 0.6s ease-out 0.05s forwards,
+        edgeShimmer 3.2s ease-in-out 0.6s infinite,
+        cardFloatTop 11s ease-in-out 1.1s infinite;
+}
+.podium-card.rank-3 {
+    order: 3;
+    animation:
+        podiumFadeIn 0.6s ease-out 0.25s forwards,
+        edgeShimmer 3.2s ease-in-out 0.9s infinite,
+        cardFloatTop 11.6s ease-in-out 1.6s infinite;
+}
+
+@keyframes edgeShimmer {
+    0%, 100% {
+        border-color: rgba(255, 204, 51, 0.15);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
+    }
+    50% {
+        border-color: rgba(255, 204, 51, 0.45);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5), inset 0 0 18px rgba(255, 204, 51, 0.1);
+    }
+}
+
+/* מקום ראשון - מסגרת זהב מסתובבת + זוהר פנימי נושם */
+.podium-card.rank-1 {
+    order: 2;
+    transform: translateY(-14px);
+    padding-top: 22px;
+    border: 2px solid transparent;
+    background:
+        linear-gradient(145deg, #251a14 0%, #1a0f0a 100%) padding-box,
+        conic-gradient(from var(--border-angle, 0deg), #ff9900, #ffcc00, #ff9900) border-box;
+    animation:
+        podiumFadeIn 0.6s ease-out 0.15s forwards,
+        championGlow 2.4s ease-in-out 0.75s infinite,
+        rotateBorderAngle 4s linear infinite,
+        cardFloatTop 10.4s ease-in-out 2.1s infinite;
+}
+.podium-card.rank-1:hover {
+    transform: translateY(-19px) scale(1.03);
+    border-color: transparent;
+}
+.podium-card.rank-1::after {
+    inset: -4px;
+}
+
+@keyframes championGlow {
+    0%, 100% {
+        box-shadow: 0 12px 35px rgba(255, 204, 51, 0.25), inset 0 0 20px rgba(255, 153, 0, 0.08);
+    }
+    50% {
+        box-shadow: 0 16px 46px rgba(255, 204, 51, 0.6), inset 0 0 34px rgba(255, 153, 0, 0.22);
+    }
+}
+
+/* ניצוצות זהב מהבהבים סביב תג האלוף */
+.podium-sparkle {
+    position: absolute;
+    font-size: 0.85rem;
+    pointer-events: none;
+    filter: drop-shadow(0 0 4px rgba(255, 204, 51, 0.8));
+    animation: sparkleTwinkle 2.2s ease-in-out infinite;
+}
+
+.podium-sparkle.sparkle-a { top: 6px; left: 10px; animation-delay: 0s; }
+.podium-sparkle.sparkle-b { top: 18px; right: 10px; animation-delay: 1.1s; }
+
+@keyframes sparkleTwinkle {
+    0%, 100% { opacity: 0; transform: scale(0.5) rotate(0deg); }
+    50% { opacity: 1; transform: scale(1.1) rotate(15deg); }
+}
+
+.podium-medal {
+    font-size: 1.4rem;
+    line-height: 1;
+}
+
+.podium-card.rank-1 .podium-medal {
+    animation: crownGlow 2.4s ease-in-out 0.75s infinite;
+}
+
+@keyframes crownGlow {
+    0%, 100% { filter: drop-shadow(0 0 3px rgba(255, 204, 51, 0.35)); }
+    50% { filter: drop-shadow(0 0 11px rgba(255, 204, 51, 0.9)); }
+}
+
+.podium-label {
+    font-size: 0.75rem;
+    font-weight: 800;
+    letter-spacing: 1px;
+    color: #cbd5e0;
+}
+
+.rank-1 .podium-label { color: #ffcc33; }
+
+.podium-avatar {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid rgba(255, 204, 51, 0.4);
+    margin: 4px 0;
+    transition: transform 0.3s ease;
+}
+
+.podium-card:hover .podium-avatar {
+    animation: avatarBounce 0.55s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+@keyframes avatarBounce {
+    0% { transform: scale(1); }
+    45% { transform: scale(1.28); }
+    70% { transform: scale(1.02); }
+    100% { transform: scale(1.12); }
+}
+
+.rank-1 .podium-avatar {
+    width: 68px;
+    height: 68px;
+    border-color: #ffcc33;
+    box-shadow: 0 0 20px rgba(255, 204, 51, 0.5);
+}
+
+.podium-name {
+    font-weight: 800;
+    font-size: 0.95rem;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.podium-stats {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    width: 100%;
+    margin-top: 8px;
+}
+
+.stat-pill {
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 10px;
+    padding: 6px 4px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.stat-label {
+    font-size: 0.62rem;
+    color: #9a8f85;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.stat-value {
+    font-size: 0.82rem;
+    font-weight: 800;
+    color: #ffcc33;
+}
+
+.prize-pill .stat-value { color: #00ff66; }
+
+/* === טיימר ספירה לאחור === */
+.leaderboard-timer {
+    position: relative;
+    border: 2px solid transparent;
+    border-radius: 16px;
+    padding: 16px;
+    background:
+        rgba(255, 255, 255, 0.03) padding-box,
+        conic-gradient(from var(--border-angle, 0deg), #ff9900, #ffcc00, #ff9900) border-box;
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    opacity: 0;
+    will-change: transform;
+    animation:
+        fadeInUp 0.6s ease-out 0.35s forwards,
+        rotateBorderAngle 5s linear infinite,
+        float 11s ease-in-out 0.6s infinite;
+}
+
+/* === תג/כותרת הטיימר בעיצוב באדג' גיימינג === */
+.timer-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    padding: 9px 20px;
+    margin-bottom: 20px;
+    border-radius: 999px;
+    background: linear-gradient(135deg, rgba(255, 153, 0, 0.18), rgba(255, 204, 51, 0.08));
+    border: 1px solid rgba(255, 204, 51, 0.4);
+    box-shadow: 0 0 22px rgba(255, 153, 0, 0.25);
+}
+
+.timer-badge-icon {
+    font-size: 1rem;
+    line-height: 1;
+}
+
+.timer-badge-text {
+    background: linear-gradient(90deg, #ffcc33, #ff8c00);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-weight: 900;
+    font-size: 0.85rem;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+
+.timer-led {
+    display: inline-block;
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: #ffcc33;
+    box-shadow: 0 0 8px rgba(255, 204, 51, 0.9);
+    animation: ledPulse 1.4s ease-in-out infinite;
+    flex-shrink: 0;
+}
+
+@keyframes ledPulse {
+    0%, 100% { opacity: 1; box-shadow: 0 0 6px rgba(255, 204, 51, 0.7); }
+    50% { opacity: 0.5; box-shadow: 0 0 14px rgba(255, 204, 51, 1); }
+}
+
+.timer-boxes {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+}
+
+.timer-sep {
+    color: #9a8f85;
+    font-weight: 900;
+    font-size: 1.6rem;
+    padding-bottom: 28px;
+}
+
+.timer-box {
+    background: linear-gradient(145deg, #251a14 0%, #1a0f0a 100%);
+    border: 1px solid rgba(255, 204, 51, 0.25);
+    border-radius: 16px;
+    padding: 18px 20px;
+    min-width: 96px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-shadow: 0 8px 22px rgba(0, 0, 0, 0.45);
+    will-change: transform;
+    animation: float 11s ease-in-out infinite;
+}
+
+/* ריחוף מדורג לכל תיבת טיימר (Days/Hours/Minutes/Seconds) */
+.timer-box:nth-of-type(1) { animation-delay: 0s; }
+.timer-box:nth-of-type(2) { animation-delay: 0.7s; }
+.timer-box:nth-of-type(3) { animation-delay: 1.4s; }
+.timer-box:nth-of-type(4) { animation-delay: 2.1s; }
+
+.timer-box span {
+    font-size: 2.8rem;
+    font-weight: 900;
+    color: #ffcc33;
+    line-height: 1.1;
+    text-shadow: 0 0 20px rgba(255, 204, 51, 0.5);
+}
+
+.timer-box label {
+    margin-top: 5px;
+    font-size: 0.72rem;
+    font-weight: 800;
+    color: #cbd5e0;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+}
+
+/* פעימת "טיק" בכל שנייה בתיבת השניות */
+.timer-box.tick {
+    /* משמר את ריחוף ה-float (delay 2.1s כמו התיבה הרביעית) לצד פעימת ה"טיק" */
+    animation: secondTick 0.5s ease-out, float 11s ease-in-out 2.1s infinite;
+}
+
+@keyframes secondTick {
+    0% { transform: scale(1); }
+    30% {
+        transform: scale(1.15);
+        border-color: #ffcc33;
+        box-shadow: 0 0 22px rgba(255, 204, 51, 0.7);
+    }
+    100% { transform: scale(1); }
+}
+
+@media (max-width: 480px) {
+    .timer-box {
+        min-width: 68px;
+        padding: 14px 10px;
+    }
+    .timer-box span {
+        font-size: 1.9rem;
+    }
+    .timer-sep {
+        font-size: 1.3rem;
+        padding-bottom: 22px;
+    }
+}
+
+/* === באדג' תאריך הסיום === */
+.timer-date-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 14px;
+    padding: 5px 14px;
+    border-radius: 999px;
+    background: rgba(255, 153, 0, 0.08);
+    border: 1px solid rgba(255, 204, 51, 0.25);
+    box-shadow: 0 0 12px rgba(255, 153, 0, 0.15);
+    color: #d8a24a;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.4px;
+}
+
+.timer-date-icon {
+    font-size: 0.8rem;
+    line-height: 1;
+}
+
+/* === טבלת דירוגים === */
+.leaderboard-table-wrap {
+    position: relative;
+    border: 2px solid transparent;
+    border-radius: 16px;
+    overflow: hidden;
+    background:
+        rgba(255, 255, 255, 0.03) padding-box,
+        conic-gradient(from var(--border-angle, 0deg), #ff9900, #ffcc00, #ff9900) border-box;
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+    opacity: 0;
+    will-change: transform;
+    animation:
+        fadeInUp 0.6s ease-out 0.45s forwards,
+        rotateBorderAngle 6s linear infinite,
+        float 11s ease-in-out 0.7s infinite;
+}
+
+.leaderboard-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.leaderboard-table thead th {
+    background: rgba(255, 255, 255, 0.04);
+    color: #9a8f85;
+    font-size: 0.7rem;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 12px 10px;
+    text-align: center;
+}
+
+.leaderboard-table tbody td {
+    position: relative;
+    padding: 12px 10px;
+    text-align: center;
+    font-size: 0.85rem;
+    font-weight: 700;
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+    overflow: hidden;
+}
+
+/* קרן אור שחולפת על פני השורה במעבר עכבר */
+.leaderboard-table tbody td::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -150%;
+    width: 60%;
+    height: 100%;
+    background: linear-gradient(120deg, transparent, rgba(255, 204, 51, 0.28), transparent);
+    transform: skewX(-20deg);
+    transition: left 0.6s ease;
+    pointer-events: none;
+}
+
+.leaderboard-table tbody tr:hover td::before {
+    left: 150%;
+}
+
+.leaderboard-table tbody tr {
+    transition: background 0.25s ease, box-shadow 0.25s ease, transform 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    will-change: transform;
+    animation: float 11s ease-in-out infinite;
+}
+
+/* ריחוף מדורג לכל שורה בטבלה */
+.leaderboard-table tbody tr:nth-child(1) { animation-delay: 0s; }
+.leaderboard-table tbody tr:nth-child(2) { animation-delay: 0.7s; }
+.leaderboard-table tbody tr:nth-child(3) { animation-delay: 1.4s; }
+.leaderboard-table tbody tr:nth-child(4) { animation-delay: 2.1s; }
+.leaderboard-table tbody tr:nth-child(5) { animation-delay: 2.8s; }
+
+/* זוהר פנימי נושם לכל תא - שכבה נפרדת מה-tr כדי לא להתנגש עם box-shadow של מעבר עכבר */
+@keyframes rowGlowPulse {
+    0%, 100% { box-shadow: inset 0 0 0 rgba(255, 204, 51, 0); }
+    50% { box-shadow: inset 0 6px 14px -8px rgba(255, 204, 51, 0.18); }
+}
+
+.leaderboard-table tbody td {
+    animation: rowGlowPulse 4s ease-in-out infinite;
+}
+
+.leaderboard-table tbody tr:nth-child(1) td { animation-delay: 0s; }
+.leaderboard-table tbody tr:nth-child(2) td { animation-delay: 0.4s; }
+.leaderboard-table tbody tr:nth-child(3) td { animation-delay: 0.8s; }
+.leaderboard-table tbody tr:nth-child(4) td { animation-delay: 1.2s; }
+.leaderboard-table tbody tr:nth-child(5) td { animation-delay: 1.6s; }
+
+/* הדגשת זהב עדינה לשורות הקרובות לפודיום */
+.leaderboard-table tbody tr:nth-child(1) { background: rgba(255, 204, 51, 0.045); }
+.leaderboard-table tbody tr:nth-child(2) { background: rgba(255, 204, 51, 0.03); }
+
+.leaderboard-table tbody tr:hover {
+    background: rgba(255, 204, 51, 0.09);
+    box-shadow: inset 0 0 0 1px rgba(255, 204, 51, 0.3);
+    /* important כדי לנצח את אנימציית ה-float הפעילה שמחזיקה ב-transform */
+    transform: translateY(-6px) scale(1.01) !important;
+}
+
+.leaderboard-table tbody tr:hover .row-avatar {
+    animation: avatarBounce 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+.rank-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.06);
+    font-size: 0.75rem;
+}
+
+.user-cell {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.row-avatar {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.prize-cell { color: #00ff66; }
+
+@media (max-width: 480px) {
+    .podium-card.rank-1 { order: 0; transform: none; padding-top: 16px; }
+    .podium-card.rank-1:hover { transform: translateY(-5px) scale(1.03); }
+    .podium-card.rank-2 { order: 1; }
+    .podium-card.rank-3 { order: 2; }
+    .leaderboard-podium { flex-direction: column; }
+    .leaderboard-table thead th:nth-child(2),
+    .leaderboard-table tbody td:nth-child(2) { text-align: right; }
+}
 
 /* === הגדרות לפופ-אפ (Modal) === */
 .modal-overlay {
@@ -338,15 +1339,21 @@ footer {
 } */
 
 /* === התאמה לנייד - תיקון צבע הרקע === */
-@media (max-width: 1000px) {
-    .side-column { 
-        display: none; 
-    }
-    .container { 
-        max-width: 100%; 
-        /* הסרנו את הרקע הכהה הקבוע כדי שהגראדיינט של ה-body ייראה */
-        background-color: transparent; 
+@media (max-width: 768px) {
+    .container {
+        max-width: 100%;
+        padding: 40px 16px;
+        /* הסרנו את הרקע הכהה הקבוע כדי שהרקע המונפש של ה-body ייראה */
+        background-color: transparent;
         border: none;
         backdrop-filter: none;
+    }
+}
+
+@media (max-width: 420px) {
+    .tab-btn {
+        font-size: 0.66rem;
+        padding: 12px 4px;
+        letter-spacing: 0;
     }
 }
