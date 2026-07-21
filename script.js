@@ -50,21 +50,28 @@
             // חושפים את הווידאו במפורש *לפני* ניסיון הניגון (לא סומכים על טיימינג עצמאי של CSS)
             videoEl.classList.add("intro-video-ready");
 
-            // אכיפה מפורשת של muted לפני play(), כדי לעמוד במדיניות ה-autoplay של הדפדפנים
-            videoEl.muted = true;
-            let playPromise;
-            try {
-                playPromise = videoEl.play();
-            } catch (err) {
-                // חלק מהדפדפנים יכולים לזרוק סינכרונית - לא נותנים לזה לשבור את זרימת האתר
-                finish();
-                return;
+            function attemptPlay() {
+                // אכיפה מפורשת של muted לפני כל ניסיון play(), כדי לעמוד במדיניות ה-autoplay של הדפדפנים
+                videoEl.muted = true;
+                try {
+                    return videoEl.play() || Promise.resolve();
+                } catch (err) {
+                    return Promise.reject(err);
+                }
             }
 
-            if (playPromise && typeof playPromise.catch === "function") {
-                // אם ה-autoplay נחסם ע"י מדיניות הדפדפן, לא נתקעים על מסך פתיחה - ממשיכים הלאה בחן
-                playPromise.catch(finish);
-            }
+            attemptPlay().catch(function () {
+                // בדפדפני מובייל (iOS Safari / Chrome) מדיניות ה-autoplay עלולה לחסום ניגון
+                // גם כשהווידאו מושתק - מנסים שוב מיד עם המגע/הקליק הראשון של המשתמש, בלי לוותר
+                // על האינטרו מראש. רשת הביטחון (safetyTimer) ממשיכה לדאוג שלעולם לא ניתקע.
+                function retryOnGesture() {
+                    if (finished) return;
+                    attemptPlay().catch(function () {});
+                }
+                document.addEventListener("touchstart", retryOnGesture, { once: true, passive: true });
+                document.addEventListener("pointerdown", retryOnGesture, { once: true });
+                document.addEventListener("click", retryOnGesture, { once: true });
+            });
         });
     }
 

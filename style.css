@@ -1264,11 +1264,65 @@ footer {
 .prize-cell { color: #00ff66; }
 
 @media (max-width: 480px) {
-    .podium-card.rank-1 { order: 0; transform: none; padding-top: 16px; }
-    .podium-card.rank-1:hover { transform: translateY(-5px) scale(1.03); }
-    .podium-card.rank-2 { order: 1; }
-    .podium-card.rank-3 { order: 2; }
-    .leaderboard-podium { flex-direction: column; }
+    /* שלושת כרטיסי הפודיום נשארים בשורה אחת אופקית קומפקטית בנייד - לא נערמים לעמודה אנכית.
+       הסדר (2nd | 1st | 3rd) וההגבהה של מקום ראשון נשארים כמו בדסקטופ (מוגדרים למעלה ב-.podium-card.rank-*) */
+    .leaderboard-podium {
+        gap: 6px;
+    }
+
+    .podium-card {
+        padding: 10px 4px;
+        gap: 4px;
+        border-radius: 12px;
+    }
+
+    .podium-card.rank-1 {
+        padding-top: 16px;
+    }
+
+    /* אווטרים, טקסט ותגיות מוקטנים כדי להתאים לשלוש עמודות צרות במסך נייד */
+    .podium-avatar {
+        width: 36px;
+        height: 36px;
+        margin: 2px 0;
+    }
+
+    .rank-1 .podium-avatar {
+        width: 44px;
+        height: 44px;
+    }
+
+    .podium-medal {
+        font-size: 1rem;
+    }
+
+    .podium-label {
+        font-size: 0.6rem;
+        letter-spacing: 0.5px;
+    }
+
+    .podium-name {
+        font-size: 0.72rem;
+    }
+
+    .podium-stats {
+        gap: 4px;
+        margin-top: 4px;
+    }
+
+    .stat-pill {
+        padding: 4px 2px;
+        border-radius: 8px;
+    }
+
+    .stat-label {
+        font-size: 0.5rem;
+    }
+
+    .stat-value {
+        font-size: 0.64rem;
+    }
+
     .leaderboard-table thead th:nth-child(2),
     .leaderboard-table tbody td:nth-child(2) { text-align: right; }
 }
