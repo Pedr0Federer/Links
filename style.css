@@ -693,79 +693,40 @@ footer {
     to { --border-angle: 360deg; }
 }
 
-/* === כותרת CSGORoll + קוד קופון PF5, מעל הפודיום === */
-.csgoroll-header {
+/* === באנר גיבור (Hero Banner) של CSGORoll + קוד PF5, מעל הפודיום === */
+.csgoroll-hero {
     display: flex;
-    flex-wrap: wrap;
     align-items: center;
     justify-content: center;
-    gap: 10px;
+    gap: 22px;
+    padding: 22px 30px;
+    border-radius: 20px;
+    background: rgba(18, 18, 22, 0.85);
+    border: 1px solid rgba(212, 175, 55, 0.3);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4), inset 0 0 26px rgba(212, 175, 55, 0.05);
     opacity: 0;
-    animation: fadeInUp 0.6s ease-out 0.1s forwards;
+    animation:
+        fadeInUp 0.6s ease-out 0.1s forwards,
+        csgorollHeroGlow 4s ease-in-out 0.7s infinite;
 }
 
-.csgoroll-title-badge {
-    display: inline-flex;
-    align-items: center;
-    padding: 8px 18px;
-    border-radius: 999px;
-    background: linear-gradient(135deg, rgba(255, 153, 0, 0.18), rgba(255, 204, 51, 0.08));
-    border: 1px solid rgba(255, 204, 51, 0.4);
-    box-shadow: 0 0 20px rgba(255, 153, 0, 0.22);
+@keyframes csgorollHeroGlow {
+    0%, 100% { box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4), inset 0 0 22px rgba(212, 175, 55, 0.05); }
+    50% { box-shadow: 0 12px 36px rgba(0, 0, 0, 0.45), inset 0 0 36px rgba(212, 175, 55, 0.13); }
 }
 
-.csgoroll-title-text {
-    background: linear-gradient(90deg, #ffcc33, #ff8c00);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    font-weight: 900;
-    font-size: 0.82rem;
-    letter-spacing: 1.4px;
-    text-transform: uppercase;
-    white-space: nowrap;
-}
-
-.csgoroll-code-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    padding: 8px 18px;
-    border-radius: 999px;
-    background: rgba(0, 255, 102, 0.1);
-    border: 1px solid rgba(0, 255, 102, 0.4);
-    box-shadow: 0 0 16px rgba(0, 255, 102, 0.25);
-    white-space: nowrap;
-}
-
-.csgoroll-code-label {
-    font-size: 0.7rem;
-    font-weight: 700;
-    letter-spacing: 0.6px;
-    text-transform: uppercase;
-    color: #cbd5e0;
-}
-
-.csgoroll-code-value {
-    font-size: 0.92rem;
-    font-weight: 900;
-    letter-spacing: 1px;
-    color: #00ff66;
-    text-shadow: 0 0 10px rgba(0, 255, 102, 0.6);
-}
-
-/* תמונת PF5 מקשטת שמרחפת בעדינות משני צידי הכותרת - שם ייחודי לאנימציה כדי לא להתנגש
-   עם ה-@keyframes float הגלובלי שכבר בשימוש במקומות אחרים באתר */
-.csgoroll-mascot {
-    width: 52px;
-    height: auto;
-    filter: drop-shadow(0 0 10px rgba(255, 204, 51, 0.55));
+/* עוגן הלוגו - גדול, ברור, מרחף בעדינות (שם אנימציה ייחודי כדי לא להתנגש עם @keyframes float הגלובלי) */
+.csgoroll-hero-logo {
+    width: 72px;
+    height: 72px;
+    object-fit: contain;
+    flex-shrink: 0;
+    filter: drop-shadow(0 0 14px rgba(212, 175, 55, 0.55));
     animation: csgorollMascotFloat 3.4s ease-in-out infinite;
     pointer-events: none;
     user-select: none;
-}
-
-.csgoroll-mascot-right {
-    animation-delay: 1.2s;
 }
 
 @keyframes csgorollMascotFloat {
@@ -773,21 +734,83 @@ footer {
     50% { transform: translateY(-8px); }
 }
 
-@media (max-width: 768px) {
-    .csgoroll-mascot {
-        width: 34px;
-    }
+.csgoroll-hero-text {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 18px;
 }
 
-@media (max-width: 480px) {
-    .csgoroll-title-text {
-        font-size: 0.72rem;
-        letter-spacing: 1px;
+.csgoroll-hero-title {
+    font-size: 1.15rem;
+    font-weight: 900;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    background: linear-gradient(90deg, #ffffff 0%, #ffd700 55%, #d4af37 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    white-space: nowrap;
+}
+
+/* תגית קוד VIP - זוהר ירוק/זהב פועם, כדי שהקוד ייקלט מיד */
+.csgoroll-hero-code {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 22px;
+    border-radius: 999px;
+    background: linear-gradient(135deg, rgba(0, 255, 102, 0.2), rgba(212, 175, 55, 0.18));
+    border: 1px solid rgba(0, 255, 102, 0.5);
+    box-shadow: 0 0 18px rgba(0, 255, 102, 0.3);
+    white-space: nowrap;
+    animation: csgorollCodePulse 2.2s ease-in-out infinite;
+}
+
+@keyframes csgorollCodePulse {
+    0%, 100% { box-shadow: 0 0 16px rgba(0, 255, 102, 0.25); }
+    50% { box-shadow: 0 0 28px rgba(0, 255, 102, 0.55); }
+}
+
+.csgoroll-hero-code-label {
+    font-size: 0.74rem;
+    font-weight: 700;
+    letter-spacing: 0.6px;
+    text-transform: uppercase;
+    color: #ececec;
+}
+
+.csgoroll-hero-code-value {
+    font-size: 1.05rem;
+    font-weight: 900;
+    letter-spacing: 1px;
+    color: #00ff66;
+    text-shadow: 0 0 12px rgba(0, 255, 102, 0.7);
+}
+
+@media (max-width: 768px) {
+    .csgoroll-hero {
+        flex-direction: column;
+        padding: 18px 16px;
+        gap: 14px;
     }
 
-    .csgoroll-title-badge,
-    .csgoroll-code-badge {
-        padding: 7px 14px;
+    .csgoroll-hero-logo {
+        width: 56px;
+        height: 56px;
+    }
+
+    .csgoroll-hero-text {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .csgoroll-hero-title {
+        font-size: 0.95rem;
+    }
+
+    .csgoroll-hero-code {
+        padding: 8px 18px;
     }
 }
 
