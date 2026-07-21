@@ -56,6 +56,44 @@ body {
     to { opacity: 1; }
 }
 
+/* כפתור "דלג" - פינה ימנית עליונה, מאפשר חשיפה מיידית של האתר אם הסרטון מתעכב */
+.intro-skip-btn {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    z-index: 100002;
+    padding: 8px 18px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 204, 51, 0.35);
+    color: #ffcc33;
+    font-family: 'Heebo', sans-serif;
+    font-weight: 800;
+    font-size: 0.78rem;
+    letter-spacing: 0.3px;
+    cursor: pointer;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    transition: all 0.25s ease;
+}
+
+.intro-skip-btn:hover,
+.intro-skip-btn:focus-visible {
+    background: rgba(255, 204, 51, 0.18);
+    border-color: rgba(255, 204, 51, 0.65);
+    box-shadow: 0 0 14px rgba(255, 204, 51, 0.3);
+    transform: translateY(-2px);
+}
+
+@media (max-width: 480px) {
+    .intro-skip-btn {
+        top: 14px;
+        right: 14px;
+        padding: 7px 14px;
+        font-size: 0.7rem;
+    }
+}
+
 /* === פסי גלילה בעיצוב מותאם לצבעי האתר === */
 ::-webkit-scrollbar {
     width: 12px;

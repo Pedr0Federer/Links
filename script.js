@@ -2,44 +2,51 @@
 (function () {
     "use strict";
 
+    const INTRO_FAILSAFE_MS = 4500; // רשת ביטחון קשיחה - קריטי בהוסטינג כמו GitHub Pages: לעולם לא נתקעים על מסך שחור
+    const INTRO_FADE_MS = 600;      // משך דעיכת שכבת הפתיחה (תואם ל-transition ב-CSS)
+
     function playIntroSplash() {
         return new Promise((resolve) => {
             const introEl = document.getElementById("introSplash");
             const videoEl = document.getElementById("introVideo");
+            const skipBtn = document.getElementById("introSkipBtn");
             if (!introEl) { resolve(); return; }
 
             let finished = false;
+            let failsafeTimer = null;
 
             function finishIntro() {
                 if (finished) return;
                 finished = true;
-                // דעיכה חלקה של שכבת הפתיחה, ואז הסרה מלאה מה-DOM ברגע שה-transition עצמו מסתיים (אירוע, לא טיימר)
+                if (failsafeTimer) clearTimeout(failsafeTimer);
+                // דעיכה חלקה של שכבת הפתיחה, ואז הסרה מלאה מה-DOM כדי שלא תחסום קליקים.
+                // משתמשים בטיימר קבוע (לא ב-transitionend) כדי שהסרה תמיד תקרה גם אם ה-transition לא רץ מסיבה כלשהי.
                 introEl.classList.add("intro-hidden");
-                introEl.addEventListener("transitionend", () => {
+                setTimeout(() => {
                     introEl.remove();
                     resolve();
-                }, { once: true });
+                }, INTRO_FADE_MS);
             }
 
-            if (!videoEl) { finishIntro(); return; }
+            // רשת ביטחון קשיחה - לכל היותר 4.5 שניות, לא משנה מה קורה עם הסרטון (שגיאת רשת, autoplay חסום וכו')
+            failsafeTimer = setTimeout(finishIntro, INTRO_FAILSAFE_MS);
 
-            // המנגנון הראשי - הסרטון מתנגן במלואו עד הסוף הטבעי שלו, בלי חיתוך מוקדם
+            // כפתור "דלג" - מאפשר למשתמש לחשוף את האתר מיידית אם הטעינה מתעכבת
+            if (skipBtn) {
+                skipBtn.addEventListener("click", finishIntro);
+            }
+
+            if (!videoEl) { return; }
+
             videoEl.addEventListener("ended", finishIntro);
-
-            // רשתות ביטחון מבוססות-אירוע בלבד (לא טיימרים) - קובץ שבור או שהניגון נתקע לגמרי
             videoEl.addEventListener("error", finishIntro);
             videoEl.addEventListener("stalled", finishIntro);
 
-            function startPlayback() {
-                videoEl.play().catch(finishIntro);
-            }
-
-            // ממתינים שהדפדפן יאותת שיש מספיק נתונים חוצצים כדי לנגן ברצף עד הסוף בלי הפרעות,
-            // ורק אז מתחילים ניגון - כך נמנעים מהקפאות/גמגומים באמצע עקב חוסר buffering
-            if (videoEl.readyState >= 4 /* HAVE_ENOUGH_DATA */) {
-                startPlayback();
-            } else {
-                videoEl.addEventListener("canplaythrough", startPlayback, { once: true });
+            // אכיפה מפורשת של muted לפני play(), כדי לעמוד במדיניות ה-autoplay של הדפדפנים גם אם המאפיין בתגית לא נקלט
+            videoEl.muted = true;
+            const playPromise = videoEl.play();
+            if (playPromise && typeof playPromise.catch === "function") {
+                playPromise.catch(finishIntro);
             }
         });
     }
