@@ -364,29 +364,29 @@ h1 {
     }
 
     .link-btn {
-        min-height: 150px;
-        padding: 24px 16px;
+        min-height: 128px;
+        padding: 18px 12px;
     }
 
     .icon {
-        width: 56px;
-        height: 56px;
+        width: 70px;
+        height: 70px;
     }
 
     /* מקורות התמונה של Reddit ו-PFKAY כוללות שוליים שקופים/תוכן נוסף מובנה בקובץ,
        כך שבאותה תיבת אייקון הן נראות קטנות יותר מהלוגואים האחרים - מגדילים את התיבה שלהן לאיזון ויזואלי */
     .link-btn.reddit .icon {
-        width: 74px;
-        height: 74px;
+        width: 92px;
+        height: 92px;
     }
 
     .link-btn.kai .icon {
-        width: 84px;
-        height: 84px;
+        width: 105px;
+        height: 105px;
     }
 
     .main-text {
-        font-size: 1.15rem;
+        font-size: 1.25rem;
     }
 
     .leaderboard-podium {
@@ -402,7 +402,7 @@ h1 {
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
     text-decoration: none;
-    padding: 18px 10px;
+    padding: 14px 8px;
     border-radius: 16px;
     /* גבול דק וחד בגוון המותג הספציפי של כל כרטיס */
     border: 1px solid rgb(var(--brand) / 0.28);
@@ -413,9 +413,9 @@ h1 {
     flex-direction: column;
     align-items: center;
     justify-content: space-between;
-    gap: 8px;
+    gap: 6px;
     position: relative;
-    min-height: 130px;
+    min-height: 108px;
     overflow: hidden;
     /* צל עומק + טבעת גבול חדה בגוון המותג */
     box-shadow: 0 8px 25px rgba(0, 0, 0, 0.35), 0 0 0 1px rgb(var(--brand) / 0.1);
@@ -502,8 +502,8 @@ h1 {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 48px;
-    height: 48px;
+    width: 60px;
+    height: 60px;
     /* צל קטן לאייקון */
     filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
     transition: transform 0.3s ease;
@@ -512,13 +512,13 @@ h1 {
 /* מקורות התמונה של Reddit ו-PFKAY כוללות שוליים שקופים/תוכן נוסף מובנה בקובץ,
    כך שבאותה תיבת אייקון הן נראות קטנות יותר מהלוגואים האחרים - מגדילים את התיבה שלהן לאיזון ויזואלי */
 .link-btn.reddit .icon {
-    width: 64px;
-    height: 64px;
+    width: 80px;
+    height: 80px;
 }
 
 .link-btn.kai .icon {
-    width: 72px;
-    height: 72px;
+    width: 90px;
+    height: 90px;
 }
 
 .link-btn:hover .icon {
@@ -555,7 +555,7 @@ h1 {
 }
 
 .main-text {
-    font-size: 1.05rem;
+    font-size: 1.15rem;
     font-weight: 900;
     line-height: 1.3;
 }
