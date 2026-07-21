@@ -169,6 +169,8 @@ body {
 }
 
 /* === סימן הלוגו הענק ברקע (אריה/נמר שואג) === */
+/* מצב עמום קבוע וסטטי לחלוטין - בלי אנימציה - כדי שהרקע כבר יהיה מעומעם מהפריים הראשון,
+   ולא ייתפס באמצע מחזור "נשימה" בהיר בדיוק ברגע שהאינטרו דועך (זה גרם ל"הבזק" תאורה מיותר) */
 .bg-lion-mark {
     position: fixed;
     top: 50%;
@@ -180,16 +182,10 @@ body {
     background-position: center;
     border-radius: 50%;
     transform: translate(-50%, -50%) scale(1);
-    opacity: 0.18;
+    opacity: 0.2;
     filter: blur(1px) saturate(1.7);
     z-index: -1;
     pointer-events: none;
-    animation: lionBreathe 10s ease-in-out infinite;
-}
-
-@keyframes lionBreathe {
-    0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.18; }
-    50% { transform: translate(-50%, -50%) scale(1.06); opacity: 0.28; }
 }
 
 /* בנייד, המעגל הענק (900px) גדול בהרבה מרוחב המסך ולכן נראה כתקריב מנופח ורווי-צבע על מרכז
