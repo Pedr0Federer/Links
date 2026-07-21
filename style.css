@@ -407,10 +407,12 @@ h1 {
     /* גבול דק וחד בגוון המותג הספציפי של כל כרטיס */
     border: 1px solid rgb(var(--brand) / 0.28);
     transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    /* שלושה "משבצות" קבועות - אייקון / כותרת / תגית תחתונה - כדי שכל הכרטיסים יתיישרו זה עם זה
+       בלי קשר לתוכן שיש או אין להם (למשל תגית LIVE או קוד קופון) */
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
+    justify-content: space-between;
     gap: 8px;
     position: relative;
     min-height: 130px;
@@ -539,11 +541,15 @@ h1 {
     display: block;
 }
 
+/* משבצת הכותרת (Middle Slot) - גובה קבוע שמספיק לשתי שורות, כדי שכותרות קצרות/ארוכות
+   לא יזיזו את משבצת התגית שמתחתן בין כרטיס לכרטיס */
 .btn-text {
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
     text-align: center;
+    min-height: 2.6em;
     /* צל לטקסט בתוך הכפתור */
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
@@ -551,13 +557,21 @@ h1 {
 .main-text {
     font-size: 1.05rem;
     font-weight: 900;
+    line-height: 1.3;
+}
+
+/* משבצת התגית התחתונה (Bottom Slot) - גובה קבוע ושמור גם כשריקה (כרטיסים בלי LIVE/קוד קופון) */
+.badge-slot {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 24px;
 }
 
 /* שורת קוד קופון - כל המשפט מודגש/זוהר באופן אחיד, לא רק הקוד עצמו */
 .sub-text {
     display: inline-flex;
     align-items: center;
-    margin-top: 6px;
     padding: 3px 12px;
     border-radius: 999px;
     background: linear-gradient(145deg, rgba(255, 204, 51, 0.28), rgba(255, 140, 0, 0.18));
@@ -602,7 +616,6 @@ footer {
     display: inline-flex;
     align-items: center;
     gap: 5px;
-    margin-top: 4px;
     font-size: 0.62rem;
     font-weight: 700;
     letter-spacing: 0.3px;
