@@ -36,6 +36,8 @@ body {
 }
 
 /* וידאו האינטרו - מכסה את כל המסך (fullscreen), ללא "תיבה" קטנה במרכז; פילטרים מחדדים ומעצימים צבע */
+/* מוסתר כברירת מחדל, ונחשף במפורש ע"י script.js (מחלקת intro-video-ready) ממש לפני קריאה ל-play(),
+   כדי שהאלמנט יהיה בוודאות "גלוי" לפני ניסיון הניגון - לא תלוי בטיימינג עצמאי של אנימציית CSS */
 .intro-video {
     position: fixed;
     top: 0;
@@ -49,11 +51,11 @@ body {
     background: #000;
     filter: contrast(1.08) brightness(1.05) saturate(1.1);
     opacity: 0;
-    animation: introVideoIn 0.5s ease-out forwards;
+    transition: opacity 0.5s ease-out;
 }
 
-@keyframes introVideoIn {
-    to { opacity: 1; }
+.intro-video.intro-video-ready {
+    opacity: 1;
 }
 
 /* === פסי גלילה בעיצוב מותאם לצבעי האתר === */

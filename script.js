@@ -1,9 +1,8 @@
-// === מסך פתיחה - וידאו אינטרו (Intro Splash) + מוכנות העמוד ===
+// === מסך פתיחה - וידאו אינטרו (Intro Splash) + טעינה מקדימה של נכסים קריטיים ===
 (function () {
     "use strict";
 
-    const INTRO_SAFETY_MS = 6000; // רשת ביטחון מוחלטת: מכסה גם "לא התחיל בכלל" וגם "נתקע באמצע"
-    const INTRO_FADE_MS = 600;    // תואם למשך ה-transition של .intro-splash ב-CSS
+    const INTRO_SAFETY_MS = 6000; // רשת ביטחון מוחלטת: מכסה גם "לא התחיל בכלל" (autoplay חסום) וגם "נתקע באמצע"
     const PAGE_READY_FALLBACK_MS = 2500; // אם window.load מתעכב/לא מגיע, לא נתקעים גם כאן
 
     // ניקוי הגנתי - מסירים כל דגל מצב ישן (session/local storage) שעלול לגרום לדילוג על האינטרו
@@ -15,50 +14,56 @@
         // אחסון חסום (למשל מצב פרטי) - לא קריטי, פשוט ממשיכים
     }
 
-    // אם הדף משוחזר מ-bfcache (ניווט אחורה/קדימה) הוא עלול לחזור במצב "כבר הסתיים" (עם
-    // האינטרו כבר מוסר והפופ-אפ כבר מוצג/סגור מהביקור הקודם) בלי שאף קוד ירוץ מחדש.
-    // רענון מלא מבטיח שכל ביקור - כולל "ביקור שני" - יתחיל תמיד מאפס בצורה נקייה.
+    // אם הדף משוחזר מ-bfcache (ניווט אחורה/קדימה) הוא עלול לחזור במצב "כבר הסתיים" בלי שאף
+    // קוד ירוץ מחדש. רענון מלא מבטיח שכל ביקור - כולל "ביקור שני" - יתחיל תמיד מאפס בצורה נקייה.
     window.addEventListener("pageshow", function (event) {
         if (event.persisted) {
             window.location.reload();
         }
     });
 
+    // playIntroSplash מנגן את הסרטון ומחזיר Promise שמתממש כשהוא מסתיים (בדרך זו או אחרת) -
+    // הוא לא נוגע בשכבת הפתיחה עצמה (fade/הסרה); זה קורה רק אחרי שגם התמונות הקריטיות מוכנות,
+    // כדי שהאוברליי ישמש כ"מסך טעינה" נקי לאורך כל הזמן הזה בלי הבזק של רקע לא טעון באמצע.
     function playIntroSplash() {
         return new Promise((resolve) => {
-            const introEl = document.getElementById("introSplash");
             const videoEl = document.getElementById("introVideo");
-            if (!introEl) { resolve(); return; }
+            if (!videoEl) { resolve(); return; }
 
             let finished = false;
             let safetyTimer = null;
 
-            function finishIntro() {
+            function finish() {
                 if (finished) return;
                 finished = true;
                 if (safetyTimer) clearTimeout(safetyTimer);
-                // דעיכה חלקה של שכבת הפתיחה, ואז הסרה מלאה מה-DOM כדי שלא תחסום קליקים
-                introEl.classList.add("intro-hidden");
-                setTimeout(() => {
-                    introEl.remove();
-                    resolve();
-                }, INTRO_FADE_MS);
+                resolve();
             }
 
             // רשת ביטחון מוחלטת - לא משנה מה קורה עם הסרטון (autoplay חסום, קובץ נכשל, ניגון נתקע וכו')
-            safetyTimer = setTimeout(finishIntro, INTRO_SAFETY_MS);
+            safetyTimer = setTimeout(finish, INTRO_SAFETY_MS);
 
-            if (!videoEl) { return; }
+            videoEl.addEventListener("ended", finish);
+            videoEl.addEventListener("error", finish);
+            videoEl.addEventListener("stalled", finish);
 
-            videoEl.addEventListener("ended", finishIntro);
-            videoEl.addEventListener("error", finishIntro);
-            videoEl.addEventListener("stalled", finishIntro);
+            // חושפים את הווידאו במפורש *לפני* ניסיון הניגון (לא סומכים על טיימינג עצמאי של CSS)
+            videoEl.classList.add("intro-video-ready");
 
-            // מנסים לנגן מיידית - לא ממתינים לשום אירוע buffering שעלול לא להגיע בכלל
+            // אכיפה מפורשת של muted לפני play(), כדי לעמוד במדיניות ה-autoplay של הדפדפנים
             videoEl.muted = true;
-            const playPromise = videoEl.play();
+            let playPromise;
+            try {
+                playPromise = videoEl.play();
+            } catch (err) {
+                // חלק מהדפדפנים יכולים לזרוק סינכרונית - לא נותנים לזה לשבור את זרימת האתר
+                finish();
+                return;
+            }
+
             if (playPromise && typeof playPromise.catch === "function") {
-                playPromise.catch(finishIntro);
+                // אם ה-autoplay נחסם ע"י מדיניות הדפדפן, לא נתקעים על מסך פתיחה - ממשיכים הלאה בחן
+                playPromise.catch(finish);
             }
         });
     }
@@ -88,12 +93,20 @@
             setTimeout(finish, PAGE_READY_FALLBACK_MS);
         });
 
-        // טעינה מפורשת של תמונת הרקע הראשית ותמונת הפופ-אפ הפרסומי - כדי שהפופ-אפ
-        // לעולם לא ייפתח לפני שהתמונות שהוא (וגם רקע האתר) תלוי בהן זמינות בפועל
+        // טעינה מפורשת של הנכסים הקריטיים (רקע ראשי, כל לוגואי הכרטיסים, תמונת הפופ-אפ) -
+        // כדי שהפופ-אפ והאתר הראשי לעולם לא ייחשפו לפני שהם באמת זמינים
         const criticalImages = Promise.all([
-            preloadImage("profile.jpg"),
-            preloadImage("promo.png")
-        ]);
+            "profile.jpg",
+            "promo.png",
+            "Discord_logo.png",
+            "Kick_logo.png",
+            "Youtube_logo.png",
+            "instagram_logo.png",
+            "tiktok_logo.png",
+            "Reddit_logo.png",
+            "PFKAY.png",
+            "ky_logo.png"
+        ].map(preloadImage));
 
         return Promise.all([windowLoad, criticalImages]);
     }

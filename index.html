@@ -10,7 +10,7 @@
     <link rel="icon" type="image/png" sizes="64x64" href="favicon-circle-64.png">
     <link rel="apple-touch-icon" sizes="180x180" href="favicon-circle-180.png">
 
-    <link rel="stylesheet" href="style.css?v=20260721-check">
+    <link rel="stylesheet" href="style.css?v=20260721-loadfix">
     <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;700;900&display=swap" rel="stylesheet">
 </head>
 <body>
@@ -19,7 +19,7 @@
         <video
             class="intro-video"
             id="introVideo"
-            src="intro.mp4?v=20260721-check"
+            src="intro.mp4?v=20260721-loadfix"
             muted
             playsinline
             autoplay
@@ -219,7 +219,7 @@
         </div>
     </div>
 
-    <script src="script.js?v=20260721-check"></script>
+    <script src="script.js?v=20260721-loadfix"></script>
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             const modal = document.getElementById("promoModal");
@@ -227,14 +227,23 @@
             const pageLayout = document.querySelector(".page-layout");
 
             // סדר פעולות קשיח:
-            // 1) תוכן האתר הראשי מוסתר כברירת מחדל דרך CSS עד כאן.
-            // 2) מריצים את רצף האינטרו במלואו (או עד שהוא נכשל בבטחה - ר' script.js).
-            // 3) רק אחרי שהאינטרו הסתיים *וגם* שאר משאבי העמוד (תמונות וכו') נטענו בפועל -
-            //    חושפים את תוכן האתר בהדרגה, ורק אז מפעילים את הפופ-אפ הפרסומי.
+            // 1) תוכן האתר הראשי מוסתר כברירת מחדל דרך CSS עד כאן, ושכבת הפתיחה (introSplash)
+            //    משמשת כ"מסך טעינה" נקי שנשאר על המסך לאורך כל השלב הבא.
+            // 2) מריצים את רצף האינטרו במלואו (או עד שהוא נכשל בבטחה - ר' script.js) *וגם* מחכים
+            //    שכל התמונות הקריטיות (רקעים, לוגואים, באנר הפופ-אפ) ייטענו בפועל - בו-זמנית.
+            // 3) רק אחרי ששניהם הסתיימו - שכבת הפתיחה דועכת ומוסרת, תוכן האתר נחשף בהדרגה,
+            //    ורק אז מפעילים את הפופ-אפ הפרסומי. כך לעולם אין הבזק של רקע לא טעון בין השלבים.
+            const INTRO_FADE_MS = 600; // תואם למשך ה-transition של .intro-splash ב-CSS
+
             Promise.all([
                 window.playIntroSplash(),
                 window.waitForPageReady()
             ]).then(() => {
+                const introEl = document.getElementById("introSplash");
+                if (introEl) {
+                    introEl.classList.add("intro-hidden");
+                    setTimeout(() => introEl.remove(), INTRO_FADE_MS);
+                }
                 if (pageLayout) {
                     pageLayout.classList.add("site-ready");
                 }
