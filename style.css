@@ -427,12 +427,12 @@ h1 {
     /* גבול זכוכית ניטרלי ועדין בבסיס - הזהב מופיע רק כהדגשה עדינה (ר' box-shadow ומצב hover למטה) */
     border: 1px solid rgba(255, 255, 255, 0.08);
     transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    /* שלושה "משבצות" קבועות - אייקון / כותרת / תגית תחתונה - כדי שכל הכרטיסים יתיישרו זה עם זה
-       בלי קשר לתוכן שיש או אין להם (למשל תגית LIVE או קוד קופון) */
+    /* תוכן הכרטיס (אייקון / כותרת / תגית) ממורכז כקבוצה אנכית - לא נדחף לפינות עם רווח ריק */
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: space-between;
+    align-content: center;
+    justify-content: center;
     gap: 6px;
     position: relative;
     min-height: 108px;
@@ -580,12 +580,18 @@ h1 {
     line-height: 1.3;
 }
 
-/* משבצת התגית התחתונה (Bottom Slot) - גובה קבוע ושמור גם כשריקה (כרטיסים בלי LIVE/קוד קופון) */
+/* משבצת תגית תחתונה - שומרת גובה נעים כשיש בה תוכן (LIVE/קוד קופון) עם ריווח מאוזן מעל ומתחת,
+   אך מצטמצמת לגמרי (0) כשהיא ריקה כדי שכרטיסים בלי תגית יהיו ממורכזים לחלוטין בלי רווח מת */
 .badge-slot {
     display: flex;
     align-items: center;
     justify-content: center;
     min-height: 24px;
+}
+
+.badge-slot:empty {
+    min-height: 0;
+    margin: 0;
 }
 
 /* שורת קוד קופון - תגית זהב מאט ומעודן, לא עוד זוהר צהוב רווי */
