@@ -69,8 +69,15 @@
                 // בדפדפני מובייל (iOS Safari / Chrome) מדיניות ה-autoplay עלולה לחסום ניגון
                 // גם כשהווידאו מושתק - מנסים שוב מיד עם המגע/הקליק הראשון של המשתמש, בלי לוותר
                 // על האינטרו מראש. רשת הביטחון (safetyTimer) ממשיכה לדאוג שלעולם לא ניתקע.
+                function cleanupGestureListeners() {
+                    document.removeEventListener("touchstart", retryOnGesture);
+                    document.removeEventListener("pointerdown", retryOnGesture);
+                    document.removeEventListener("click", retryOnGesture);
+                }
                 function retryOnGesture() {
                     if (finished) return;
+                    // מסירים את שני המאזינים האחרים כדי לא להשאיר listeners תלויים ומיותרים
+                    cleanupGestureListeners();
                     attemptPlay().then(speedUpPlayback).catch(function () {});
                 }
                 document.addEventListener("touchstart", retryOnGesture, { once: true, passive: true });
