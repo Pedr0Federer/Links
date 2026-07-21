@@ -10,7 +10,7 @@
     <link rel="icon" type="image/png" sizes="64x64" href="favicon-circle-64.png">
     <link rel="apple-touch-icon" sizes="180x180" href="favicon-circle-180.png">
 
-    <link rel="stylesheet" href="style.css?v=20260721-loadfix">
+    <link rel="stylesheet" href="style.css?v=20260721-corsfix">
     <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;700;900&display=swap" rel="stylesheet">
 </head>
 <body>
@@ -19,7 +19,7 @@
         <video
             class="intro-video"
             id="introVideo"
-            src="intro.mp4?v=20260721-loadfix"
+            src="intro.mp4?v=20260721-corsfix"
             muted
             playsinline
             autoplay
@@ -219,7 +219,7 @@
         </div>
     </div>
 
-    <script src="script.js?v=20260721-loadfix"></script>
+    <script src="script.js?v=20260721-corsfix"></script>
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             const modal = document.getElementById("promoModal");
@@ -264,6 +264,15 @@
                 }
             });
 
+            // === fetch עם timeout מובנה - קריאות רשת חיצוניות (CORS, שרתים איטיים/תקועים וכו')
+            // לעולם לא יכולות להישאר תלויות ללא הגבלת זמן ולהשפיע על שאר האתר ===
+            function fetchWithTimeout(url, options, timeoutMs) {
+                const controller = new AbortController();
+                const timer = setTimeout(() => controller.abort(), timeoutMs || 6000);
+                return fetch(url, Object.assign({}, options, { signal: controller.signal }))
+                    .finally(() => clearTimeout(timer));
+            }
+
             // === ניווט בטאבים ===
             const tabBtns = document.querySelectorAll(".tab-btn");
             const tabPanels = document.querySelectorAll(".tab-panel");
@@ -281,7 +290,7 @@
             // === בדיקת סטטוס שידור חי ב-Kick ===
             const kickPill = document.getElementById("kickLivePill");
             if (kickPill) {
-                fetch("https://kick.com/api/v2/channels/pedrofederer", { headers: { "Accept": "application/json" } })
+                fetchWithTimeout("https://kick.com/api/v2/channels/pedrofederer", { headers: { "Accept": "application/json" } }, 6000)
                     .then(res => {
                         if (!res.ok) throw new Error("bad response");
                         return res.json();
@@ -478,10 +487,12 @@
             // === שכבת שליפה עם גיבוי דרך CORS Proxy ===
             // nickpf.com לא שולח כותרות CORS, אז מנסים קריאה ישירה קודם,
             // ואם היא נחסמת ע"י הדפדפן נופלים חזרה לפרוקסי כדי לאפשר נתונים חיים מהדומיין הזה.
+            // כל קריאה מוגבלת ב-timeout כדי שפרוקסי איטי/תקוע (למשל corsproxy.io) לעולם לא יתלה לנצח.
             const CORS_PROXY = "https://corsproxy.io/?url=";
+            const LEADERBOARD_FETCH_TIMEOUT_MS = 6000;
 
             async function fetchJson(url) {
-                const res = await fetch(url, { headers: { "Accept": "application/json" } });
+                const res = await fetchWithTimeout(url, { headers: { "Accept": "application/json" } }, LEADERBOARD_FETCH_TIMEOUT_MS);
                 if (!res.ok) throw new Error("bad response: " + res.status);
                 return res.json();
             }
@@ -490,6 +501,7 @@
                 try {
                     return await fetchJson(url);
                 } catch (directErr) {
+                    // חסימת CORS, timeout, או כל כשל רשת אחר בקריאה הישירה - עוברים לפרוקסי
                     try {
                         return await fetchJson(CORS_PROXY + encodeURIComponent(url));
                     } catch (proxyErr) {
@@ -505,6 +517,10 @@
             }
 
             async function loadLeaderboard() {
+                // מציגים מיידית את נתוני הגיבוי כדי שהטאב לעולם לא יישאר תקוע על "טוען נתונים..."
+                // גם אם השרת החיצוני חוסם/נתקע - ומעדכנים לנתונים חיים אם/כאשר השליפה מצליחה
+                renderLeaderboard(FALLBACK_PLAYERS, DEFAULT_MONTHLY_REWARD);
+
                 let players = FALLBACK_PLAYERS;
 
                 const data = await fetchJsonWithProxyFallback(`https://nickpf.com/api/csgoroll-leaderboard?t=${Date.now()}`);
@@ -516,7 +532,10 @@
                 renderLeaderboard(players, monthlyReward);
             }
 
-            loadLeaderboard();
+            // גם אם קורה כשל בלתי צפוי, נתוני הגיבוי כבר מוצגים - זה רק לוג שקט, לא חוסם כלום
+            loadLeaderboard().catch(function (err) {
+                console.warn("[leaderboard] unexpected failure, fallback data already rendered", err);
+            });
 
             // === טיימר ספירה לאחור עד סוף החודש ===
             function getMonthEndTarget() {
