@@ -12,27 +12,25 @@
 
     <!-- Preload/preconnect - מתחילים להוריד את הנכסים הקריטיים (וידאו האינטרו, תמונת הפרופיל, גופן חיצוני)
          מוקדם ככל האפשר, במקביל לפרסור ה-HTML, במקום לחכות שהדפדפן יגיע אליהם בהמשך המסמך -->
-    <link rel="preload" as="video" href="intro.mp4?v=20260721-v1.1.7" type="video/mp4">
+    <link rel="preload" as="video" href="intro.mp4?v=20260721-nobadge-1" type="video/mp4">
     <link rel="preload" as="image" href="profile.jpg">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-    <link rel="stylesheet" href="style.css?v=20260721-v1.1.7">
+    <link rel="stylesheet" href="style.css?v=20260721-nobadge-1">
     <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;700;900&display=swap" rel="stylesheet">
 
     <!-- script.js נטען מוקדם עם defer - מתחיל להוריד אותו מיד (במקביל לפרסור ה-HTML) במקום להמתין
          שהפרסר יגיע לתחתית הגוף, בלי לחסום את הרינדור (defer מריץ אותו רק אחרי שה-DOM מוכן) -->
-    <script src="script.js?v=20260721-v1.1.7" defer></script>
+    <script src="script.js?v=20260721-nobadge-1" defer></script>
 </head>
 <body>
-
-    <div id="version-badge">v1.1.7</div>
 
     <div class="intro-splash" id="introSplash" aria-hidden="true">
         <video
             class="intro-video"
             id="introVideo"
-            src="intro.mp4?v=20260721-v1.1.7"
+            src="intro.mp4?v=20260721-nobadge-1"
             muted
             playsinline
             webkit-playsinline="true"
@@ -220,7 +218,7 @@
                         </div>
 
                         <p class="leaderboard-disclaimer">
-                            Disclaimer: Please gamble responsibly (18+). We assume no responsibility for any financial losses or outcomes incurred on external gambling or promotional platforms linked on this site. All codes and promotions are intended solely for educational and entertainment purposes.
+                            Disclaimer: Please gamble responsibly (18+). We assume no responsibility for any financial losses or outcomes incurred on external gambling or promotional platforms linked on this site.
                         </p>
 
                     </div>
