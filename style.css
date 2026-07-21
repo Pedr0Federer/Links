@@ -753,6 +753,32 @@ footer {
     text-shadow: 0 0 10px rgba(0, 255, 102, 0.6);
 }
 
+/* תמונת PF5 מקשטת שמרחפת בעדינות משני צידי הכותרת - שם ייחודי לאנימציה כדי לא להתנגש
+   עם ה-@keyframes float הגלובלי שכבר בשימוש במקומות אחרים באתר */
+.csgoroll-mascot {
+    width: 52px;
+    height: auto;
+    filter: drop-shadow(0 0 10px rgba(255, 204, 51, 0.55));
+    animation: csgorollMascotFloat 3.4s ease-in-out infinite;
+    pointer-events: none;
+    user-select: none;
+}
+
+.csgoroll-mascot-right {
+    animation-delay: 1.2s;
+}
+
+@keyframes csgorollMascotFloat {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-8px); }
+}
+
+@media (max-width: 768px) {
+    .csgoroll-mascot {
+        width: 34px;
+    }
+}
+
 @media (max-width: 480px) {
     .csgoroll-title-text {
         font-size: 0.72rem;
