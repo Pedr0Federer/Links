@@ -17,6 +17,23 @@ body {
     scrollbar-color: #ff9900 #0a0a0a;
 }
 
+/* === תגית גרסה זמנית === */
+#version-badge {
+    position: fixed;
+    top: 12px;
+    right: 12px;
+    z-index: 9999;
+    background: rgba(255, 215, 0, 0.12);
+    border: 1px solid rgba(255, 215, 0, 0.4);
+    color: #ffd700;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: bold;
+    pointer-events: none;
+    backdrop-filter: blur(8px);
+}
+
 /* === מסך פתיחה - וידאו אינטרו (Intro Splash) === */
 .intro-splash {
     position: fixed;
@@ -398,16 +415,16 @@ h1 {
 }
 
 .link-btn {
-    /* ברירת מחדל - זהב, למקרה של כרטיס ללא מותג ספציפי; כל כרטיס גובר על המשתנה הזה בהמשך */
-    --brand: 255 204 51;
-    /* זכוכית כהה ונקייה (Dark Glassmorphism) - בסיס ניטרלי, כשגוון המותג מופיע כזוהר פנימי עדין ולא כצבע דומיננטי */
-    background: linear-gradient(145deg, rgba(24, 24, 28, 0.78) 0%, rgba(14, 14, 18, 0.68) 100%);
+    /* אקורד זהב מטאלי אחיד לכל 9 הכרטיסים - לא עוד צבע קשת/מותג שונה לכל כרטיס */
+    --brand: 212 175 55;
+    /* אובסידיאן כהה ומאט (Dark Premium) - בסיס אחיד לכל הכרטיסים */
+    background: rgba(15, 15, 18, 0.85);
     backdrop-filter: blur(14px);
     -webkit-backdrop-filter: blur(14px);
     text-decoration: none;
     padding: 14px 8px;
     border-radius: 16px;
-    /* גבול כהה ועדין בבסיס - צבע המותג מופיע כהדגשה עדינה בלבד (ר' box-shadow ומצב hover למטה) */
+    /* גבול זכוכית ניטרלי ועדין בבסיס - הזהב מופיע רק כהדגשה עדינה (ר' box-shadow ומצב hover למטה) */
     border: 1px solid rgba(255, 255, 255, 0.08);
     transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     /* שלושה "משבצות" קבועות - אייקון / כותרת / תגית תחתונה - כדי שכל הכרטיסים יתיישרו זה עם זה
@@ -483,11 +500,10 @@ h1 {
 .link-btn:hover {
     /* important כדי לנצח את אנימציית cardFloat הפעילה שמחזיקה ב-transform */
     transform: translateY(-8px) scale(1.045) !important;
-    /* במעבר עכבר - הזכוכית נהיית מעט בהירה יותר, נשארת ניטרלית */
-    background: linear-gradient(145deg, rgba(34, 34, 40, 0.85) 0%, rgba(20, 20, 24, 0.75) 100%);
-    /* עומק כהה + זוהר בגוון המותג יחד - כאן צבע המותג בא לידי ביטוי כהדגשת גבול/זוהר, לא כרקע */
-    box-shadow: 0 20px 45px rgba(0, 0, 0, 0.5), 0 0 28px rgb(var(--brand) / 0.4);
-    border-color: rgb(var(--brand) / 0.55);
+    /* עלייה חלקה + זוהר זהב/לבן נקי במקום השתקפויות ניאון - האובסידיאן נהיה מעט בהיר יותר */
+    background: rgba(24, 24, 28, 0.9);
+    box-shadow: 0 20px 45px rgba(0, 0, 0, 0.5), 0 0 26px rgb(var(--brand) / 0.35);
+    border-color: rgb(var(--brand) / 0.5);
 }
 
 /* השהייה הדרגתית לכניסת הכפתורים, ואחריה תחילת הריחוף האיטי לכל כרטיס בעיכוב מפוזר וטבעי */
@@ -525,9 +541,9 @@ h1 {
 }
 
 .link-btn:hover .icon {
-    /* קפיצה עדינה של האייקון + זוהר בצבע המותג (currentColor מגיע מצבע הקישור הספציפי) */
+    /* קפיצה עדינה של האייקון + זוהר זהב אחיד ועדין (לא עוד גוון לפי מותג) */
     animation: iconBounce 0.55s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
-    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3)) drop-shadow(0 0 10px currentColor);
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3)) drop-shadow(0 0 9px rgb(var(--brand)));
 }
 
 @keyframes iconBounce {
@@ -553,7 +569,8 @@ h1 {
     justify-content: center;
     text-align: center;
     min-height: 2.6em;
-    /* צל לטקסט בתוך הכפתור */
+    /* טקסט כותרת לבן טהור, חד וניגודי - צל עדין וניטרלי בלבד, לא צבעוני */
+    color: #ffffff;
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
@@ -571,20 +588,20 @@ h1 {
     min-height: 24px;
 }
 
-/* שורת קוד קופון - כל המשפט מודגש/זוהר באופן אחיד, לא רק הקוד עצמו */
+/* שורת קוד קופון - תגית זהב מאט ומעודן, לא עוד זוהר צהוב רווי */
 .sub-text {
     display: inline-flex;
     align-items: center;
     padding: 3px 12px;
     border-radius: 999px;
-    background: linear-gradient(145deg, rgba(255, 204, 51, 0.28), rgba(255, 140, 0, 0.18));
-    border: 1px solid rgba(255, 204, 51, 0.55);
-    color: #ffcc33;
+    background: rgba(212, 175, 55, 0.1);
+    border: 1px solid rgba(212, 175, 55, 0.35);
+    color: #d4af37;
     font-size: 0.72rem;
-    font-weight: 900;
+    font-weight: 700;
     letter-spacing: 0.3px;
     text-shadow: none;
-    box-shadow: 0 0 10px rgba(255, 204, 51, 0.3);
+    box-shadow: none;
 }
 
 footer {
@@ -594,25 +611,13 @@ footer {
     text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
 }
 
-/* צבעי המותג של כל כרטיס נקבעים דרך --brand (rgb triplet); הגבול, הזוהר האמביינטי, קרן האור וה-hover כולם נגזרים ממנו אוטומטית */
+/* כל 9 הכרטיסים חולקים כעת את אותו --brand (זהב מטאלי) שהוגדר ב-.link-btn - אין יותר
+   צבע ייחודי למותג לכל כרטיס. נשארה כאן רק ההתאמה שבאמת ייחודית ללוגו עצמו (לא לצבע הכרטיס). */
 
-/* Discord */
-.link-btn.discord { --brand: 88 101 242; color: #5865F2; }
-
-/* Discord Fragrance - דיסקורד בשמים */
-.link-btn.discord-frag {
-    --brand: 255 0 160;
-    color: #ff00a0; /* צבע טקסט ורוד פוקסיה זוהר */
-}
-
-/* שינוי צבע הלוגו של הדיסקורד בתוך כפתור זה בלבד לורוד */
+/* Discord Fragrance - דיסקורד בשמים: הלוגו נשאר ורוד כדי להבדיל מהדיסקורד הראשי (אותו קובץ תמונה) */
 .link-btn.discord-frag .original-logo {
-    /* פילטר שהופך את הלוגו למג'נטה/ורוד המדויק */
     filter: brightness(0) saturate(100%) invert(27%) sepia(91%) saturate(3015%) hue-rotate(310deg) brightness(101%) contrast(103%);
 }
-
-/* Kick */
-.link-btn.kick { --brand: 0 255 1; color: #00ff01; }
 
 /* === תגית סטטוס שידור חי (Kick) === */
 .live-pill {
@@ -655,24 +660,6 @@ footer {
     0%, 100% { opacity: 1; transform: scale(1); }
     50% { opacity: 0.5; transform: scale(1.3); }
 }
-
-/* YouTube */
-.link-btn.youtube { --brand: 255 77 77; color: #ff4d4d; }
-
-/* TikTok */
-.link-btn.tiktok { --brand: 0 242 234; color: #00f2ea; }
-
-/* Instagram */
-.link-btn.instagram { --brand: 131 58 180; color: #833AB4; }
-
-/* Reddit */
-.link-btn.reddit { --brand: 255 110 46; color: #ff8b57; }
-
-/* כלבו יהודה */
-.link-btn.shop-black { --brand: 255 255 255; color: #ffffff; }
-
-/* קאי קולקטורס */
-.link-btn.kai { --brand: 255 204 0; color: #ffcc00; }
 
 /* === לידרבורד (CODES & LEADERBOARDS) === */
 .leaderboard {
