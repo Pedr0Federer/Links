@@ -27,7 +27,8 @@ body {
     justify-content: center;
     background: radial-gradient(circle at center, #140d08 0%, #05070a 65%, #020304 100%);
     opacity: 1;
-    transition: opacity 0.6s ease;
+    /* דעיכה מהירה יותר (היה 0.6s) כדי להגיע לאתר הראשי מהר יותר בתחושה */
+    transition: opacity 0.4s ease;
 }
 
 .intro-splash.intro-hidden {
@@ -399,15 +400,15 @@ h1 {
 .link-btn {
     /* ברירת מחדל - זהב, למקרה של כרטיס ללא מותג ספציפי; כל כרטיס גובר על המשתנה הזה בהמשך */
     --brand: 255 204 51;
-    /* זכוכית כהה ושקופה כדי שהרקע המונפש ייראה מבעד לכפתור */
-    background: linear-gradient(145deg, rgba(37, 26, 20, 0.45) 0%, rgba(26, 15, 10, 0.35) 100%);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
+    /* זכוכית כהה ונקייה (Dark Glassmorphism) - בסיס ניטרלי, כשגוון המותג מופיע כזוהר פנימי עדין ולא כצבע דומיננטי */
+    background: linear-gradient(145deg, rgba(24, 24, 28, 0.78) 0%, rgba(14, 14, 18, 0.68) 100%);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
     text-decoration: none;
     padding: 14px 8px;
     border-radius: 16px;
-    /* גבול דק וחד בגוון המותג הספציפי של כל כרטיס */
-    border: 1px solid rgb(var(--brand) / 0.28);
+    /* גבול כהה ועדין בבסיס - צבע המותג מופיע כהדגשה עדינה בלבד (ר' box-shadow ומצב hover למטה) */
+    border: 1px solid rgba(255, 255, 255, 0.08);
     transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     /* שלושה "משבצות" קבועות - אייקון / כותרת / תגית תחתונה - כדי שכל הכרטיסים יתיישרו זה עם זה
        בלי קשר לתוכן שיש או אין להם (למשל תגית LIVE או קוד קופון) */
@@ -419,8 +420,8 @@ h1 {
     position: relative;
     min-height: 108px;
     overflow: hidden;
-    /* צל עומק + טבעת גבול חדה בגוון המותג */
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.35), 0 0 0 1px rgb(var(--brand) / 0.1);
+    /* צל עומק + הדגשת מותג עדינה מאוד סביב הכרטיס - "inner glow" רך, לא בלוק צבע */
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4), 0 0 0 1px rgb(var(--brand) / 0.1);
     opacity: 0;
     will-change: transform;
     /* fadeInUp מטפל בכניסה (transform), cardFloat מקבל שליטה על transform רק אחרי שהכניסה מסתיימת לכל כרטיס (ראו עיכובים למטה) */
@@ -482,11 +483,11 @@ h1 {
 .link-btn:hover {
     /* important כדי לנצח את אנימציית cardFloat הפעילה שמחזיקה ב-transform */
     transform: translateY(-8px) scale(1.045) !important;
-    /* במעבר עכבר - הגוון נהיה מעט יותר חם */
-    background: linear-gradient(145deg, rgba(53, 38, 29, 0.55) 0%, rgba(37, 26, 20, 0.45) 100%);
-    /* עומק כהה + זוהר בגוון המותג יחד, לתחושת "hover depth" עשירה */
-    box-shadow: 0 20px 45px rgba(0, 0, 0, 0.45), 0 0 28px rgb(var(--brand) / 0.4);
-    border-color: rgb(var(--brand) / 0.6);
+    /* במעבר עכבר - הזכוכית נהיית מעט בהירה יותר, נשארת ניטרלית */
+    background: linear-gradient(145deg, rgba(34, 34, 40, 0.85) 0%, rgba(20, 20, 24, 0.75) 100%);
+    /* עומק כהה + זוהר בגוון המותג יחד - כאן צבע המותג בא לידי ביטוי כהדגשת גבול/זוהר, לא כרקע */
+    box-shadow: 0 20px 45px rgba(0, 0, 0, 0.5), 0 0 28px rgb(var(--brand) / 0.4);
+    border-color: rgb(var(--brand) / 0.55);
 }
 
 /* השהייה הדרגתית לכניסת הכפתורים, ואחריה תחילת הריחוף האיטי לכל כרטיס בעיכוב מפוזר וטבעי */

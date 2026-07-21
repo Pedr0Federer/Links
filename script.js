@@ -60,13 +60,18 @@
                 }
             }
 
-            attemptPlay().catch(function () {
+            function speedUpPlayback() {
+                // ברגע שהניגון באמת התחיל - מהירות מעט מהירה יותר כדי שהאינטרו ירגיש קצבי וזריז יותר
+                videoEl.playbackRate = 1.25;
+            }
+
+            attemptPlay().then(speedUpPlayback).catch(function () {
                 // בדפדפני מובייל (iOS Safari / Chrome) מדיניות ה-autoplay עלולה לחסום ניגון
                 // גם כשהווידאו מושתק - מנסים שוב מיד עם המגע/הקליק הראשון של המשתמש, בלי לוותר
                 // על האינטרו מראש. רשת הביטחון (safetyTimer) ממשיכה לדאוג שלעולם לא ניתקע.
                 function retryOnGesture() {
                     if (finished) return;
-                    attemptPlay().catch(function () {});
+                    attemptPlay().then(speedUpPlayback).catch(function () {});
                 }
                 document.addEventListener("touchstart", retryOnGesture, { once: true, passive: true });
                 document.addEventListener("pointerdown", retryOnGesture, { once: true });
