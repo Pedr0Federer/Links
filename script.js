@@ -1,6 +1,10 @@
-// === מסך פתיחה - וידאו אינטרו (Intro Splash) ===
+// === מסך פתיחה - וידאו אינטרו (Intro Splash) + מוכנות העמוד ===
 (function () {
     "use strict";
+
+    const INTRO_SAFETY_MS = 6000; // רשת ביטחון מוחלטת: מכסה גם "לא התחיל בכלל" וגם "נתקע באמצע"
+    const INTRO_FADE_MS = 600;    // תואם למשך ה-transition של .intro-splash ב-CSS
+    const PAGE_READY_FALLBACK_MS = 2500; // אם window.load מתעכב/לא מגיע, לא נתקעים גם כאן
 
     function playIntroSplash() {
         return new Promise((resolve) => {
@@ -9,40 +13,54 @@
             if (!introEl) { resolve(); return; }
 
             let finished = false;
+            let safetyTimer = null;
 
             function finishIntro() {
                 if (finished) return;
                 finished = true;
-                // דעיכה חלקה של שכבת הפתיחה, ואז הסרה מלאה מה-DOM ברגע שה-transition עצמו מסתיים (אירוע, לא טיימר)
+                if (safetyTimer) clearTimeout(safetyTimer);
+                // דעיכה חלקה של שכבת הפתיחה, ואז הסרה מלאה מה-DOM כדי שלא תחסום קליקים
                 introEl.classList.add("intro-hidden");
-                introEl.addEventListener("transitionend", () => {
+                setTimeout(() => {
                     introEl.remove();
                     resolve();
-                }, { once: true });
+                }, INTRO_FADE_MS);
             }
 
-            if (!videoEl) { finishIntro(); return; }
+            // רשת ביטחון מוחלטת - לא משנה מה קורה עם הסרטון (autoplay חסום, קובץ נכשל, ניגון נתקע וכו')
+            safetyTimer = setTimeout(finishIntro, INTRO_SAFETY_MS);
 
-            // המנגנון הראשי - הסרטון מתנגן במלואו עד הסוף הטבעי שלו, בלי חיתוך מוקדם
+            if (!videoEl) { return; }
+
             videoEl.addEventListener("ended", finishIntro);
-
-            // רשתות ביטחון מבוססות-אירוע בלבד (לא טיימרים) - קובץ שבור או שהניגון נתקע לגמרי
             videoEl.addEventListener("error", finishIntro);
             videoEl.addEventListener("stalled", finishIntro);
 
-            function startPlayback() {
-                videoEl.play().catch(finishIntro);
-            }
-
-            // ממתינים שהדפדפן יאותת שיש מספיק נתונים חוצצים כדי לנגן ברצף עד הסוף בלי הפרעות,
-            // ורק אז מתחילים ניגון - כך נמנעים מהקפאות/גמגומים באמצע עקב חוסר buffering
-            if (videoEl.readyState >= 4 /* HAVE_ENOUGH_DATA */) {
-                startPlayback();
-            } else {
-                videoEl.addEventListener("canplaythrough", startPlayback, { once: true });
+            // מנסים לנגן מיידית - לא ממתינים לשום אירוע buffering שעלול לא להגיע בכלל
+            videoEl.muted = true;
+            const playPromise = videoEl.play();
+            if (playPromise && typeof playPromise.catch === "function") {
+                playPromise.catch(finishIntro);
             }
         });
     }
 
+    function waitForPageReady() {
+        // מחכים שכל משאבי העמוד (תמונות וכו') ייטענו בפועל (window.load),
+        // עם רשת ביטחון קצרה למקרה שזה מתעכב/נכשל, כדי לא לתקוע את החשיפה של האתר
+        return new Promise((resolve) => {
+            if (document.readyState === "complete") { resolve(); return; }
+            let done = false;
+            function finish() {
+                if (done) return;
+                done = true;
+                resolve();
+            }
+            window.addEventListener("load", finish, { once: true });
+            setTimeout(finish, PAGE_READY_FALLBACK_MS);
+        });
+    }
+
     window.playIntroSplash = playIntroSplash;
+    window.waitForPageReady = waitForPageReady;
 })();

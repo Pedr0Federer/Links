@@ -133,11 +133,19 @@ body {
 }
 
 /* === הגדרות הפריסה === */
+/* מוסתר כברירת מחדל - נחשף ע"י script.js/index.html רק אחרי שהאינטרו הסתיים וגם משאבי העמוד נטענו,
+   כדי שלא "יבזיק" רקע לא מעוצב/תמונות לא טעונות מתחת לשכבת הפתיחה */
 .page-layout {
     display: flex;
     justify-content: center;
     align-items: flex-start;
     min-height: 100vh;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+}
+
+.page-layout.site-ready {
+    opacity: 1;
 }
 
 /* === סימן הלוגו הענק ברקע (אריה/נמר שואג) === */
