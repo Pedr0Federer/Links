@@ -422,7 +422,9 @@ h1 {
     align-items: center;
     gap: 16px;
     padding: 20px;
-    border-radius: 18px;
+    /* צורת "שבבים חתוכים" - זווית ישרה חדה למעלה-שמאל/מטה-ימין, פינה מעוגלת למעלה-ימין/מטה-שמאל */
+    border-radius: 0 18px 0 18px;
+    clip-path: polygon(20px 0, 100% 0, 100% calc(100% - 20px), calc(100% - 20px) 100%, 0 100%, 0 20px);
     background: rgba(255, 200, 50, 0.12);
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
@@ -486,7 +488,9 @@ h1 {
     justify-content: center;
     gap: 8px;
     padding: 22px 14px;
-    border-radius: 16px;
+    /* צורת "שבבים חתוכים" - זווית ישרה חדה למעלה-שמאל/מטה-ימין, פינה מעוגלת למעלה-ימין/מטה-שמאל */
+    border-radius: 0 16px 0 16px;
+    clip-path: polygon(16px 0, 100% 0, 100% calc(100% - 16px), calc(100% - 16px) 100%, 0 100%, 0 16px);
     background: rgba(255, 200, 50, 0.07);
     border: 1px dashed rgba(255, 220, 100, 0.3);
     backdrop-filter: blur(12px);
@@ -575,7 +579,9 @@ h1 {
     -webkit-backdrop-filter: blur(16px);
     text-decoration: none;
     padding: 14px 8px;
-    border-radius: 16px;
+    /* צורת "שבבים חתוכים" (ניסוי עיצובי) - זווית ישרה חדה למעלה-שמאל/מטה-ימין, פינה מעוגלת למעלה-ימין/מטה-שמאל */
+    border-radius: 0 16px 0 16px;
+    clip-path: polygon(16px 0, 100% 0, 100% calc(100% - 16px), calc(100% - 16px) 100%, 0 100%, 0 16px);
     border: 1px solid rgba(255, 220, 100, 0.3);
     transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     /* תוכן הכרטיס (אייקון / כותרת / תגית) ממורכז כקבוצה אנכית - לא נדחף לפינות עם רווח ריק */
