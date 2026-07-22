@@ -36,6 +36,7 @@
             }
         }
 
+        // ניגון מיידי בטעינה - עם fallback שקט אם autoplay נחסם, עד למגע/קליק ראשון
         attemptPlay().catch(function () {
             function retryOnGesture() {
                 document.removeEventListener("touchstart", retryOnGesture);
@@ -46,6 +47,15 @@
             document.addEventListener("touchstart", retryOnGesture, { once: true, passive: true });
             document.addEventListener("pointerdown", retryOnGesture, { once: true });
             document.addEventListener("click", retryOnGesture, { once: true });
+        });
+
+        // כשהטאב גלוי/פעיל - הווידאו חייב להיות מנוגן; כשהוא מוסתר - משהים כדי לחסוך CPU/GPU
+        document.addEventListener("visibilitychange", function () {
+            if (document.hidden) {
+                bgVideo.pause();
+            } else {
+                attemptPlay().catch(function () {});
+            }
         });
     }
 
