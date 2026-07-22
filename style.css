@@ -1245,20 +1245,17 @@ footer {
 /* === טיימר ספירה לאחור === */
 .leaderboard-timer {
     position: relative;
-    border: 2px solid transparent;
     border-radius: 16px;
     padding: 16px;
-    /* זכוכית כהה אחידה (ניסוי עיצובי) - זהה בדיוק לפאנל הפודיום */
-    background:
-        rgba(18, 22, 14, 0.85) padding-box,
-        conic-gradient(from var(--border-angle, 0deg), #ff9900, #ffcc00, #ff9900) border-box;
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
+    /* זכוכית כהה כפויה (ניסוי עיצובי) - !important כדי לנצח בוודאות כל שכבה/מטמון קודם */
+    background: rgba(15, 18, 12, 0.88) !important;
+    backdrop-filter: blur(20px) !important;
+    -webkit-backdrop-filter: blur(20px) !important;
+    border: 1px solid rgba(255, 200, 80, 0.3) !important;
     opacity: 0;
     will-change: transform;
     animation:
         fadeInUp 0.6s ease-out 0.35s forwards,
-        rotateBorderAngle 5s linear infinite,
         float 11s ease-in-out 0.6s infinite;
 }
 
@@ -1394,21 +1391,18 @@ footer {
 /* === טבלת דירוגים === */
 .leaderboard-table-wrap {
     position: relative;
-    border: 2px solid transparent;
     border-radius: 16px;
     overflow: hidden;
-    /* זכוכית כהה אחידה (ניסוי עיצובי) - זהה בדיוק לפאנל הפודיום, במקום הזכוכית הבהירה הקודמת */
-    background:
-        rgba(18, 22, 14, 0.85) padding-box,
-        conic-gradient(from var(--border-angle, 0deg), #ff9900, #ffcc00, #ff9900) border-box;
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
+    /* זכוכית כהה כפויה (ניסוי עיצובי) - !important כדי לנצח בוודאות כל שכבה/מטמון קודם */
+    background: rgba(15, 18, 12, 0.88) !important;
+    backdrop-filter: blur(20px) !important;
+    -webkit-backdrop-filter: blur(20px) !important;
+    border: 1px solid rgba(255, 200, 80, 0.3) !important;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
     opacity: 0;
     will-change: transform;
     animation:
         fadeInUp 0.6s ease-out 0.45s forwards,
-        rotateBorderAngle 6s linear infinite,
         float 11s ease-in-out 0.7s infinite;
 }
 
@@ -1425,6 +1419,7 @@ footer {
     text-transform: uppercase;
     padding: 12px 10px;
     text-align: center;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8), 0 0 2px rgba(0, 0, 0, 0.9);
 }
 
 .leaderboard-table tbody td {
