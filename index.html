@@ -18,7 +18,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-    <link rel="stylesheet" href="style.css?v=2.4-particles">
+    <link rel="stylesheet" href="style.css?v=2.5-hourlypoll">
     <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;700;900&display=swap" rel="stylesheet">
 
     <!-- script.js נטען מוקדם עם defer - מתחיל להוריד אותו מיד (במקביל לפרסור ה-HTML) במקום להמתין
@@ -566,9 +566,33 @@
                 renderLeaderboard(players, monthlyReward);
             }
 
+            // === רענון תקופתי של הלידרבורד (כל שעה) ===
+            const LEADERBOARD_POLL_INTERVAL_MS = 3600000; // שעה - איזון בין נתונים עדכניים לעומס מינימלי על השרת
+            let leaderboardPollTimerId = null; // נשמר כדי למנוע יצירת אינטרוול כפול בטעות
+            let lastLeaderboardFetchAt = 0;
+
+            // renderLeaderboard כבר עושה עדכון innerHTML ממוקד בתוך הפודיום/הטבלה בלבד - לא נוגע
+            // בשאר העמוד, כך שאין קפיצת גלילה או ריצוד פריסה כשהרענון קורה ברקע
+            function pollLeaderboard() {
+                lastLeaderboardFetchAt = Date.now();
+                loadLeaderboard().catch(function (err) {
+                    console.warn("[leaderboard] unexpected failure during periodic refresh, previous data stays visible", err);
+                });
+            }
+
             // גם אם קורה כשל בלתי צפוי, נתוני הגיבוי כבר מוצגים - זה רק לוג שקט, לא חוסם כלום
-            loadLeaderboard().catch(function (err) {
-                console.warn("[leaderboard] unexpected failure, fallback data already rendered", err);
+            pollLeaderboard();
+
+            if (!leaderboardPollTimerId) {
+                leaderboardPollTimerId = setInterval(pollLeaderboard, LEADERBOARD_POLL_INTERVAL_MS);
+            }
+
+            // אם המשתמש עזב את הטאב ליותר משעה וחזר - מרעננים מיידית וללא רעש (בלי לחכות
+            // לאינטרוול הבא), כדי שהנתונים לעולם לא יישארו "תקועים" ישן מדי בזמן שהוא לא הסתכל
+            document.addEventListener("visibilitychange", function () {
+                if (!document.hidden && (Date.now() - lastLeaderboardFetchAt) >= LEADERBOARD_POLL_INTERVAL_MS) {
+                    pollLeaderboard();
+                }
             });
 
             // === טיימר ספירה לאחור עד סוף החודש ===
