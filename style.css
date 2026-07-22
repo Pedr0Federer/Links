@@ -696,6 +696,10 @@ footer {
     line-height: 1.5;
     color: rgba(255, 255, 255, 0.45);
     text-align: center;
+    /* הטקסט הוא משפט אנגלי - כופים כיוון LTR מפורש (העמוד עצמו RTL) כדי שהנקודה בסוף
+       תישאר בקצה הימני הנכון של המשפט, במקום "לקפוץ" שמאלה בגלל הקשר ה-BiDi שסביבה */
+    direction: ltr !important;
+    unicode-bidi: isolate;
 }
 
 .podium-skeleton,
