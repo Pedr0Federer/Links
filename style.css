@@ -424,10 +424,10 @@ h1 {
     /* צורת "שבבים חתוכים" - זווית ישרה חדה למעלה-שמאל/מטה-ימין, פינה מעוגלת למעלה-ימין/מטה-שמאל */
     border-radius: 0 18px 0 18px;
     clip-path: polygon(20px 0, 100% 0, 100% calc(100% - 20px), calc(100% - 20px) 100%, 0 100%, 0 20px);
-    /* זכוכית קפואה שקופה (ניסוי עיצובי) */
-    background: rgba(255, 255, 255, 0.12);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
+    /* זכוכית קפואה עם גוון כהה עדין - לשמור על ניגודיות טקסט מול הרקע הבהיר */
+    background: rgba(15, 20, 10, 0.45);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
     border: 1px solid rgba(255, 220, 100, 0.45);
     /* filter:drop-shadow במקום box-shadow - עוקב אחרי הצללית החתוכה בפועל (clip-path),
        ולא משאיר "דליפה" מלבנית כהה בפינות החתוכות */
@@ -439,7 +439,7 @@ h1 {
 
 .featured-card:hover {
     transform: translateY(-6px) scale(1.02);
-    background: rgba(255, 255, 255, 0.2);
+    background: rgba(15, 20, 10, 0.6);
     filter: drop-shadow(0 14px 26px rgba(0, 0, 0, 0.4)) drop-shadow(0 0 16px rgba(255, 204, 51, 0.4));
     border-color: rgba(255, 220, 100, 0.65);
 }
@@ -462,12 +462,14 @@ h1 {
 .featured-title {
     font-size: 1.1rem;
     font-weight: 900;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8), 0 0 2px rgba(0, 0, 0, 0.9);
 }
 
 .featured-sub {
-    font-size: 0.78rem;
-    color: rgba(255, 255, 255, 0.55);
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.85);
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8), 0 0 2px rgba(0, 0, 0, 0.9);
 }
 
 /* --- כרטיסי מידע (עדכונים אחרונים / תורמים מובילים) - "בקרוב" גלוי וכן, בלי תוכן מומצא --- */
@@ -493,26 +495,28 @@ h1 {
     /* צורת "שבבים חתוכים" - זווית ישרה חדה למעלה-שמאל/מטה-ימין, פינה מעוגלת למעלה-ימין/מטה-שמאל */
     border-radius: 0 16px 0 16px;
     clip-path: polygon(16px 0, 100% 0, 100% calc(100% - 16px), calc(100% - 16px) 100%, 0 100%, 0 16px);
-    /* זכוכית קפואה שקופה (ניסוי עיצובי) */
-    background: rgba(255, 255, 255, 0.12);
+    /* זכוכית קפואה עם גוון כהה עדין - לשמור על ניגודיות טקסט מול הרקע הבהיר */
+    background: rgba(15, 20, 10, 0.45);
     border: 1px dashed rgba(255, 220, 100, 0.45);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
     min-height: 84px;
 }
 
 .info-card-title {
     font-weight: 800;
     font-size: 0.92rem;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8), 0 0 2px rgba(0, 0, 0, 0.9);
 }
 
 .info-card-soon {
-    font-size: 0.68rem;
+    font-size: 0.78rem;
     letter-spacing: 1.5px;
     text-transform: uppercase;
     color: #ffcc33;
-    opacity: 0.8;
+    opacity: 0.9;
     font-weight: 700;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8), 0 0 2px rgba(0, 0, 0, 0.9);
 }
 
 /* --- רשת קישורים מהירים (שאר הכרטיסים) --- */
@@ -576,10 +580,10 @@ h1 {
 .link-btn {
     /* אקורד זהב מטאלי אחיד לכל 9 הכרטיסים - לא עוד צבע קשת/מותג שונה לכל כרטיס */
     --brand: 212 175 55;
-    /* זכוכית קפואה שקופה (ניסוי עיצובי) - במקום הגוון הזהוב הקודם */
-    background: rgba(255, 255, 255, 0.12);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
+    /* זכוכית קפואה עם גוון כהה עדין - לשמור על ניגודיות טקסט מול הרקע הבהיר */
+    background: rgba(15, 20, 10, 0.45);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
     text-decoration: none;
     padding: 14px 8px;
     /* צורת "שבבים חתוכים" (ניסוי עיצובי) - זווית ישרה חדה למעלה-שמאל/מטה-ימין, פינה מעוגלת למעלה-ימין/מטה-שמאל */
@@ -662,7 +666,7 @@ h1 {
     /* important כדי לנצח את אנימציית cardFloat הפעילה שמחזיקה ב-transform */
     transform: translateY(-8px) scale(1.045) !important;
     /* עלייה חלקה + זוהר זהב מעט עשיר יותר מהמצב הרגיל */
-    background: rgba(255, 255, 255, 0.2);
+    background: rgba(15, 20, 10, 0.6);
     filter: drop-shadow(0 14px 28px rgba(0, 0, 0, 0.4)) drop-shadow(0 0 16px rgb(var(--brand) / 0.45));
     border-color: rgba(255, 220, 100, 0.65);
 }
@@ -733,9 +737,9 @@ h1 {
     justify-content: center;
     text-align: center;
     min-height: 2.6em;
-    /* טקסט כותרת לבן טהור, חד וניגודי - צל עדין וניטרלי בלבד, לא צבעוני */
+    /* טקסט כותרת לבן טהור - צל כהה חזק כדי לשמור על ניגודיות מול הרקע הבהיר */
     color: #ffffff;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8), 0 0 2px rgba(0, 0, 0, 0.9);
 }
 
 .main-text {
@@ -767,10 +771,10 @@ h1 {
     background: rgba(212, 175, 55, 0.1);
     border: 1px solid rgba(212, 175, 55, 0.35);
     color: #d4af37;
-    font-size: 0.72rem;
+    font-size: 0.85rem;
     font-weight: 700;
     letter-spacing: 0.3px;
-    text-shadow: none;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8), 0 0 2px rgba(0, 0, 0, 0.9);
     box-shadow: none;
 }
 
@@ -794,15 +798,15 @@ footer {
     display: inline-flex;
     align-items: center;
     gap: 5px;
-    font-size: 0.62rem;
+    font-size: 0.7rem;
     font-weight: 700;
     letter-spacing: 0.3px;
     padding: 2px 8px;
     border-radius: 20px;
     background: rgba(255, 255, 255, 0.06);
     border: 1px solid rgba(255, 255, 255, 0.1);
-    color: #9a8f85;
-    text-shadow: none;
+    color: #cbd5e0;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8), 0 0 2px rgba(0, 0, 0, 0.9);
     transition: all 0.3s ease;
 }
 
