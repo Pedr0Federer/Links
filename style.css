@@ -382,104 +382,27 @@ h1 {
     display: flex;
 }
 
-/* === טאב הבית - פריסת דשבורד (ניסוי עיצובי חדש): כרטיסים מומלצים למעלה,
-   כרטיסי מידע באמצע, ורשת קישורים מהירים למטה - שלושת המקטעים נערמים אנכית === */
+/* === רשת קישורים לטאב הבית - 3x3 אחיד וסימטרי, כל 9 הכרטיסים באותו גודל/צורה === */
 #tab-home.tab-panel.active {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-}
-
-/* --- כרטיסים מומלצים (Kick & YouTube) --- */
-.dashboard-featured {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 14px;
-}
-
-@media (max-width: 640px) {
-    .dashboard-featured {
-        grid-template-columns: 1fr;
-    }
-}
-
-.featured-card {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    padding: 20px;
-    /* צורת "שבבים חתוכים" - זווית ישרה חדה למעלה-שמאל/מטה-ימין, פינה מעוגלת למעלה-ימין/מטה-שמאל */
-    border-radius: 0 18px 0 18px;
-    clip-path: polygon(20px 0, 100% 0, 100% calc(100% - 20px), calc(100% - 20px) 100%, 0 100%, 0 20px);
-    /* זכוכית קפואה עם גוון כהה עדין - לשמור על ניגודיות טקסט מול הרקע הבהיר */
-    background: rgba(15, 20, 10, 0.45);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 220, 100, 0.45);
-    /* filter:drop-shadow במקום box-shadow - עוקב אחרי הצללית החתוכה בפועל (clip-path),
-       ולא משאיר "דליפה" מלבנית כהה בפינות החתוכות */
-    filter: drop-shadow(0 8px 18px rgba(0, 0, 0, 0.35));
-    text-decoration: none;
-    color: #ffffff;
-    transition: all 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
-
-.featured-card:hover {
-    transform: translateY(-6px) scale(1.02);
-    background: rgba(15, 20, 10, 0.6);
-    filter: drop-shadow(0 14px 26px rgba(0, 0, 0, 0.4)) drop-shadow(0 0 16px rgba(255, 204, 51, 0.4));
-    border-color: rgba(255, 220, 100, 0.65);
-}
-
-.featured-card .icon {
-    width: 64px;
-    height: 64px;
-    flex-shrink: 0;
-}
-
-.featured-text {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 6px;
-    text-align: right;
-    min-width: 0;
-}
-
-.featured-title {
-    font-size: 1.1rem;
-    font-weight: 900;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8), 0 0 2px rgba(0, 0, 0, 0.9);
-}
-
-.featured-sub {
-    font-size: 0.88rem;
-    font-weight: 600;
-    color: rgba(255, 255, 255, 0.85);
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8), 0 0 2px rgba(0, 0, 0, 0.9);
-}
-
-/* --- רשת קישורים מהירים (שאר הכרטיסים) --- */
-.dashboard-quicklinks {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 14px;
 }
 
 @media (max-width: 640px) {
-    .dashboard-quicklinks {
+    #tab-home.tab-panel.active {
         grid-template-columns: repeat(2, 1fr);
     }
 }
 
 @media (max-width: 380px) {
-    .dashboard-quicklinks {
+    #tab-home.tab-panel.active {
         grid-template-columns: 1fr;
     }
 }
 
 @media (min-width: 993px) {
-    .dashboard-quicklinks {
+    #tab-home.tab-panel.active {
         gap: 22px;
     }
 
@@ -730,9 +653,9 @@ footer {
 /* כל 9 הכרטיסים חולקים כעת את אותו --brand (זהב מטאלי) שהוגדר ב-.link-btn - אין יותר
    צבע ייחודי למותג לכל כרטיס. נשארה כאן רק ההתאמה שבאמת ייחודית ללוגו עצמו (לא לצבע הכרטיס). */
 
-/* Discord Fragrance - דיסקורד בשמים: הלוגו נשאר ורוד כדי להבדיל מהדיסקורד הראשי (אותו קובץ תמונה) */
+/* Discord Fragrance - דיסקורד בשמים: הלוגו לבן אחיד, תואם לשאר האייקונים */
 .link-btn.discord-frag .original-logo {
-    filter: brightness(0) saturate(100%) invert(27%) sepia(91%) saturate(3015%) hue-rotate(310deg) brightness(101%) contrast(103%);
+    filter: brightness(0) invert(1);
 }
 
 /* === תגית סטטוס שידור חי (Kick) === */
