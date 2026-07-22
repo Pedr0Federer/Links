@@ -1112,7 +1112,7 @@ footer {
         float 11s ease-in-out 0.6s infinite;
 }
 
-/* === תג/כותרת הטיימר בעיצוב באדג' גיימינג === */
+/* === תג/כותרת הטיימר - עיצוב פרימיום זהב, נקי מאימוג'ים === */
 .timer-badge {
     display: inline-flex;
     align-items: center;
@@ -1120,23 +1120,22 @@ footer {
     padding: 9px 20px;
     margin-bottom: 20px;
     border-radius: 999px;
-    background: linear-gradient(135deg, rgba(255, 153, 0, 0.18), rgba(255, 204, 51, 0.08));
-    border: 1px solid rgba(255, 204, 51, 0.4);
-    box-shadow: 0 0 22px rgba(255, 153, 0, 0.25);
+    background: linear-gradient(135deg, rgba(255, 184, 0, 0.12), rgba(0, 0, 0, 0.45));
+    border: 1px solid rgba(255, 184, 0, 0.35);
+    box-shadow: 0 0 12px rgba(255, 184, 0, 0.15);
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
 
-.timer-badge-icon {
-    font-size: 1rem;
-    line-height: 1;
+.timer-badge:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 0 18px rgba(255, 184, 0, 0.3);
 }
 
 .timer-badge-text {
-    background: linear-gradient(90deg, #ffcc33, #ff8c00);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+    color: #ffc83b;
     font-weight: 900;
     font-size: 0.85rem;
-    letter-spacing: 1.2px;
+    letter-spacing: 1.5px;
     text-transform: uppercase;
     white-space: nowrap;
 }
@@ -1238,7 +1237,7 @@ footer {
     }
 }
 
-/* === באדג' תאריך הסיום === */
+/* === באדג' תאריך הסיום - עיצוב פרימיום זהב, נקי מאימוג'ים === */
 .timer-date-badge {
     display: inline-flex;
     align-items: center;
@@ -1246,18 +1245,20 @@ footer {
     margin-top: 14px;
     padding: 5px 14px;
     border-radius: 999px;
-    background: rgba(255, 153, 0, 0.08);
-    border: 1px solid rgba(255, 204, 51, 0.25);
-    box-shadow: 0 0 12px rgba(255, 153, 0, 0.15);
-    color: #d8a24a;
+    background: linear-gradient(135deg, rgba(255, 184, 0, 0.12), rgba(0, 0, 0, 0.45));
+    border: 1px solid rgba(255, 184, 0, 0.35);
+    box-shadow: 0 0 12px rgba(255, 184, 0, 0.15);
+    color: #ffb800;
     font-size: 0.75rem;
     font-weight: 700;
-    letter-spacing: 0.4px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
 
-.timer-date-icon {
-    font-size: 0.8rem;
-    line-height: 1;
+.timer-date-badge:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 0 18px rgba(255, 184, 0, 0.3);
 }
 
 /* === טבלת דירוגים === */

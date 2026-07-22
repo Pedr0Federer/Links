@@ -12,17 +12,17 @@
 
     <!-- Preload/preconnect - מתחילים להוריד את הנכסים הקריטיים (וידאו האינטרו, תמונת הפרופיל, גופן חיצוני)
          מוקדם ככל האפשר, במקביל לפרסור ה-HTML, במקום לחכות שהדפדפן יגיע אליהם בהמשך המסמך -->
-    <link rel="preload" as="video" href="intro.mp4?v=20260722-dir-fix" type="video/mp4">
+    <link rel="preload" as="video" href="intro.mp4?v=20260722-badge-redesign" type="video/mp4">
     <link rel="preload" as="image" href="profile.jpg">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-    <link rel="stylesheet" href="style.css?v=20260722-dir-fix">
+    <link rel="stylesheet" href="style.css?v=20260722-badge-redesign">
     <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;700;900&display=swap" rel="stylesheet">
 
     <!-- script.js נטען מוקדם עם defer - מתחיל להוריד אותו מיד (במקביל לפרסור ה-HTML) במקום להמתין
          שהפרסר יגיע לתחתית הגוף, בלי לחסום את הרינדור (defer מריץ אותו רק אחרי שה-DOM מוכן) -->
-    <script src="script.js?v=20260722-dir-fix" defer></script>
+    <script src="script.js?v=20260722-badge-redesign" defer></script>
 </head>
 <body>
 
@@ -30,7 +30,7 @@
         <video
             class="intro-video"
             id="introVideo"
-            src="intro.mp4?v=20260722-dir-fix"
+            src="intro.mp4?v=20260722-badge-redesign"
             muted
             playsinline
             webkit-playsinline="true"
@@ -183,7 +183,6 @@
                         <div class="leaderboard-timer">
                             <div class="timer-badge" dir="ltr">
                                 <span class="timer-led" aria-hidden="true"></span>
-                                <span class="timer-badge-icon" aria-hidden="true">⏱</span>
                                 <span class="timer-badge-text">Leaderboard Ends In:</span>
                             </div>
                             <div class="timer-boxes" dir="ltr">
@@ -196,7 +195,6 @@
                                 <div class="timer-box"><span id="cdSeconds">--</span><label>Seconds</label></div>
                             </div>
                             <div class="timer-date-badge" dir="ltr">
-                                <span class="timer-date-icon" aria-hidden="true">📅</span>
                                 <span id="cdDate"></span>
                             </div>
                         </div>
@@ -579,9 +577,9 @@
                 void secondsBox.offsetWidth;
                 secondsBox.classList.add("tick");
 
-                document.getElementById("cdDate").textContent = target.toLocaleDateString("en-US", {
+                document.getElementById("cdDate").textContent = "ENDS: " + (target.toLocaleDateString("en-US", {
                     month: "short", day: "numeric"
-                }) + ", 11:59 PM";
+                }) + ", 11:59 PM").toUpperCase();
             }
 
             updateCountdown();
