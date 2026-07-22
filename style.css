@@ -7,8 +7,9 @@
 }
 
 body {
-    /* רקע ג'ונגל - שכבת האפלה כהה מעליו כדי לשמר ניגודיות לטקסט/כרטיסים */
-    background-image: linear-gradient(rgba(5, 7, 10, 0.82), rgba(5, 7, 10, 0.88)), url("bg-jungle.webp");
+    /* רקע ג'ונגל בהיר וחי (ניסוי עיצובי) - שכבת האפלה כמעט הוסרה כדי שהתמונה תישאר תוססת,
+       ללא "עמעום" כהה על אזור המרכז */
+    background-image: linear-gradient(rgba(5, 7, 10, 0.1), rgba(5, 7, 10, 0.15)), url("bg-jungle.webp");
     background-size: cover;
     background-position: center;
     background-attachment: fixed;
@@ -153,8 +154,7 @@ body {
 .page-layout {
     display: flex;
     justify-content: center;
-    /* stretch (במקום flex-start) כדי שהקונטיינר יתמתח לגובה המלא הזמין - מונע "קיטוע" מוקדם
-       של פאנל הזכוכית מעל הפוטר בתצוגות גבוהות/זום-אאוט, במקום להצטמצם לגובה התוכן בלבד */
+    /* stretch (במקום flex-start) - שומר על ההתנהגות התקינה בתצוגות גבוהות/זום-אאוט */
     align-items: stretch;
     min-height: 100vh;
     opacity: 0;
@@ -235,21 +235,19 @@ body {
     }
 }
 
-/* === הקונטיינר המרכזי - אפקט זכוכית משודרג === */
+/* === הקונטיינר המרכזי (ניסוי עיצובי) - העטיפה הכהה הוסרה לגמרי, הכרטיסים צפים ישירות
+   מעל רקע הג'ונגל; נשארו רק המידות/הריווח שקובעים את מיקום התוכן === */
 .container {
     width: 100%;
     max-width: 1100px;
     text-align: center;
     padding: 60px 50px;
     z-index: 10;
-    /* רקע זכוכית מעט בהיר יותר */
-    background-color: rgba(255, 255, 255, 0.03);
-    backdrop-filter: blur(15px);
-    -webkit-backdrop-filter: blur(15px);
-    border-left: 1px solid rgba(255, 255, 255, 0.1);
-    border-right: 1px solid rgba(255, 255, 255, 0.1);
-    /* צל לקונטיינר המרכזי להוספת עומק */
-    box-shadow: 0 0 40px rgba(0, 0, 0, 0.3);
+    background-color: transparent;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    border: none;
+    box-shadow: none;
 }
 
 header {
@@ -279,8 +277,7 @@ header {
     border: 3px solid #f1a403;
     margin-bottom: 15px;
     display: block;
-    /* הילה זהובה עגולה ורכה סביב האווטאר (במקום תג המגן) */
-    box-shadow: 0 0 25px rgba(255, 200, 50, 0.6), 0 0 50px rgba(255, 180, 0, 0.3);
+    box-shadow: 0 0 20px rgba(241, 164, 3, 0.4);
     transition: box-shadow 0.3s ease-in-out, border-color 0.3s ease-in-out, filter 0.3s ease-in-out;
 }
 
@@ -299,24 +296,27 @@ h1 {
     background: linear-gradient(180deg, #ffb347 0%, #ff6e2e 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    filter: drop-shadow(0px 3px 6px rgba(0, 0, 0, 0.4));
+    /* filter:drop-shadow במקום text-shadow (ניסוי עיצובי) - text-shadow על טקסט עם gradient-clip
+       שקוף "מלכלך" את הצבע החי; drop-shadow פועל על הצללית המעובדת בלי לגעת במילוי עצמו */
+    filter: drop-shadow(0px 2px 6px rgba(0, 0, 0, 0.85));
 }
 
 .subtitle {
-    /* טקסט זהב מסוגנן עם זוהר, במקום אפור ניטרלי */
+    /* טקסט זהב מסוגנן, מודגש יותר, עם צל כהה חזק (ניסוי עיצובי) */
     color: #ffcc33;
     font-size: 0.9rem;
-    font-weight: 800;
+    font-weight: 900;
     letter-spacing: 2px;
-    text-shadow: 0 0 12px rgba(255, 204, 51, 0.5);
+    text-shadow: 0 2px 6px rgba(0, 0, 0, 0.95), 0 0 4px rgba(0, 0, 0, 0.9), 0 0 12px rgba(255, 204, 51, 0.5);
 }
 
 /* === ניווט טאבים (Home / Codes & Leaderboards) === */
 .tabs-nav {
     display: flex;
     gap: 6px;
-    background: rgba(255, 255, 255, 0.035);
-    border: 1px solid rgba(255, 204, 51, 0.18);
+    /* זכוכית כהה עדינה - תואמת לאסתטיקת הכרטיסים החדשה */
+    background: rgba(15, 20, 10, 0.45);
+    border: 1px solid rgba(255, 220, 100, 0.45);
     padding: 6px;
     border-radius: 999px;
     margin-bottom: 28px;
@@ -328,12 +328,13 @@ h1 {
 
 .tab-btn {
     flex: 1;
-    /* זכוכית מכוסת קרה לכרטיסייה הלא-פעילה */
-    background: rgba(255, 255, 255, 0.02);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    color: #9a8f85;
+    /* זכוכית כהה מוצקה לכרטיסייה הלא-פעילה - קריאה בבירור מול הרקע הבהיר */
+    background: rgba(20, 25, 15, 0.7);
+    border: 1px solid rgba(255, 204, 51, 0.5);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    color: #ffe9a8;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8), 0 0 2px rgba(0, 0, 0, 0.9);
     font-family: inherit;
     font-weight: 800;
     font-size: 0.95rem;
@@ -347,15 +348,16 @@ h1 {
 
 .tab-btn:hover {
     color: #ffcc33;
-    background: rgba(255, 204, 51, 0.1);
-    border-color: rgba(255, 204, 51, 0.35);
+    background: rgba(255, 204, 51, 0.18);
+    border-color: rgba(255, 204, 51, 0.7);
     box-shadow: 0 0 16px rgba(255, 204, 51, 0.25);
 }
 
 .tab-btn.active {
     /* גרדיאנט זהב/כתום עשיר + זוהר פנימי + זוהר ניאון חם מתחת לכרטיסייה */
     background: linear-gradient(145deg, #ffd966, #ff8c00);
-    color: #1a0f0a;
+    color: #111111;
+    text-shadow: none;
     font-weight: 900;
     border-color: rgba(255, 204, 51, 0.7);
     box-shadow:
@@ -380,27 +382,104 @@ h1 {
     display: flex;
 }
 
-/* === רשת קישורים לטאב הבית === */
+/* === טאב הבית - פריסת דשבורד (ניסוי עיצובי חדש): כרטיסים מומלצים למעלה,
+   כרטיסי מידע באמצע, ורשת קישורים מהירים למטה - שלושת המקטעים נערמים אנכית === */
 #tab-home.tab-panel.active {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* --- כרטיסים מומלצים (Kick & YouTube) --- */
+.dashboard-featured {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+}
+
+@media (max-width: 640px) {
+    .dashboard-featured {
+        grid-template-columns: 1fr;
+    }
+}
+
+.featured-card {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 20px;
+    /* צורת "שבבים חתוכים" - זווית ישרה חדה למעלה-שמאל/מטה-ימין, פינה מעוגלת למעלה-ימין/מטה-שמאל */
+    border-radius: 0 18px 0 18px;
+    clip-path: polygon(20px 0, 100% 0, 100% calc(100% - 20px), calc(100% - 20px) 100%, 0 100%, 0 20px);
+    /* זכוכית קפואה עם גוון כהה עדין - לשמור על ניגודיות טקסט מול הרקע הבהיר */
+    background: rgba(15, 20, 10, 0.45);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 220, 100, 0.45);
+    /* filter:drop-shadow במקום box-shadow - עוקב אחרי הצללית החתוכה בפועל (clip-path),
+       ולא משאיר "דליפה" מלבנית כהה בפינות החתוכות */
+    filter: drop-shadow(0 8px 18px rgba(0, 0, 0, 0.35));
+    text-decoration: none;
+    color: #ffffff;
+    transition: all 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.featured-card:hover {
+    transform: translateY(-6px) scale(1.02);
+    background: rgba(15, 20, 10, 0.6);
+    filter: drop-shadow(0 14px 26px rgba(0, 0, 0, 0.4)) drop-shadow(0 0 16px rgba(255, 204, 51, 0.4));
+    border-color: rgba(255, 220, 100, 0.65);
+}
+
+.featured-card .icon {
+    width: 64px;
+    height: 64px;
+    flex-shrink: 0;
+}
+
+.featured-text {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+    text-align: right;
+    min-width: 0;
+}
+
+.featured-title {
+    font-size: 1.1rem;
+    font-weight: 900;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8), 0 0 2px rgba(0, 0, 0, 0.9);
+}
+
+.featured-sub {
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.85);
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8), 0 0 2px rgba(0, 0, 0, 0.9);
+}
+
+/* --- רשת קישורים מהירים (שאר הכרטיסים) --- */
+.dashboard-quicklinks {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 14px;
 }
 
 @media (max-width: 640px) {
-    #tab-home.tab-panel.active {
+    .dashboard-quicklinks {
         grid-template-columns: repeat(2, 1fr);
     }
 }
 
 @media (max-width: 380px) {
-    #tab-home.tab-panel.active {
+    .dashboard-quicklinks {
         grid-template-columns: 1fr;
     }
 }
 
 @media (min-width: 993px) {
-    #tab-home.tab-panel.active {
+    .dashboard-quicklinks {
         gap: 22px;
     }
 
@@ -441,15 +520,16 @@ h1 {
 .link-btn {
     /* אקורד זהב מטאלי אחיד לכל 9 הכרטיסים - לא עוד צבע קשת/מותג שונה לכל כרטיס */
     --brand: 212 175 55;
-    /* זכוכית זהובה (Glassmorphism) - במקום האובסידיאן הכהה הקודם */
-    background: rgba(255, 220, 100, 0.1);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
+    /* זכוכית קפואה עם גוון כהה עדין - לשמור על ניגודיות טקסט מול הרקע הבהיר */
+    background: rgba(15, 20, 10, 0.45);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
     text-decoration: none;
     padding: 14px 8px;
-    border-radius: 16px;
-    /* גבול זכוכית ניטרלי ועדין בבסיס - הזהב מופיע רק כהדגשה עדינה (ר' box-shadow ומצב hover למטה) */
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    /* צורת "שבבים חתוכים" (ניסוי עיצובי) - זווית ישרה חדה למעלה-שמאל/מטה-ימין, פינה מעוגלת למעלה-ימין/מטה-שמאל */
+    border-radius: 0 16px 0 16px;
+    clip-path: polygon(16px 0, 100% 0, 100% calc(100% - 16px), calc(100% - 16px) 100%, 0 100%, 0 16px);
+    border: 1px solid rgba(255, 220, 100, 0.45);
     transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     /* תוכן הכרטיס (אייקון / כותרת / תגית) ממורכז כקבוצה אנכית - לא נדחף לפינות עם רווח ריק */
     display: flex;
@@ -461,8 +541,9 @@ h1 {
     position: relative;
     min-height: 108px;
     overflow: hidden;
-    /* צל עומק + הדגשת מותג עדינה מאוד סביב הכרטיס - "inner glow" רך, לא בלוק צבע */
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4), 0 0 0 1px rgb(var(--brand) / 0.1);
+    /* filter:drop-shadow במקום box-shadow - עוקב אחרי הצללית החתוכה בפועל (clip-path),
+       ולא משאיר "דליפה" מלבנית כהה בפינות החתוכות */
+    filter: drop-shadow(0 8px 18px rgba(0, 0, 0, 0.35));
     opacity: 0;
     will-change: transform;
     /* fadeInUp מטפל בכניסה (transform), cardFloat מקבל שליטה על transform רק אחרי שהכניסה מסתיימת לכל כרטיס (ראו עיכובים למטה) */
@@ -524,10 +605,10 @@ h1 {
 .link-btn:hover {
     /* important כדי לנצח את אנימציית cardFloat הפעילה שמחזיקה ב-transform */
     transform: translateY(-8px) scale(1.045) !important;
-    /* עלייה חלקה + זוהר זהב/לבן נקי במקום השתקפויות ניאון - האובסידיאן נהיה מעט בהיר יותר */
-    background: rgba(24, 24, 28, 0.9);
-    box-shadow: 0 20px 45px rgba(0, 0, 0, 0.5), 0 0 26px rgb(var(--brand) / 0.35);
-    border-color: rgb(var(--brand) / 0.5);
+    /* עלייה חלקה + זוהר זהב מעט עשיר יותר מהמצב הרגיל */
+    background: rgba(15, 20, 10, 0.6);
+    filter: drop-shadow(0 14px 28px rgba(0, 0, 0, 0.4)) drop-shadow(0 0 16px rgb(var(--brand) / 0.45));
+    border-color: rgba(255, 220, 100, 0.65);
 }
 
 /* השהייה הדרגתית לכניסת הכפתורים, ואחריה תחילת הריחוף האיטי לכל כרטיס בעיכוב מפוזר וטבעי */
@@ -596,9 +677,9 @@ h1 {
     justify-content: center;
     text-align: center;
     min-height: 2.6em;
-    /* טקסט כותרת לבן טהור, חד וניגודי - צל עדין וניטרלי בלבד, לא צבעוני */
+    /* טקסט כותרת לבן טהור - צל כהה חזק כדי לשמור על ניגודיות מול הרקע הבהיר */
     color: #ffffff;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8), 0 0 2px rgba(0, 0, 0, 0.9);
 }
 
 .main-text {
@@ -630,18 +711,20 @@ h1 {
     background: rgba(212, 175, 55, 0.1);
     border: 1px solid rgba(212, 175, 55, 0.35);
     color: #d4af37;
-    font-size: 0.72rem;
+    font-size: 0.85rem;
     font-weight: 700;
     letter-spacing: 0.3px;
-    text-shadow: none;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8), 0 0 2px rgba(0, 0, 0, 0.9);
     box-shadow: none;
 }
 
 footer {
     margin-top: 60px;
-    color: #a0aec0;
+    /* גוון זהב חד + צל כהה חזק (ניסוי עיצובי) - כדי שהקרדיט לא "ייבלע" ברקע החול הבהיר */
+    color: #ffd700;
+    font-weight: 600;
     font-size: 0.85rem;
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.9);
 }
 
 /* כל 9 הכרטיסים חולקים כעת את אותו --brand (זהב מטאלי) שהוגדר ב-.link-btn - אין יותר
@@ -657,15 +740,15 @@ footer {
     display: inline-flex;
     align-items: center;
     gap: 5px;
-    font-size: 0.62rem;
+    font-size: 0.7rem;
     font-weight: 700;
     letter-spacing: 0.3px;
     padding: 2px 8px;
     border-radius: 20px;
     background: rgba(255, 255, 255, 0.06);
     border: 1px solid rgba(255, 255, 255, 0.1);
-    color: #9a8f85;
-    text-shadow: none;
+    color: #cbd5e0;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8), 0 0 2px rgba(0, 0, 0, 0.9);
     transition: all 0.3s ease;
 }
 
@@ -709,8 +792,11 @@ footer {
     padding: 0.75rem 1rem;
     border-top: 1px solid rgba(255, 255, 255, 0.08);
     font-size: 0.75rem;
+    font-weight: 600;
     line-height: 1.5;
-    color: rgba(255, 255, 255, 0.45);
+    /* טקסט חד + צל כהה חזק (ניסוי עיצובי) - כדי שהאזהרה תישאר קריאה מול רקע החול הבהיר */
+    color: #e0e0e0;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.9);
     text-align: center;
     /* הטקסט הוא משפט אנגלי - כופים כיוון LTR מפורש (העמוד עצמו RTL) כדי שהנקודה בסוף
        תישאר בקצה הימני הנכון של המשפט, במקום "לקפוץ" שמאלה בגלל הקשר ה-BiDi שסביבה */
@@ -743,16 +829,17 @@ footer {
     justify-content: center;
     gap: 22px;
     padding: 22px 30px;
-    border-radius: 20px;
-    background: rgba(18, 18, 22, 0.85);
-    border: 1px solid rgba(212, 175, 55, 0.3);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4), inset 0 0 26px rgba(212, 175, 55, 0.05);
-    /* ריווח נוסף מעבר לפער האחיד של .leaderboard - מרחיק את הבאנר מהפודיום ומאזן אותו
-       בין ניווט הטאבים לרשת הלידרבורד */
-    margin-top: 8px;
-    margin-bottom: 28px;
+    /* צורת "שבבים חתוכים" (ניסוי עיצובי) - תואם לכרטיסי הבית */
+    border-radius: 0 20px 0 20px;
+    clip-path: polygon(22px 0, 100% 0, 100% calc(100% - 22px), calc(100% - 22px) 100%, 0 100%, 0 22px);
+    /* זכוכית זהובה זהה בדיוק לכרטיסי הבית (ניסוי עיצובי) - איחוד מלא בין הטאבים */
+    background: rgba(15, 20, 10, 0.45);
+    border: 1px solid rgba(255, 220, 100, 0.45);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    /* filter:drop-shadow לצל החיצוני (עוקב אחרי הצללית החתוכה) - הזוהר הפנימי נשאר box-shadow (inset) */
+    filter: drop-shadow(0 12px 24px rgba(0, 0, 0, 0.4));
+    box-shadow: inset 0 0 26px rgba(212, 175, 55, 0.05);
     opacity: 0;
     animation:
         fadeInUp 0.6s ease-out 0.1s forwards,
@@ -760,8 +847,8 @@ footer {
 }
 
 @keyframes csgorollHeroGlow {
-    0%, 100% { box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4), inset 0 0 22px rgba(212, 175, 55, 0.05); }
-    50% { box-shadow: 0 12px 36px rgba(0, 0, 0, 0.45), inset 0 0 36px rgba(212, 175, 55, 0.13); }
+    0%, 100% { box-shadow: inset 0 0 22px rgba(212, 175, 55, 0.05); }
+    50% { box-shadow: inset 0 0 36px rgba(212, 175, 55, 0.13); }
 }
 
 /* עוגן הלוגו - גדול, ברור, מרחף בעדינות (שם אנימציה ייחודי כדי לא להתנגש עם @keyframes float הגלובלי).
@@ -856,6 +943,16 @@ footer {
     gap: 12px;
     position: relative;
     z-index: 0;
+    /* פאנל זכוכית כהה מאחד (ניסוי עיצובי) - זהה לטיימר ולטבלה, מייצב את הפודיום מול הרקע הבהיר */
+    padding: 20px 16px 16px;
+    /* צורת "שבבים חתוכים" (ניסוי עיצובי) - תואם לכרטיסי הבית */
+    border-radius: 0 20px 0 20px;
+    clip-path: polygon(22px 0, 100% 0, 100% calc(100% - 22px), calc(100% - 22px) 100%, 0 100%, 0 22px);
+    /* זכוכית זהובה זהה בדיוק לכרטיסי הבית (ניסוי עיצובי) - איחוד מלא בין הטאבים */
+    background: rgba(15, 20, 10, 0.45);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 220, 100, 0.45);
 }
 
 /* כתמי אור עדינים שמרחפים מאחורי הפודיום ומעניקים עומק תלת-ממדי */
@@ -896,7 +993,8 @@ footer {
     flex: 1;
     min-width: 0;
     background: linear-gradient(145deg, #251a14 0%, #1a0f0a 100%);
-    border: 1px solid rgba(255, 204, 51, 0.15);
+    /* גבול פנימי מודגש יותר (ניסוי עיצובי) - כדי שהכרטיס יבלוט בבירור מול פאנל הזכוכית הכהה החדש */
+    border: 1px solid rgba(255, 204, 51, 0.3);
     border-radius: 16px;
     padding: 16px 8px;
     display: flex;
@@ -1116,19 +1214,19 @@ footer {
 /* === טיימר ספירה לאחור === */
 .leaderboard-timer {
     position: relative;
-    border: 2px solid transparent;
-    border-radius: 16px;
+    /* צורת "שבבים חתוכים" (ניסוי עיצובי) - תואם לכרטיסי הבית */
+    border-radius: 0 16px 0 16px;
+    clip-path: polygon(18px 0, 100% 0, 100% calc(100% - 18px), calc(100% - 18px) 100%, 0 100%, 0 18px);
     padding: 16px;
-    background:
-        rgba(255, 255, 255, 0.03) padding-box,
-        conic-gradient(from var(--border-angle, 0deg), #ff9900, #ffcc00, #ff9900) border-box;
-    backdrop-filter: blur(15px);
-    -webkit-backdrop-filter: blur(15px);
+    /* זכוכית זהובה זהה בדיוק לכרטיסי הבית (ניסוי עיצובי) - !important לנצח בוודאות כל שכבה/מטמון קודם */
+    background: rgba(15, 20, 10, 0.45) !important;
+    backdrop-filter: blur(20px) !important;
+    -webkit-backdrop-filter: blur(20px) !important;
+    border: 1px solid rgba(255, 220, 100, 0.45) !important;
     opacity: 0;
     will-change: transform;
     animation:
         fadeInUp 0.6s ease-out 0.35s forwards,
-        rotateBorderAngle 5s linear infinite,
         float 11s ease-in-out 0.6s infinite;
 }
 
@@ -1142,7 +1240,7 @@ footer {
 
 .timer-badge-text {
     color: #ffc83b;
-    text-shadow: 0 0 10px rgba(255, 200, 59, 0.3);
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8), 0 0 2px rgba(0, 0, 0, 0.9), 0 0 10px rgba(255, 200, 59, 0.3);
     font-weight: 900;
     font-size: 0.85rem;
     letter-spacing: 2px;
@@ -1205,7 +1303,7 @@ footer {
     font-weight: 900;
     color: #ffcc33;
     line-height: 1.1;
-    text-shadow: 0 0 20px rgba(255, 204, 51, 0.5);
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8), 0 0 2px rgba(0, 0, 0, 0.9), 0 0 20px rgba(255, 204, 51, 0.5);
 }
 
 .timer-box label {
@@ -1215,6 +1313,7 @@ footer {
     color: #cbd5e0;
     letter-spacing: 1.2px;
     text-transform: uppercase;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8), 0 0 2px rgba(0, 0, 0, 0.9);
 }
 
 /* פעימת "טיק" בכל שנייה בתיבת השניות */
@@ -1252,30 +1351,32 @@ footer {
     display: inline-flex;
     align-items: center;
     margin-top: 1.2rem;
-    color: rgba(255, 200, 59, 0.7);
+    color: rgba(255, 200, 59, 0.9);
     font-size: 0.78rem;
     font-weight: 600;
     letter-spacing: 1.5px;
     text-transform: uppercase;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8), 0 0 2px rgba(0, 0, 0, 0.9);
 }
 
 /* === טבלת דירוגים === */
 .leaderboard-table-wrap {
     position: relative;
-    border: 2px solid transparent;
-    border-radius: 16px;
+    /* צורת "שבבים חתוכים" (ניסוי עיצובי) - תואם לכרטיסי הבית */
+    border-radius: 0 16px 0 16px;
+    clip-path: polygon(18px 0, 100% 0, 100% calc(100% - 18px), calc(100% - 18px) 100%, 0 100%, 0 18px);
     overflow: hidden;
-    background:
-        rgba(255, 255, 255, 0.03) padding-box,
-        conic-gradient(from var(--border-angle, 0deg), #ff9900, #ffcc00, #ff9900) border-box;
-    backdrop-filter: blur(15px);
-    -webkit-backdrop-filter: blur(15px);
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+    /* זכוכית זהובה זהה בדיוק לכרטיסי הבית (ניסוי עיצובי) - !important לנצח בוודאות כל שכבה/מטמון קודם */
+    background: rgba(15, 20, 10, 0.45) !important;
+    backdrop-filter: blur(20px) !important;
+    -webkit-backdrop-filter: blur(20px) !important;
+    border: 1px solid rgba(255, 220, 100, 0.45) !important;
+    /* filter:drop-shadow במקום box-shadow - עוקב אחרי הצללית החתוכה בפועל (clip-path) */
+    filter: drop-shadow(0 10px 22px rgba(0, 0, 0, 0.4));
     opacity: 0;
     will-change: transform;
     animation:
         fadeInUp 0.6s ease-out 0.45s forwards,
-        rotateBorderAngle 6s linear infinite,
         float 11s ease-in-out 0.7s infinite;
 }
 
@@ -1292,6 +1393,7 @@ footer {
     text-transform: uppercase;
     padding: 12px 10px;
     text-align: center;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8), 0 0 2px rgba(0, 0, 0, 0.9);
 }
 
 .leaderboard-table tbody td {
@@ -1533,15 +1635,11 @@ footer {
     border-color: #ff4d4d;
 }
 
-/* === התאמה לנייד - תיקון צבע הרקע === */
+/* === התאמה לנייד - ריווח מוקטן === */
 @media (max-width: 768px) {
     .container {
         max-width: 100%;
         padding: 40px 16px;
-        /* הסרנו את הרקע הכהה הקבוע כדי שהרקע המונפש של ה-body ייראה */
-        background-color: transparent;
-        border: none;
-        backdrop-filter: none;
     }
 }
 

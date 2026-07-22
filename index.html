@@ -18,12 +18,12 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-    <link rel="stylesheet" href="style.css?v=20260722-layout-refine">
+    <link rel="stylesheet" href="style.css?v=2.0-glass">
     <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;700;900&display=swap" rel="stylesheet">
 
     <!-- script.js נטען מוקדם עם defer - מתחיל להוריד אותו מיד (במקביל לפרסור ה-HTML) במקום להמתין
          שהפרסר יגיע לתחתית הגוף, בלי לחסום את הרינדור (defer מריץ אותו רק אחרי שה-DOM מוכן) -->
-    <script src="script.js?v=20260722-audit2" defer></script>
+    <script src="script.js?v=2.0-glass" defer></script>
 </head>
 <body>
 
@@ -58,13 +58,40 @@
             </header>
 
             <nav class="tabs-nav">
-                <button class="tab-btn active" data-tab="home" type="button">HOME</button>
-                <button class="tab-btn" data-tab="codes" type="button">CODES &amp; LEADERBOARDS</button>
+                <button class="tab-btn active" data-tab="home" type="button">בית</button>
+                <button class="tab-btn" data-tab="codes" type="button">לידרבורד</button>
             </nav>
 
             <main class="links-container">
 
                 <section class="tab-panel active" id="tab-home">
+
+                    <div class="dashboard-featured">
+                        <a href="https://kick.com/pedrofederer" class="featured-card kick-featured" target="_blank">
+                            <span class="icon">
+                                <img src="Kick_logo.png" alt="Kick" class="original-logo">
+                            </span>
+                            <div class="featured-text">
+                                <span class="featured-title">לשידורים ב-Kick</span>
+                                <span class="live-pill offline" id="kickLivePill">
+                                    <span class="dot"></span>
+                                    <span class="live-text">Watch Live</span>
+                                </span>
+                            </div>
+                        </a>
+
+                        <a href="https://www.youtube.com/@PedroFederer" class="featured-card youtube-featured" target="_blank">
+                            <span class="icon">
+                                <img src="Youtube_logo.png" alt="YouTube" class="original-logo">
+                            </span>
+                            <div class="featured-text">
+                                <span class="featured-title">לשידורים ב-YouTube</span>
+                                <span class="featured-sub">צפו בפרקים ובתכנים האחרונים</span>
+                            </div>
+                        </a>
+                    </div>
+
+                    <div class="dashboard-quicklinks">
 
                     <a href="https://discord.com/invite/E6NmAAdjzJ" class="link-btn discord" target="_blank">
                         <span class="icon">
@@ -72,31 +99,6 @@
                         </span>
                         <div class="btn-text">
                             <span class="main-text">שרת הדיסקורד</span>
-                        </div>
-                        <div class="badge-slot"></div>
-                    </a>
-
-                    <a href="https://kick.com/pedrofederer" class="link-btn kick" target="_blank">
-                        <span class="icon">
-                            <img src="Kick_logo.png" alt="Kick" class="original-logo">
-                        </span>
-                        <div class="btn-text">
-                            <span class="main-text">לשידורים ב-Kick</span>
-                        </div>
-                        <div class="badge-slot">
-                            <span class="live-pill offline" id="kickLivePill">
-                                <span class="dot"></span>
-                                <span class="live-text">Watch Live</span>
-                            </span>
-                        </div>
-                    </a>
-
-                    <a href="https://www.youtube.com/@PedroFederer" class="link-btn youtube" target="_blank">
-                        <span class="icon">
-                            <img src="Youtube_logo.png" alt="YouTube" class="original-logo">
-                        </span>
-                        <div class="btn-text">
-                            <span class="main-text">לשידורים ב-YouTube</span>
                         </div>
                         <div class="badge-slot"></div>
                     </a>
@@ -164,6 +166,8 @@
                         </div>
                         <div class="badge-slot"></div>
                     </a>
+
+                    </div>
 
                 </section>
 
