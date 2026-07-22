@@ -22,59 +22,6 @@
         }
     });
 
-    // === רקע וידאו לופ - ה-autoplay המובנה בתגית ה-video מריץ אותו מיד; ה-JS כאן הוא רק
-    // רשת ביטחון קלה למקרה שהדפדפן חוסם autoplay, ושומר על play/pause נכון לפי מצב הטאב ===
-    function playBackgroundVideo() {
-        const bgVideo = document.getElementById("bg-video");
-        if (!bgVideo) return;
-
-        function attemptPlay() {
-            bgVideo.muted = true;
-            try {
-                return bgVideo.play() || Promise.resolve();
-            } catch (err) {
-                return Promise.reject(err);
-            }
-        }
-
-        // הוסר requestVideoFrameCallback שנוסה בעבר לכפות קצב הצגה מלא תמיד - נמדד אמפירית
-        // שזה גורם לעומס כבד על ה-main thread/GPU compositor (בעיקר בכרום ללא decode חומרתי
-        // זמין), כי זה מבטל את ההגנה הטבעית של הדפדפן על עצמו. במקום להילחם במדיניות
-        // ה-throttling של הדפדפן, מקטינים את העומס האמיתי של הדף עצמו (רזולוציית/פריימרייט
-        // הווידאו, וכמות החלקיקים בקנבס) כדי שהדפדפן יוכל להציג בקצב חלק ככל האפשר במסגרת
-        // המדיניות שלו - זה הלימיט האמיתי שקוד בדף יכול להשפיע עליו
-
-        // רשת ביטחון חד-פעמית - מסירה את עצמה מיד אחרי הפעולה הראשונה של המשתמש, ופועלת
-        // רק אם הווידאו עדיין לא באמת מנגן (autoplay נחסם ע"י הדפדפן)
-        function retryOnInteraction() {
-            document.removeEventListener("touchstart", retryOnInteraction);
-            document.removeEventListener("click", retryOnInteraction);
-            document.removeEventListener("scroll", retryOnInteraction);
-            if (bgVideo.paused) {
-                attemptPlay().catch(function () {});
-            }
-        }
-
-        if (bgVideo.paused) {
-            attemptPlay().catch(function () {});
-        }
-
-        document.addEventListener("touchstart", retryOnInteraction, { once: true, passive: true });
-        document.addEventListener("click", retryOnInteraction, { once: true });
-        document.addEventListener("scroll", retryOnInteraction, { once: true, passive: true });
-
-        // כשהטאב גלוי/פעיל - הווידאו חייב להיות מנוגן; כשהוא מוסתר - משהים כדי לחסוך CPU/GPU
-        document.addEventListener("visibilitychange", function () {
-            if (document.hidden) {
-                bgVideo.pause();
-            } else {
-                attemptPlay().catch(function () {});
-            }
-        });
-    }
-
-    playBackgroundVideo();
-
     // playIntroSplash מנגן את הסרטון ומחזיר Promise שמתממש כשהוא מסתיים (בדרך זו או אחרת) -
     // הוא לא נוגע בשכבת הפתיחה עצמה (fade/הסרה); זה קורה רק אחרי שגם התמונות הקריטיות מוכנות,
     // כדי שהאוברליי ישמש כ"מסך טעינה" נקי לאורך כל הזמן הזה בלי הבזק של רקע לא טעון באמצע.
@@ -169,6 +116,7 @@
         // כדי שהפופ-אפ והאתר הראשי לעולם לא ייחשפו לפני שהם באמת זמינים
         const criticalImages = Promise.all([
             "profile.jpg",
+            "bg-jungle.webp",
             "promo.png",
             "Discord_logo.png",
             "Kick_logo.png",

@@ -14,15 +14,16 @@
          מוקדם ככל האפשר, במקביל לפרסור ה-HTML, במקום לחכות שהדפדפן יגיע אליהם בהמשך המסמך -->
     <link rel="preload" as="video" href="intro.mp4?v=20260722-audit-pass" type="video/mp4">
     <link rel="preload" as="image" href="profile.jpg">
+    <link rel="preload" as="image" href="bg-jungle.webp">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-    <link rel="stylesheet" href="style.css?v=4.3-reduce-decode-load">
+    <link rel="stylesheet" href="style.css?v=5.0-revert-to-image-bg">
     <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;700;900&display=swap" rel="stylesheet">
 
     <!-- script.js נטען מוקדם עם defer - מתחיל להוריד אותו מיד (במקביל לפרסור ה-HTML) במקום להמתין
          שהפרסר יגיע לתחתית הגוף, בלי לחסום את הרינדור (defer מריץ אותו רק אחרי שה-DOM מוכן) -->
-    <script src="script.js?v=4.3-reduce-decode-load" defer></script>
+    <script src="script.js?v=5.0-revert-to-image-bg" defer></script>
 </head>
 <body>
 
@@ -38,11 +39,6 @@
             preload="auto"
         ></video>
     </div>
-
-    <video id="bg-video" autoplay loop muted playsinline preload="auto" aria-hidden="true">
-        <source src="BackgraoundVid.webm?v=4.3-reduce-decode-load" type="video/webm">
-        <source src="BackgraoundVid.mp4?v=4.3-reduce-decode-load" type="video/mp4">
-    </video>
 
     <canvas id="particles-bg"></canvas>
     <div class="glow-orb glow-orb-1"></div>
@@ -346,10 +342,8 @@
             const EMBER_COLORS = ["255, 204, 51", "255, 170, 60", "255, 140, 20"];
 
             function initParticles() {
-                // צפיפות מופחתת בכוונה (הייתה עד 480, מחלק 4800) - ציור קנבס 2D הוא עבודת
-                // CPU על ה-main thread שמתחרה ישירות עם פענוח הווידאו על אותו thread; פחות
-                // חלקיקים משחרר CPU אמיתי לטובת הצגה חלקה של הווידאו, בלי לגעת באפקט עצמו
-                const count = Math.min(180, Math.floor((window.innerWidth * window.innerHeight) / 9600));
+                // צפיפות מוגברת עוד יותר - "גחלים" זוהרות וגדולות יותר, פורחות ברחבי כל הרקע
+                const count = Math.min(480, Math.floor((window.innerWidth * window.innerHeight) / 4800));
                 particles = Array.from({ length: count }, () => ({
                     x: Math.random() * canvas.width,
                     y: Math.random() * canvas.height,
