@@ -470,7 +470,11 @@ h1 {
     border-radius: 0 16px 0 16px;
     clip-path: polygon(16px 0, 100% 0, 100% calc(100% - 16px), calc(100% - 16px) 100%, 0 100%, 0 16px);
     border: 1px solid rgba(255, 220, 100, 0.45);
-    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    /* מעברים על תכונות ספציפיות בלבד (במקום "all") - עקבי עם .tab-btn */
+    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275),
+        background 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275),
+        filter 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275),
+        border-color 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     /* תוכן הכרטיס (אייקון / כותרת / תגית) ממורכז כקבוצה אנכית - לא נדחף לפינות עם רווח ריק */
     display: flex;
     flex-direction: column;
@@ -693,7 +697,8 @@ footer {
     border: 1px solid rgba(255, 255, 255, 0.1);
     color: #cbd5e0;
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8), 0 0 2px rgba(0, 0, 0, 0.9);
-    transition: all 0.3s ease;
+    /* מעברים על תכונות ספציפיות בלבד (במקום "all") */
+    transition: color 0.3s ease, border-color 0.3s ease, background 0.3s ease;
 }
 
 .live-pill .dot {
@@ -1576,7 +1581,8 @@ footer {
     cursor: pointer;
     z-index: 10000;
     box-shadow: 0 4px 10px rgba(0,0,0,0.5);
-    transition: all 0.3s ease;
+    /* מעברים על תכונות ספציפיות בלבד (במקום "all") */
+    transition: transform 0.3s ease, background 0.3s ease, border-color 0.3s ease;
 }
 
 .close-modal:hover {
