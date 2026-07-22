@@ -764,9 +764,11 @@ h1 {
 
 footer {
     margin-top: 60px;
-    color: #a0aec0;
+    /* גוון זהב חד + צל כהה חזק (ניסוי עיצובי) - כדי שהקרדיט לא "ייבלע" ברקע החול הבהיר */
+    color: #ffd700;
+    font-weight: 600;
     font-size: 0.85rem;
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.9);
 }
 
 /* כל 9 הכרטיסים חולקים כעת את אותו --brand (זהב מטאלי) שהוגדר ב-.link-btn - אין יותר
@@ -834,8 +836,11 @@ footer {
     padding: 0.75rem 1rem;
     border-top: 1px solid rgba(255, 255, 255, 0.08);
     font-size: 0.75rem;
+    font-weight: 600;
     line-height: 1.5;
-    color: rgba(255, 255, 255, 0.45);
+    /* טקסט חד + צל כהה חזק (ניסוי עיצובי) - כדי שהאזהרה תישאר קריאה מול רקע החול הבהיר */
+    color: #e0e0e0;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.9);
     text-align: center;
     /* הטקסט הוא משפט אנגלי - כופים כיוון LTR מפורש (העמוד עצמו RTL) כדי שהנקודה בסוף
        תישאר בקצה הימני הנכון של המשפט, במקום "לקפוץ" שמאלה בגלל הקשר ה-BiDi שסביבה */
@@ -868,12 +873,16 @@ footer {
     justify-content: center;
     gap: 22px;
     padding: 22px 30px;
-    border-radius: 20px;
+    /* צורת "שבבים חתוכים" (ניסוי עיצובי) - תואם לכרטיסי הבית */
+    border-radius: 0 20px 0 20px;
+    clip-path: polygon(22px 0, 100% 0, 100% calc(100% - 22px), calc(100% - 22px) 100%, 0 100%, 0 22px);
     background: rgba(18, 18, 22, 0.85);
     border: 1px solid rgba(212, 175, 55, 0.3);
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
-    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4), inset 0 0 26px rgba(212, 175, 55, 0.05);
+    /* filter:drop-shadow לצל החיצוני (עוקב אחרי הצללית החתוכה) - הזוהר הפנימי נשאר box-shadow (inset) */
+    filter: drop-shadow(0 12px 24px rgba(0, 0, 0, 0.4));
+    box-shadow: inset 0 0 26px rgba(212, 175, 55, 0.05);
     opacity: 0;
     animation:
         fadeInUp 0.6s ease-out 0.1s forwards,
@@ -881,8 +890,8 @@ footer {
 }
 
 @keyframes csgorollHeroGlow {
-    0%, 100% { box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4), inset 0 0 22px rgba(212, 175, 55, 0.05); }
-    50% { box-shadow: 0 12px 36px rgba(0, 0, 0, 0.45), inset 0 0 36px rgba(212, 175, 55, 0.13); }
+    0%, 100% { box-shadow: inset 0 0 22px rgba(212, 175, 55, 0.05); }
+    50% { box-shadow: inset 0 0 36px rgba(212, 175, 55, 0.13); }
 }
 
 /* עוגן הלוגו - גדול, ברור, מרחף בעדינות (שם אנימציה ייחודי כדי לא להתנגש עם @keyframes float הגלובלי).
@@ -979,7 +988,9 @@ footer {
     z-index: 0;
     /* פאנל זכוכית כהה מאחד (ניסוי עיצובי) - זהה לטיימר ולטבלה, מייצב את הפודיום מול הרקע הבהיר */
     padding: 20px 16px 16px;
-    border-radius: 20px;
+    /* צורת "שבבים חתוכים" (ניסוי עיצובי) - תואם לכרטיסי הבית */
+    border-radius: 0 20px 0 20px;
+    clip-path: polygon(22px 0, 100% 0, 100% calc(100% - 22px), calc(100% - 22px) 100%, 0 100%, 0 22px);
     background: rgba(18, 22, 14, 0.85);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
@@ -1245,7 +1256,9 @@ footer {
 /* === טיימר ספירה לאחור === */
 .leaderboard-timer {
     position: relative;
-    border-radius: 16px;
+    /* צורת "שבבים חתוכים" (ניסוי עיצובי) - תואם לכרטיסי הבית */
+    border-radius: 0 16px 0 16px;
+    clip-path: polygon(18px 0, 100% 0, 100% calc(100% - 18px), calc(100% - 18px) 100%, 0 100%, 0 18px);
     padding: 16px;
     /* זכוכית כהה כפויה (ניסוי עיצובי) - !important כדי לנצח בוודאות כל שכבה/מטמון קודם */
     background: rgba(15, 18, 12, 0.88) !important;
@@ -1391,14 +1404,17 @@ footer {
 /* === טבלת דירוגים === */
 .leaderboard-table-wrap {
     position: relative;
-    border-radius: 16px;
+    /* צורת "שבבים חתוכים" (ניסוי עיצובי) - תואם לכרטיסי הבית */
+    border-radius: 0 16px 0 16px;
+    clip-path: polygon(18px 0, 100% 0, 100% calc(100% - 18px), calc(100% - 18px) 100%, 0 100%, 0 18px);
     overflow: hidden;
     /* זכוכית כהה כפויה (ניסוי עיצובי) - !important כדי לנצח בוודאות כל שכבה/מטמון קודם */
     background: rgba(15, 18, 12, 0.88) !important;
     backdrop-filter: blur(20px) !important;
     -webkit-backdrop-filter: blur(20px) !important;
     border: 1px solid rgba(255, 200, 80, 0.3) !important;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+    /* filter:drop-shadow במקום box-shadow - עוקב אחרי הצללית החתוכה בפועל (clip-path) */
+    filter: drop-shadow(0 10px 22px rgba(0, 0, 0, 0.4));
     opacity: 0;
     will-change: transform;
     animation:
