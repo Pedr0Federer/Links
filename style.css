@@ -29,6 +29,7 @@ body {
     background-color: #05070a;
     will-change: transform;
     transform: translate3d(0, 0, 0);
+    contain: strict;
 }
 
 /* === מסך פתיחה - וידאו אינטרו (Intro Splash) === */

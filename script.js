@@ -22,10 +22,14 @@
         }
     });
 
-    // === רקע וידאו לופ - ניגון מיידי + נסיון חוזר במגע/קליק ראשון אם המדיניות autoplay חוסמת ===
+    // === רקע וידאו לופ - טעינה עצלה (lazy) עד ל-window "load" ===
+    // preload="none" ב-HTML אומר לדפדפן לא להוריד כלום מראש; רק אחרי שכל הדף (כולל כל שאר
+    // הנכסים) כבר נטען במלואו, מפעילים בפועל load()+play() כדי לא לחסום/להאט את הרינדור הראשוני
     function playBackgroundVideo() {
         const bgVideo = document.getElementById("bg-video");
         if (!bgVideo) return;
+
+        let started = false;
 
         function attemptPlay() {
             bgVideo.muted = true;
@@ -36,21 +40,35 @@
             }
         }
 
-        // ניגון מיידי בטעינה - עם fallback שקט אם autoplay נחסם, עד למגע/קליק ראשון
-        attemptPlay().catch(function () {
-            function retryOnGesture() {
-                document.removeEventListener("touchstart", retryOnGesture);
-                document.removeEventListener("pointerdown", retryOnGesture);
-                document.removeEventListener("click", retryOnGesture);
-                attemptPlay().catch(function () {});
-            }
-            document.addEventListener("touchstart", retryOnGesture, { once: true, passive: true });
-            document.addEventListener("pointerdown", retryOnGesture, { once: true });
-            document.addEventListener("click", retryOnGesture, { once: true });
-        });
+        function startVideo() {
+            if (started) return;
+            started = true;
+            // מפעיל את הערכת מקורות ה-<source> (webm/mp4) ומתחיל את ההורדה בפועל - עד כה,
+            // בזכות preload="none", הדפדפן לא הוריד ולא פענח שום בייט מהווידאו
+            bgVideo.load();
+            attemptPlay().catch(function () {
+                // מדיניות autoplay עלולה לחסום גם ניגון מושתק - מנסים שוב במגע/קליק הראשון
+                function retryOnGesture() {
+                    document.removeEventListener("touchstart", retryOnGesture);
+                    document.removeEventListener("pointerdown", retryOnGesture);
+                    document.removeEventListener("click", retryOnGesture);
+                    attemptPlay().catch(function () {});
+                }
+                document.addEventListener("touchstart", retryOnGesture, { once: true, passive: true });
+                document.addEventListener("pointerdown", retryOnGesture, { once: true });
+                document.addEventListener("click", retryOnGesture, { once: true });
+            });
+        }
+
+        if (document.readyState === "complete") {
+            startVideo();
+        } else {
+            window.addEventListener("load", startVideo, { once: true });
+        }
 
         // כשהטאב גלוי/פעיל - הווידאו חייב להיות מנוגן; כשהוא מוסתר - משהים כדי לחסוך CPU/GPU
         document.addEventListener("visibilitychange", function () {
+            if (!started) return;
             if (document.hidden) {
                 bgVideo.pause();
             } else {
