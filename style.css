@@ -996,6 +996,13 @@ footer {
     gap: 12px;
     position: relative;
     z-index: 0;
+    /* פאנל זכוכית כהה מאחד (ניסוי עיצובי) - תואם לפאנל הטיימר, מייצב את הפודיום מול הרקע הבהיר */
+    padding: 20px 16px 16px;
+    border-radius: 20px;
+    background: rgba(18, 22, 14, 0.7);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 220, 100, 0.45);
 }
 
 /* כתמי אור עדינים שמרחפים מאחורי הפודיום ומעניקים עומק תלת-ממדי */
@@ -1036,7 +1043,8 @@ footer {
     flex: 1;
     min-width: 0;
     background: linear-gradient(145deg, #251a14 0%, #1a0f0a 100%);
-    border: 1px solid rgba(255, 204, 51, 0.15);
+    /* גבול פנימי מודגש יותר (ניסוי עיצובי) - כדי שהכרטיס יבלוט בבירור מול פאנל הזכוכית הכהה החדש */
+    border: 1px solid rgba(255, 204, 51, 0.3);
     border-radius: 16px;
     padding: 16px 8px;
     display: flex;
