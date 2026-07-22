@@ -456,53 +456,6 @@ h1 {
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8), 0 0 2px rgba(0, 0, 0, 0.9);
 }
 
-/* --- כרטיסי מידע (עדכונים אחרונים / תורמים מובילים) - "בקרוב" גלוי וכן, בלי תוכן מומצא --- */
-.dashboard-info {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 14px;
-}
-
-@media (max-width: 640px) {
-    .dashboard-info {
-        grid-template-columns: 1fr;
-    }
-}
-
-.info-card {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    padding: 22px 14px;
-    /* צורת "שבבים חתוכים" - זווית ישרה חדה למעלה-שמאל/מטה-ימין, פינה מעוגלת למעלה-ימין/מטה-שמאל */
-    border-radius: 0 16px 0 16px;
-    clip-path: polygon(16px 0, 100% 0, 100% calc(100% - 16px), calc(100% - 16px) 100%, 0 100%, 0 16px);
-    /* זכוכית קפואה עם גוון כהה עדין - לשמור על ניגודיות טקסט מול הרקע הבהיר */
-    background: rgba(15, 20, 10, 0.45);
-    border: 1px dashed rgba(255, 220, 100, 0.45);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    min-height: 84px;
-}
-
-.info-card-title {
-    font-weight: 800;
-    font-size: 0.92rem;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8), 0 0 2px rgba(0, 0, 0, 0.9);
-}
-
-.info-card-soon {
-    font-size: 0.78rem;
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
-    color: #ffcc33;
-    opacity: 0.9;
-    font-weight: 700;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8), 0 0 2px rgba(0, 0, 0, 0.9);
-}
-
 /* --- רשת קישורים מהירים (שאר הכרטיסים) --- */
 .dashboard-quicklinks {
     display: grid;
@@ -876,10 +829,11 @@ footer {
     /* צורת "שבבים חתוכים" (ניסוי עיצובי) - תואם לכרטיסי הבית */
     border-radius: 0 20px 0 20px;
     clip-path: polygon(22px 0, 100% 0, 100% calc(100% - 22px), calc(100% - 22px) 100%, 0 100%, 0 22px);
-    background: rgba(18, 18, 22, 0.85);
-    border: 1px solid rgba(212, 175, 55, 0.3);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
+    /* זכוכית זהובה זהה בדיוק לכרטיסי הבית (ניסוי עיצובי) - איחוד מלא בין הטאבים */
+    background: rgba(15, 20, 10, 0.45);
+    border: 1px solid rgba(255, 220, 100, 0.45);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
     /* filter:drop-shadow לצל החיצוני (עוקב אחרי הצללית החתוכה) - הזוהר הפנימי נשאר box-shadow (inset) */
     filter: drop-shadow(0 12px 24px rgba(0, 0, 0, 0.4));
     box-shadow: inset 0 0 26px rgba(212, 175, 55, 0.05);
@@ -991,7 +945,8 @@ footer {
     /* צורת "שבבים חתוכים" (ניסוי עיצובי) - תואם לכרטיסי הבית */
     border-radius: 0 20px 0 20px;
     clip-path: polygon(22px 0, 100% 0, 100% calc(100% - 22px), calc(100% - 22px) 100%, 0 100%, 0 22px);
-    background: rgba(18, 22, 14, 0.85);
+    /* זכוכית זהובה זהה בדיוק לכרטיסי הבית (ניסוי עיצובי) - איחוד מלא בין הטאבים */
+    background: rgba(15, 20, 10, 0.45);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
     border: 1px solid rgba(255, 220, 100, 0.45);
@@ -1260,11 +1215,11 @@ footer {
     border-radius: 0 16px 0 16px;
     clip-path: polygon(18px 0, 100% 0, 100% calc(100% - 18px), calc(100% - 18px) 100%, 0 100%, 0 18px);
     padding: 16px;
-    /* זכוכית כהה כפויה (ניסוי עיצובי) - !important כדי לנצח בוודאות כל שכבה/מטמון קודם */
-    background: rgba(15, 18, 12, 0.88) !important;
+    /* זכוכית זהובה זהה בדיוק לכרטיסי הבית (ניסוי עיצובי) - !important לנצח בוודאות כל שכבה/מטמון קודם */
+    background: rgba(15, 20, 10, 0.45) !important;
     backdrop-filter: blur(20px) !important;
     -webkit-backdrop-filter: blur(20px) !important;
-    border: 1px solid rgba(255, 200, 80, 0.3) !important;
+    border: 1px solid rgba(255, 220, 100, 0.45) !important;
     opacity: 0;
     will-change: transform;
     animation:
@@ -1408,11 +1363,11 @@ footer {
     border-radius: 0 16px 0 16px;
     clip-path: polygon(18px 0, 100% 0, 100% calc(100% - 18px), calc(100% - 18px) 100%, 0 100%, 0 18px);
     overflow: hidden;
-    /* זכוכית כהה כפויה (ניסוי עיצובי) - !important כדי לנצח בוודאות כל שכבה/מטמון קודם */
-    background: rgba(15, 18, 12, 0.88) !important;
+    /* זכוכית זהובה זהה בדיוק לכרטיסי הבית (ניסוי עיצובי) - !important לנצח בוודאות כל שכבה/מטמון קודם */
+    background: rgba(15, 20, 10, 0.45) !important;
     backdrop-filter: blur(20px) !important;
     -webkit-backdrop-filter: blur(20px) !important;
-    border: 1px solid rgba(255, 200, 80, 0.3) !important;
+    border: 1px solid rgba(255, 220, 100, 0.45) !important;
     /* filter:drop-shadow במקום box-shadow - עוקב אחרי הצללית החתוכה בפועל (clip-path) */
     filter: drop-shadow(0 10px 22px rgba(0, 0, 0, 0.4));
     opacity: 0;
