@@ -330,8 +330,9 @@ h1 {
 .tabs-nav {
     display: flex;
     gap: 6px;
-    background: rgba(255, 255, 255, 0.035);
-    border: 1px solid rgba(255, 204, 51, 0.18);
+    /* זכוכית כהה עדינה - תואמת לאסתטיקת הכרטיסים החדשה */
+    background: rgba(15, 20, 10, 0.45);
+    border: 1px solid rgba(255, 220, 100, 0.45);
     padding: 6px;
     border-radius: 999px;
     margin-bottom: 28px;
@@ -343,12 +344,13 @@ h1 {
 
 .tab-btn {
     flex: 1;
-    /* זכוכית מכוסת קרה לכרטיסייה הלא-פעילה */
-    background: rgba(255, 255, 255, 0.02);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    color: #9a8f85;
+    /* זכוכית כהה מוצקה לכרטיסייה הלא-פעילה - קריאה בבירור מול הרקע הבהיר */
+    background: rgba(20, 25, 15, 0.7);
+    border: 1px solid rgba(255, 204, 51, 0.5);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    color: #ffe9a8;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8), 0 0 2px rgba(0, 0, 0, 0.9);
     font-family: inherit;
     font-weight: 800;
     font-size: 0.95rem;
@@ -362,15 +364,16 @@ h1 {
 
 .tab-btn:hover {
     color: #ffcc33;
-    background: rgba(255, 204, 51, 0.1);
-    border-color: rgba(255, 204, 51, 0.35);
+    background: rgba(255, 204, 51, 0.18);
+    border-color: rgba(255, 204, 51, 0.7);
     box-shadow: 0 0 16px rgba(255, 204, 51, 0.25);
 }
 
 .tab-btn.active {
     /* גרדיאנט זהב/כתום עשיר + זוהר פנימי + זוהר ניאון חם מתחת לכרטיסייה */
     background: linear-gradient(145deg, #ffd966, #ff8c00);
-    color: #1a0f0a;
+    color: #111111;
+    text-shadow: none;
     font-weight: 900;
     border-color: rgba(255, 204, 51, 0.7);
     box-shadow:
@@ -1256,8 +1259,9 @@ footer {
     border: 2px solid transparent;
     border-radius: 16px;
     padding: 16px;
+    /* מילוי כהה ואטום יותר (ניסוי עיצובי) - כדי שהפאנל לא "יידלף" אל תוך רקע החול/השמיים הבהיר */
     background:
-        rgba(255, 255, 255, 0.03) padding-box,
+        rgba(18, 22, 14, 0.75) padding-box,
         conic-gradient(from var(--border-angle, 0deg), #ff9900, #ffcc00, #ff9900) border-box;
     backdrop-filter: blur(15px);
     -webkit-backdrop-filter: blur(15px);
@@ -1279,7 +1283,7 @@ footer {
 
 .timer-badge-text {
     color: #ffc83b;
-    text-shadow: 0 0 10px rgba(255, 200, 59, 0.3);
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8), 0 0 2px rgba(0, 0, 0, 0.9), 0 0 10px rgba(255, 200, 59, 0.3);
     font-weight: 900;
     font-size: 0.85rem;
     letter-spacing: 2px;
@@ -1342,7 +1346,7 @@ footer {
     font-weight: 900;
     color: #ffcc33;
     line-height: 1.1;
-    text-shadow: 0 0 20px rgba(255, 204, 51, 0.5);
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8), 0 0 2px rgba(0, 0, 0, 0.9), 0 0 20px rgba(255, 204, 51, 0.5);
 }
 
 .timer-box label {
@@ -1352,6 +1356,7 @@ footer {
     color: #cbd5e0;
     letter-spacing: 1.2px;
     text-transform: uppercase;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8), 0 0 2px rgba(0, 0, 0, 0.9);
 }
 
 /* פעימת "טיק" בכל שנייה בתיבת השניות */
@@ -1389,11 +1394,12 @@ footer {
     display: inline-flex;
     align-items: center;
     margin-top: 1.2rem;
-    color: rgba(255, 200, 59, 0.7);
+    color: rgba(255, 200, 59, 0.9);
     font-size: 0.78rem;
     font-weight: 600;
     letter-spacing: 1.5px;
     text-transform: uppercase;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8), 0 0 2px rgba(0, 0, 0, 0.9);
 }
 
 /* === טבלת דירוגים === */
