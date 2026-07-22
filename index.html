@@ -18,7 +18,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-    <link rel="stylesheet" href="style.css?v=2.3-ultimate">
+    <link rel="stylesheet" href="style.css?v=2.4-particles">
     <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;700;900&display=swap" rel="stylesheet">
 
     <!-- script.js נטען מוקדם עם defer - מתחיל להוריד אותו מיד (במקביל לפרסור ה-HTML) במקום להמתין
@@ -342,12 +342,13 @@
             const EMBER_COLORS = ["255, 204, 51", "255, 170, 60", "255, 140, 20"];
 
             function initParticles() {
-                // צפיפות מוגברת משמעותית - "גחלים" זוהרות פורחות ברחבי כל הרקע
-                const count = Math.min(320, Math.floor((window.innerWidth * window.innerHeight) / 6000));
+                // צפיפות מוגברת עוד יותר - "גחלים" זוהרות וגדולות יותר, פורחות ברחבי כל הרקע
+                const count = Math.min(480, Math.floor((window.innerWidth * window.innerHeight) / 4800));
                 particles = Array.from({ length: count }, () => ({
                     x: Math.random() * canvas.width,
                     y: Math.random() * canvas.height,
-                    r: Math.random() * 1.6 + 0.4,
+                    // רדיוס גדול משמעותית (היה 0.4-2.0px) - כל גחלת בודדת בולטת וניכרת יותר
+                    r: Math.random() * 2.5 + 1.5,
                     vx: (Math.random() - 0.5) * 0.2,
                     // הטיה כלפי מעלה - "גחלים" עולות במקום ריחוף אקראי סימטרי
                     vy: -(Math.random() * 0.18 + 0.02),
