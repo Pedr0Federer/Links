@@ -307,25 +307,6 @@ h1 {
     text-shadow: 0 0 12px rgba(255, 204, 51, 0.5);
 }
 
-/* === תג מגן זהב זוהר - מונח על תמונת הפרופיל (ניסוי עיצובי חדש) === */
-.profile-shield {
-    position: absolute;
-    bottom: -4px;
-    left: -4px;
-    width: 34px;
-    height: 34px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    filter: drop-shadow(0 0 8px rgba(255, 204, 51, 0.8));
-    pointer-events: none;
-}
-
-.profile-shield svg {
-    width: 100%;
-    height: 100%;
-}
-
 /* === ניווט טאבים (Home / Codes & Leaderboards) === */
 .tabs-nav {
     display: flex;
@@ -996,12 +977,12 @@ footer {
     gap: 12px;
     position: relative;
     z-index: 0;
-    /* פאנל זכוכית כהה מאחד (ניסוי עיצובי) - תואם לפאנל הטיימר, מייצב את הפודיום מול הרקע הבהיר */
+    /* פאנל זכוכית כהה מאחד (ניסוי עיצובי) - זהה לטיימר ולטבלה, מייצב את הפודיום מול הרקע הבהיר */
     padding: 20px 16px 16px;
     border-radius: 20px;
-    background: rgba(18, 22, 14, 0.7);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
+    background: rgba(18, 22, 14, 0.85);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
     border: 1px solid rgba(255, 220, 100, 0.45);
 }
 
@@ -1267,12 +1248,12 @@ footer {
     border: 2px solid transparent;
     border-radius: 16px;
     padding: 16px;
-    /* מילוי כהה ואטום יותר (ניסוי עיצובי) - כדי שהפאנל לא "יידלף" אל תוך רקע החול/השמיים הבהיר */
+    /* זכוכית כהה אחידה (ניסוי עיצובי) - זהה בדיוק לפאנל הפודיום */
     background:
-        rgba(18, 22, 14, 0.75) padding-box,
+        rgba(18, 22, 14, 0.85) padding-box,
         conic-gradient(from var(--border-angle, 0deg), #ff9900, #ffcc00, #ff9900) border-box;
-    backdrop-filter: blur(15px);
-    -webkit-backdrop-filter: blur(15px);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
     opacity: 0;
     will-change: transform;
     animation:
@@ -1416,11 +1397,12 @@ footer {
     border: 2px solid transparent;
     border-radius: 16px;
     overflow: hidden;
+    /* זכוכית כהה אחידה (ניסוי עיצובי) - זהה בדיוק לפאנל הפודיום, במקום הזכוכית הבהירה הקודמת */
     background:
-        rgba(255, 255, 255, 0.03) padding-box,
+        rgba(18, 22, 14, 0.85) padding-box,
         conic-gradient(from var(--border-angle, 0deg), #ff9900, #ffcc00, #ff9900) border-box;
-    backdrop-filter: blur(15px);
-    -webkit-backdrop-filter: blur(15px);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
     opacity: 0;
     will-change: transform;
