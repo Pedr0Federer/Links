@@ -22,6 +22,35 @@
         }
     });
 
+    // === רקע וידאו לופ - ניגון מיידי + נסיון חוזר במגע/קליק ראשון אם המדיניות autoplay חוסמת ===
+    function playBackgroundVideo() {
+        const bgVideo = document.getElementById("bg-video");
+        if (!bgVideo) return;
+
+        function attemptPlay() {
+            bgVideo.muted = true;
+            try {
+                return bgVideo.play() || Promise.resolve();
+            } catch (err) {
+                return Promise.reject(err);
+            }
+        }
+
+        attemptPlay().catch(function () {
+            function retryOnGesture() {
+                document.removeEventListener("touchstart", retryOnGesture);
+                document.removeEventListener("pointerdown", retryOnGesture);
+                document.removeEventListener("click", retryOnGesture);
+                attemptPlay().catch(function () {});
+            }
+            document.addEventListener("touchstart", retryOnGesture, { once: true, passive: true });
+            document.addEventListener("pointerdown", retryOnGesture, { once: true });
+            document.addEventListener("click", retryOnGesture, { once: true });
+        });
+    }
+
+    playBackgroundVideo();
+
     // playIntroSplash מנגן את הסרטון ומחזיר Promise שמתממש כשהוא מסתיים (בדרך זו או אחרת) -
     // הוא לא נוגע בשכבת הפתיחה עצמה (fade/הסרה); זה קורה רק אחרי שגם התמונות הקריטיות מוכנות,
     // כדי שהאוברליי ישמש כ"מסך טעינה" נקי לאורך כל הזמן הזה בלי הבזק של רקע לא טעון באמצע.
@@ -116,7 +145,6 @@
         // כדי שהפופ-אפ והאתר הראשי לעולם לא ייחשפו לפני שהם באמת זמינים
         const criticalImages = Promise.all([
             "profile.jpg",
-            "bg-jungle.webp",
             "promo.png",
             "Discord_logo.png",
             "Kick_logo.png",

@@ -7,13 +7,6 @@
 }
 
 body {
-    /* רקע ג'ונגל בהיר וחי (ניסוי עיצובי) - שכבת האפלה כמעט הוסרה כדי שהתמונה תישאר תוססת,
-       ללא "עמעום" כהה על אזור המרכז */
-    background-image: linear-gradient(rgba(5, 7, 10, 0.1), rgba(5, 7, 10, 0.15)), url("bg-jungle.webp");
-    background-size: cover;
-    background-position: center;
-    background-attachment: fixed;
-    background-repeat: no-repeat;
     background-color: #05070a;
     color: #ffffff;
     min-height: 100vh;
@@ -23,11 +16,19 @@ body {
     scrollbar-color: #ff9900 #0a0a0a;
 }
 
-/* background-attachment:fixed ידוע כגרוע/באגי בביצועים ובגלילה ב-iOS Safari - בנייד גוללים רגיל */
-@media (max-width: 768px) {
-    body {
-        background-attachment: scroll;
-    }
+/* === רקע וידאו לופ במקום תמונה סטטית - מכסה את כל המסך מאחורי כל תוכן האתר === */
+#bg-video {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    object-fit: cover;
+    z-index: -2;
+    pointer-events: none;
+    background-color: #05070a;
+    will-change: transform;
+    transform: translate3d(0, 0, 0);
 }
 
 /* === מסך פתיחה - וידאו אינטרו (Intro Splash) === */

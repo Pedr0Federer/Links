@@ -14,16 +14,15 @@
          מוקדם ככל האפשר, במקביל לפרסור ה-HTML, במקום לחכות שהדפדפן יגיע אליהם בהמשך המסמך -->
     <link rel="preload" as="video" href="intro.mp4?v=20260722-audit-pass" type="video/mp4">
     <link rel="preload" as="image" href="profile.jpg">
-    <link rel="preload" as="image" href="bg-jungle.webp">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-    <link rel="stylesheet" href="style.css?v=3.1-english-tabs">
+    <link rel="stylesheet" href="style.css?v=3.3-pure-video-bg">
     <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;700;900&display=swap" rel="stylesheet">
 
     <!-- script.js נטען מוקדם עם defer - מתחיל להוריד אותו מיד (במקביל לפרסור ה-HTML) במקום להמתין
          שהפרסר יגיע לתחתית הגוף, בלי לחסום את הרינדור (defer מריץ אותו רק אחרי שה-DOM מוכן) -->
-    <script src="script.js?v=2.0-glass" defer></script>
+    <script src="script.js?v=3.3-pure-video-bg" defer></script>
 </head>
 <body>
 
@@ -39,6 +38,10 @@
             preload="auto"
         ></video>
     </div>
+
+    <video id="bg-video" autoplay loop muted playsinline preload="auto" aria-hidden="true">
+        <source src="BackgraoundVid.mp4?v=3.3-pure-video-bg" type="video/mp4">
+    </video>
 
     <canvas id="particles-bg"></canvas>
     <div class="glow-orb glow-orb-1"></div>
