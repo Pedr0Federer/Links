@@ -116,6 +116,7 @@
         // כדי שהפופ-אפ והאתר הראשי לעולם לא ייחשפו לפני שהם באמת זמינים
         const criticalImages = Promise.all([
             "profile.jpg",
+            "bg-jungle.webp",
             "promo.png",
             "Discord_logo.png",
             "Kick_logo.png",
