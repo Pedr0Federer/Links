@@ -17,7 +17,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-    <link rel="stylesheet" href="style.css?v=20260722-audit-pass">
+    <link rel="stylesheet" href="style.css?v=20260722-jungle-theme">
     <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;700;900&display=swap" rel="stylesheet">
 
     <!-- script.js נטען מוקדם עם defer - מתחיל להוריד אותו מיד (במקביל לפרסור ה-HTML) במקום להמתין
@@ -51,9 +51,21 @@
             <header>
                 <a href="https://kick.com/pedrofederer" target="_blank" rel="noopener" class="profile-link" aria-label="צפו ב-PedroFederer בשידור חי ב-Kick">
                     <img src="profile.jpg" alt="PedroFederer" class="profile-img">
+                    <span class="profile-shield" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <defs>
+                                <linearGradient id="shieldGrad" x1="0" y1="0" x2="0" y2="1">
+                                    <stop offset="0%" stop-color="#ffe9a8"/>
+                                    <stop offset="100%" stop-color="#d4af37"/>
+                                </linearGradient>
+                            </defs>
+                            <path d="M12 2l7 3.2v5.4c0 4.6-3 8.8-7 10.4-4-1.6-7-5.8-7-10.4V5.2L12 2z" fill="url(#shieldGrad)" stroke="#ffcc33" stroke-width="0.6"/>
+                            <path d="M8.3 12.2l2.4 2.4 4.6-5" stroke="#1a0f0a" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                        </svg>
+                    </span>
                 </a>
                 <h1>PedroFederer</h1>
-                <p class="subtitle">OFFICIAL LINKS</p>
+                <p class="subtitle">OFFICIAL HUB</p>
             </header>
 
             <nav class="tabs-nav">

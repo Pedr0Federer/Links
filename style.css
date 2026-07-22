@@ -7,14 +7,26 @@
 }
 
 body {
-    /* בסיס כהה וסטייליש שעליו יושבים אפקטי הזוהר והחלקיקים */
-    background: #05070a;
+    /* רקע ג'ונגל - שכבת האפלה כהה מעליו כדי לשמר ניגודיות לטקסט/כרטיסים */
+    background-image: linear-gradient(rgba(5, 7, 10, 0.82), rgba(5, 7, 10, 0.88)), url("bg-jungle.jpeg");
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+    background-color: #05070a;
     color: #ffffff;
     min-height: 100vh;
     overflow-x: hidden;
     position: relative;
     scrollbar-width: thin;
     scrollbar-color: #ff9900 #0a0a0a;
+}
+
+/* background-attachment:fixed ידוע כגרוע/באגי בביצועים ובגלילה ב-iOS Safari - בנייד גוללים רגיל */
+@media (max-width: 768px) {
+    body {
+        background-attachment: scroll;
+    }
 }
 
 /* === מסך פתיחה - וידאו אינטרו (Intro Splash) === */
@@ -288,11 +300,31 @@ h1 {
 }
 
 .subtitle {
-    color: #cbd5e0; /* צבע טקסט בהיר יותר */
+    /* טקסט זהב מסוגנן עם זוהר, במקום אפור ניטרלי */
+    color: #ffcc33;
     font-size: 0.9rem;
     font-weight: 800;
     letter-spacing: 2px;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    text-shadow: 0 0 12px rgba(255, 204, 51, 0.5);
+}
+
+/* === תג מגן זהב זוהר - מונח על תמונת הפרופיל === */
+.profile-shield {
+    position: absolute;
+    bottom: -4px;
+    left: -4px;
+    width: 34px;
+    height: 34px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    filter: drop-shadow(0 0 8px rgba(255, 204, 51, 0.8));
+    pointer-events: none;
+}
+
+.profile-shield svg {
+    width: 100%;
+    height: 100%;
 }
 
 /* === ניווט טאבים (Home / Codes & Leaderboards) === */
