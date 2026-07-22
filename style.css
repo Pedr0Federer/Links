@@ -295,8 +295,9 @@ h1 {
     background: linear-gradient(180deg, #ffb347 0%, #ff6e2e 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    /* צל כהה חזק (ניסוי עיצובי) - כדי שהשם יבלוט בבירור מול השמיים הבהירים */
-    text-shadow: 0 2px 6px rgba(0, 0, 0, 0.95), 0 0 4px rgba(0, 0, 0, 0.9);
+    /* filter:drop-shadow במקום text-shadow (ניסוי עיצובי) - text-shadow על טקסט עם gradient-clip
+       שקוף "מלכלך" את הצבע החי; drop-shadow פועל על הצללית המעובדת בלי לגעת במילוי עצמו */
+    filter: drop-shadow(0px 2px 6px rgba(0, 0, 0, 0.85));
 }
 
 .subtitle {
