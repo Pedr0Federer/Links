@@ -8,7 +8,7 @@
 
 body {
     /* רקע ג'ונגל - שכבת האפלה כהה מעליו כדי לשמר ניגודיות לטקסט/כרטיסים */
-    background-image: linear-gradient(rgba(5, 7, 10, 0.82), rgba(5, 7, 10, 0.88)), url("bg-jungle.jpeg");
+    background-image: linear-gradient(rgba(5, 7, 10, 0.82), rgba(5, 7, 10, 0.88)), url("bg-jungle.webp");
     background-size: cover;
     background-position: center;
     background-attachment: fixed;
