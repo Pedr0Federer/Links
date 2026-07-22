@@ -153,7 +153,9 @@ body {
 .page-layout {
     display: flex;
     justify-content: center;
-    align-items: flex-start;
+    /* stretch (במקום flex-start) כדי שהקונטיינר יתמתח לגובה המלא הזמין - מונע "קיטוע" מוקדם
+       של פאנל הזכוכית מעל הפוטר בתצוגות גבוהות/זום-אאוט, במקום להצטמצם לגובה התוכן בלבד */
+    align-items: stretch;
     min-height: 100vh;
     opacity: 0;
     transition: opacity 0.5s ease;
@@ -277,7 +279,8 @@ header {
     border: 3px solid #f1a403;
     margin-bottom: 15px;
     display: block;
-    box-shadow: 0 0 20px rgba(241, 164, 3, 0.4);
+    /* הילה זהובה עגולה ורכה סביב האווטאר (במקום תג המגן) */
+    box-shadow: 0 0 25px rgba(255, 200, 50, 0.6), 0 0 50px rgba(255, 180, 0, 0.3);
     transition: box-shadow 0.3s ease-in-out, border-color 0.3s ease-in-out, filter 0.3s ease-in-out;
 }
 
@@ -306,25 +309,6 @@ h1 {
     font-weight: 800;
     letter-spacing: 2px;
     text-shadow: 0 0 12px rgba(255, 204, 51, 0.5);
-}
-
-/* === תג מגן זהב זוהר - מונח על תמונת הפרופיל === */
-.profile-shield {
-    position: absolute;
-    bottom: -4px;
-    left: -4px;
-    width: 34px;
-    height: 34px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    filter: drop-shadow(0 0 8px rgba(255, 204, 51, 0.8));
-    pointer-events: none;
-}
-
-.profile-shield svg {
-    width: 100%;
-    height: 100%;
 }
 
 /* === ניווט טאבים (Home / Codes & Leaderboards) === */
@@ -765,6 +749,10 @@ footer {
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
     box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4), inset 0 0 26px rgba(212, 175, 55, 0.05);
+    /* ריווח נוסף מעבר לפער האחיד של .leaderboard - מרחיק את הבאנר מהפודיום ומאזן אותו
+       בין ניווט הטאבים לרשת הלידרבורד */
+    margin-top: 8px;
+    margin-bottom: 28px;
     opacity: 0;
     animation:
         fadeInUp 0.6s ease-out 0.1s forwards,
