@@ -37,6 +37,22 @@
             }
         }
 
+        // תיקון לבאג throttling אמיתי בכרום: כשהדף "רגוע" (בלי גלילה/אינטראקציה), הדפדפן
+        // מוריד את קצב ה-*הצגה* של פריימי הווידאו (גם אם הפענוח עצמו רץ תקין) כדי לחסוך
+        // חשמל - חיזוק/הרפיה חד-פעמית לא נצפים, כי מדובר בקצב הצגה ולא בקצב טעינה.
+        // גלילה מפעילה מחדש הצגה בקצב מלא כי היא נחשבת אינטראקציה מפורשת בעדיפות גבוהה.
+        // requestVideoFrameCallback הוא ה-API הרשמי בדיוק לתרחיש הזה - הרשמה מפורשת ל"כל
+        // פריים חדש שהמפענח מפיק" הופכת את הדף לצרכן פעיל של הווידאו בכל פריים, ומבטלת
+        // את ה-throttling האוטומטי מבלי לגעת בקצב הפיענוח או באיכות עצמם
+        function keepVideoFrameCadence() {
+            if (typeof bgVideo.requestVideoFrameCallback !== "function") return;
+            function onFrame() {
+                bgVideo.requestVideoFrameCallback(onFrame);
+            }
+            bgVideo.requestVideoFrameCallback(onFrame);
+        }
+        keepVideoFrameCadence();
+
         // רשת ביטחון חד-פעמית - מסירה את עצמה מיד אחרי הפעולה הראשונה של המשתמש, ופועלת
         // רק אם הווידאו עדיין לא באמת מנגן (autoplay נחסם ע"י הדפדפן)
         function retryOnInteraction() {

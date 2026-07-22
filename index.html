@@ -17,12 +17,12 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-    <link rel="stylesheet" href="style.css?v=4.1-preserve-design-720p">
+    <link rel="stylesheet" href="style.css?v=4.2-fix-idle-frame-throttle">
     <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;700;900&display=swap" rel="stylesheet">
 
     <!-- script.js נטען מוקדם עם defer - מתחיל להוריד אותו מיד (במקביל לפרסור ה-HTML) במקום להמתין
          שהפרסר יגיע לתחתית הגוף, בלי לחסום את הרינדור (defer מריץ אותו רק אחרי שה-DOM מוכן) -->
-    <script src="script.js?v=4.1-preserve-design-720p" defer></script>
+    <script src="script.js?v=4.2-fix-idle-frame-throttle" defer></script>
 </head>
 <body>
 
@@ -40,8 +40,8 @@
     </div>
 
     <video id="bg-video" autoplay loop muted playsinline preload="auto" aria-hidden="true">
-        <source src="BackgraoundVid.webm?v=4.1-preserve-design-720p" type="video/webm">
-        <source src="BackgraoundVid.mp4?v=4.1-preserve-design-720p" type="video/mp4">
+        <source src="BackgraoundVid.webm?v=4.2-fix-idle-frame-throttle" type="video/webm">
+        <source src="BackgraoundVid.mp4?v=4.2-fix-idle-frame-throttle" type="video/mp4">
     </video>
 
     <canvas id="particles-bg"></canvas>
@@ -621,10 +621,17 @@
                 const secondsEl = document.getElementById("cdSeconds");
                 secondsEl.textContent = String(seconds).padStart(2, "0");
 
+                // מפעילים מחדש את אנימציית ה-CSS בלי לכפות reflow סינכרוני על כל הדף (היה
+                // void secondsBox.offsetWidth - קורא ל-layout מלא כל שנייה, יקר עם כמות
+                // ה-backdrop-filter/blur בעמוד) - שני requestAnimationFrame עוקבים מבטיחים
+                // שהדפדפן כבר צייר בלי המחלקה לפני שמוסיפים אותה בחזרה, בלי חסימת ה-main thread
                 const secondsBox = secondsEl.closest(".timer-box");
                 secondsBox.classList.remove("tick");
-                void secondsBox.offsetWidth;
-                secondsBox.classList.add("tick");
+                requestAnimationFrame(function () {
+                    requestAnimationFrame(function () {
+                        secondsBox.classList.add("tick");
+                    });
+                });
 
                 document.getElementById("cdDate").textContent = "ENDS: " + (target.toLocaleDateString("en-US", {
                     month: "short", day: "numeric"
