@@ -457,10 +457,10 @@ h1 {
 .link-btn {
     /* אקורד זהב מטאלי אחיד לכל 9 הכרטיסים - לא עוד צבע קשת/מותג שונה לכל כרטיס */
     --brand: 212 175 55;
-    /* אובסידיאן כהה ומאט (Dark Premium) - בסיס אחיד לכל הכרטיסים */
-    background: rgba(15, 15, 18, 0.85);
-    backdrop-filter: blur(14px);
-    -webkit-backdrop-filter: blur(14px);
+    /* זכוכית זהובה (Glassmorphism) - במקום האובסידיאן הכהה הקודם */
+    background: rgba(255, 220, 100, 0.1);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
     text-decoration: none;
     padding: 14px 8px;
     border-radius: 16px;
