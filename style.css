@@ -396,27 +396,139 @@ h1 {
     display: flex;
 }
 
-/* === רשת קישורים לטאב הבית === */
+/* === טאב הבית - פריסת דשבורד (ניסוי עיצובי חדש): כרטיסים מומלצים למעלה,
+   כרטיסי מידע באמצע, ורשת קישורים מהירים למטה - שלושת המקטעים נערמים אנכית === */
 #tab-home.tab-panel.active {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* --- כרטיסים מומלצים (Kick & YouTube) --- */
+.dashboard-featured {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+}
+
+@media (max-width: 640px) {
+    .dashboard-featured {
+        grid-template-columns: 1fr;
+    }
+}
+
+.featured-card {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 20px;
+    border-radius: 18px;
+    background: rgba(255, 200, 50, 0.12);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 220, 100, 0.3);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+    text-decoration: none;
+    color: #ffffff;
+    transition: all 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.featured-card:hover {
+    transform: translateY(-6px) scale(1.02);
+    background: rgba(255, 200, 50, 0.18);
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5), 0 0 26px rgba(255, 204, 51, 0.35);
+    border-color: rgba(255, 220, 100, 0.55);
+}
+
+.featured-card .icon {
+    width: 64px;
+    height: 64px;
+    flex-shrink: 0;
+}
+
+.featured-text {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+    text-align: right;
+    min-width: 0;
+}
+
+.featured-title {
+    font-size: 1.1rem;
+    font-weight: 900;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.featured-sub {
+    font-size: 0.78rem;
+    color: rgba(255, 255, 255, 0.55);
+}
+
+/* --- כרטיסי מידע (עדכונים אחרונים / תורמים מובילים) - "בקרוב" גלוי וכן, בלי תוכן מומצא --- */
+.dashboard-info {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+}
+
+@media (max-width: 640px) {
+    .dashboard-info {
+        grid-template-columns: 1fr;
+    }
+}
+
+.info-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 22px 14px;
+    border-radius: 16px;
+    background: rgba(255, 200, 50, 0.07);
+    border: 1px dashed rgba(255, 220, 100, 0.3);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    min-height: 84px;
+}
+
+.info-card-title {
+    font-weight: 800;
+    font-size: 0.92rem;
+}
+
+.info-card-soon {
+    font-size: 0.68rem;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: #ffcc33;
+    opacity: 0.8;
+    font-weight: 700;
+}
+
+/* --- רשת קישורים מהירים (שאר הכרטיסים) --- */
+.dashboard-quicklinks {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 14px;
 }
 
 @media (max-width: 640px) {
-    #tab-home.tab-panel.active {
+    .dashboard-quicklinks {
         grid-template-columns: repeat(2, 1fr);
     }
 }
 
 @media (max-width: 380px) {
-    #tab-home.tab-panel.active {
+    .dashboard-quicklinks {
         grid-template-columns: 1fr;
     }
 }
 
 @media (min-width: 993px) {
-    #tab-home.tab-panel.active {
+    .dashboard-quicklinks {
         gap: 22px;
     }
 
