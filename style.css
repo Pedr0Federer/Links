@@ -7,13 +7,6 @@
 }
 
 body {
-    /* רקע ג'ונגל בהיר וחי (ניסוי עיצובי) - שכבת האפלה כמעט הוסרה כדי שהתמונה תישאר תוססת,
-       ללא "עמעום" כהה על אזור המרכז */
-    background-image: linear-gradient(rgba(5, 7, 10, 0.1), rgba(5, 7, 10, 0.15)), url("bg-jungle.webp");
-    background-size: cover;
-    background-position: center;
-    background-attachment: fixed;
-    background-repeat: no-repeat;
     background-color: #05070a;
     color: #ffffff;
     min-height: 100vh;
@@ -23,10 +16,37 @@ body {
     scrollbar-color: #ff9900 #0a0a0a;
 }
 
-/* background-attachment:fixed ידוע כגרוע/באגי בביצועים ובגלילה ב-iOS Safari - בנייד גוללים רגיל */
+/* רקע ג'ונגל בהיר וחי (ניסוי עיצובי) - שכבת האפלה כמעט הוסרה כדי שהתמונה תישאר תוססת,
+   ללא "עמעום" כהה על אזור המרכז.
+   בדסקטופ הרקע עובר מ-background-attachment:fixed על ה-body לפסאודו-אלמנט position:fixed
+   נפרד: background-attachment:fixed גורם לכרום להתייחס לרקע כחלק מהשכבה הגוללת של המסמך
+   שצריך לצייר מחדש על ה-main thread (לא מואץ-GPU) בכל אינווליוד - כולל כל פריים של קנבס
+   החלקיקים/הזוהרים שרצים מתחתיו - בניגוד ל-position:fixed אמיתי שכרום כן יכול לקדם
+   לשכבת קומפוזיציה עצמאית וזולה לשמור כמות שהיא. התוצאה הוויזואלית זהה לחלוטין בדסקטופ -
+   אותה תמונה קבועה שלא זזה עם הגלילה.
+   בנייד ממשיכים עם המנגנון המקורי (background-image רגיל על ה-body, ר' המדיה-קוורי למטה) כדי
+   לשמר בדיוק את אותה חשיבת cover/מיקום שהייתה קיימת קודם, בלי לסכן שינוי ויזואלי בעמודים
+   גבוהים מגלילה אחת - שם ממילא attachment:fixed לא היה בשימוש (הבאג ב-iOS Safari) */
+@media (min-width: 769px) {
+    body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        z-index: -10;
+        background-image: linear-gradient(rgba(5, 7, 10, 0.1), rgba(5, 7, 10, 0.15)), url("bg-jungle.webp");
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        pointer-events: none;
+    }
+}
+
 @media (max-width: 768px) {
     body {
-        background-attachment: scroll;
+        background-image: linear-gradient(rgba(5, 7, 10, 0.1), rgba(5, 7, 10, 0.15)), url("bg-jungle.webp");
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
     }
 }
 
@@ -330,6 +350,10 @@ h1 {
     -webkit-backdrop-filter: blur(15px);
     /* עומק לעטיפה החיצונית + הבהרה עדינה בקצה העליון לתחושת זכוכית */
     box-shadow: 0 12px 32px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+    /* contain:layout style (בלי paint/size, כדי לא לחתוך אפקטים חזותיים) - מבודד את תת-העץ
+       הזה מבחינת layout/style recalculation, כך ששינויים במקום אחר בעמוד (טיימר שמתעדכן
+       כל שנייה, לידרבורד שמתרענן) לא נאלצים לבדוק את הענף הזה בכל פעם */
+    contain: layout style;
 }
 
 .tab-btn {
@@ -337,8 +361,10 @@ h1 {
     /* זכוכית כהה מוצקה לכרטיסייה הלא-פעילה - קריאה בבירור מול הרקע הבהיר */
     background: rgba(20, 25, 15, 0.7);
     border: 1px solid rgba(255, 204, 51, 0.5);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
+    /* backdrop-filter הוסר בכוונה: .tabs-nav ההורה כבר מטשטש blur(15px) את מה שמאחוריו,
+       ומצב .active ממילא אטום לגמרי (גרדיאנט מלא) כך שהבלור שלו לא היה נראה כלל - טישטוש
+       כפול/מקונן כזה (בלור בתוך בלור) הוא אחד הדפוסים היקרים ביותר לקומפוזיטור, וכאן
+       הוא רץ פעמיים (2 כפתורים) על כל פריים לנצח בלי שום תוספת ויזואלית ממשית */
     color: #ffe9a8;
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8), 0 0 2px rgba(0, 0, 0, 0.9);
     font-family: inherit;
@@ -489,6 +515,9 @@ h1 {
     will-change: transform;
     /* fadeInUp מטפל בכניסה (transform), cardFloat מקבל שליטה על transform רק אחרי שהכניסה מסתיימת לכל כרטיס (ראו עיכובים למטה) */
     animation: fadeInUp 0.6s ease-out forwards, cardFloat 11s ease-in-out infinite;
+    /* contain:layout style (בלי paint/size) - מבודד כל כרטיס מבחינת layout/style recalculation
+       מהשאר, בלי להשפיע על ה-overflow:hidden/clip-path הקיימים */
+    contain: layout style;
 }
 
 /* ריחוף עדין ומתמשך - "נשימה" שקטה ואיטית של הכרטיס (הזזה מינימלית, GPU-friendly) */
@@ -788,6 +817,7 @@ footer {
     box-shadow: inset 0 0 26px rgba(212, 175, 55, 0.05);
     opacity: 0;
     will-change: transform;
+    contain: layout style;
     animation:
         fadeInUp 0.6s ease-out 0.1s forwards,
         csgorollHeroGlow 4s ease-in-out 0.7s infinite;
@@ -900,6 +930,7 @@ footer {
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
     border: 1px solid rgba(255, 220, 100, 0.45);
+    contain: layout style;
 }
 
 /* כתמי אור עדינים שמרחפים מאחורי הפודיום ומעניקים עומק תלת-ממדי */
@@ -954,6 +985,7 @@ footer {
     box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
     opacity: 0;
     margin-top: 24px;
+    contain: layout style;
     /* will-change:top הוסר בכוונה - top הוא תכונת layout ולעולם לא יכול להיות compositor-only,
        כך שההינט הזה לא סיפק שום תועלת בפועל, רק אילץ ניסיון קידום שכבה מיותר.
        transform נשאר חופשי לריחוף מעבר עכבר וההגבהה הקבועה של מקום ראשון (translateY סטטי) - הכניסה זזה דרך margin-top, והריחוף האיטי והעדין דרך top, כך ששתי האנימציות לא מתנגשות ב-transform */
@@ -1176,6 +1208,7 @@ footer {
     border: 1px solid rgba(255, 220, 100, 0.45) !important;
     opacity: 0;
     will-change: transform;
+    contain: layout style;
     animation:
         fadeInUp 0.6s ease-out 0.35s forwards,
         float 11s ease-in-out 0.6s infinite;
@@ -1326,6 +1359,7 @@ footer {
     filter: drop-shadow(0 10px 22px rgba(0, 0, 0, 0.4));
     opacity: 0;
     will-change: transform;
+    contain: layout style;
     animation:
         fadeInUp 0.6s ease-out 0.45s forwards,
         float 11s ease-in-out 0.7s infinite;
