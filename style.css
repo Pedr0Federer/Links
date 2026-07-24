@@ -1680,3 +1680,53 @@ footer {
         letter-spacing: 0;
     }
 }
+
+/* === מצב ביצועים נמוכים (Low-Performance Fallback) ===
+   מחלקת body.low-perf מופעלת אוטומטית ע"י מד ה-FPS ב-script.js כשקצב הפריימים בפועל
+   בטעינה נמוך מהסף שהוגדר - בד"כ סימן ל-Hardware Acceleration כבוי בדפדפן (רינדור תוכנה
+   מלא), שבו backdrop-filter וקנבס מונפש הופכים ליקרים מאוד ללא קשר לכמה שהם מאופטמים.
+   כל האלמנטים שומרים על אותה פריסה/צורה/טיפוגרפיה - רק הבלור מוסר ומוחלף ברקע כהה
+   ואטום משמעותית יותר, שנותן מראה "זכוכית פרימיום" דומה בלי שום עלות טשטוש בזמן ריצה */
+
+/* שתי שכבות הבלור המשותפות (המחליפות את כל 10 הבלורים הבודדים המקוריים) */
+body.low-perf #tab-home.tab-panel.active::before,
+body.low-perf .leaderboard-glass-group::before {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+}
+
+/* פאנל הטאבים והמודאל מטשטשים את הרקע שלהם ישירות - מבטלים גם כאן, עם רקע אטום יותר */
+body.low-perf .tabs-nav {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    background: rgba(15, 20, 10, 0.88);
+}
+
+body.low-perf .modal-overlay {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    background-color: rgba(0, 0, 0, 0.92);
+}
+
+/* כל כרטיס/פאנל זכוכית - אותו גוון, אטום משמעותית יותר במקום הטשטוש */
+body.low-perf .link-btn,
+body.low-perf .csgoroll-hero,
+body.low-perf .leaderboard-podium {
+    background: rgba(15, 20, 10, 0.88);
+}
+
+body.low-perf .leaderboard-timer {
+    background: rgba(15, 20, 10, 0.88) !important;
+}
+
+body.low-perf .leaderboard-table-wrap {
+    background: rgba(15, 20, 10, 0.88) !important;
+}
+
+/* עצירה מלאה של שכבות הרקע המונפשות - הקנבס נעצר גם ב-JS (ר' index.html), וההסתרה כאן
+   מוודאת שגם הפריים האחרון שנשאר מצויר לא יוסיף שום עלות קומפוזיציה. glow-orb מוסר
+   כי filter:blur(120px) על אלמנט מונפש הוא בעצמו עבודה יקרה מאוד ללא האצת GPU */
+body.low-perf #particles-bg,
+body.low-perf .glow-orb {
+    display: none;
+}

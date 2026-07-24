@@ -134,3 +134,42 @@
     window.playIntroSplash = playIntroSplash;
     window.waitForPageReady = waitForPageReady;
 })();
+
+// === ניטור ביצועים (FPS) + נפילה חיננית ל-CPU rendering ===
+// כשהאצת חומרה (Hardware Acceleration) כבויה בכרום, הדפדפן עובר לרינדור תוכנה מלא -
+// backdrop-filter וקנבס החלקיקים הופכים ליקרים באופן קיצוני ללא קשר לכמה שהם מאופטמים
+// במבנה ה-CSS/JS עצמו. במקום לנחש/להניח, מודדים בפועל את קצב הפריימים בזמן אמת מיד
+// עם טעינת הדף, ואם הוא נמוך מדי - מוסיפים מחלקה שמפעילה נפילה חיננית ב-CSS (ר' style.css)
+// ועוצרים את לולאת הקנבס (ר' index.html) כדי להוריד את העומס למינימום האפשרי
+(function () {
+    "use strict";
+
+    const PERF_SAMPLE_MS = 1500; // חלון המדידה - 1.5 שניות ראשונות
+    const LOW_FPS_THRESHOLD = 35; // מתחת לזה - נחשב רינדור תוכנה/חומרה חלשה
+
+    let frameCount = 0;
+    let sampleStartTime = null;
+
+    function samplePerformance(timestamp) {
+        if (sampleStartTime === null) {
+            sampleStartTime = timestamp;
+        }
+        frameCount++;
+        const elapsed = timestamp - sampleStartTime;
+
+        if (elapsed < PERF_SAMPLE_MS) {
+            requestAnimationFrame(samplePerformance);
+            return;
+        }
+
+        const fps = (frameCount / elapsed) * 1000;
+        // דגל גלובלי - נבדק פר-פריים בלולאת הקנבס ב-index.html, כדי שהיא תיעצר גם אם
+        // כבר התחילה לרוץ לפני שהמדידה כאן הסתיימה
+        window.isLowPerfDevice = fps < LOW_FPS_THRESHOLD;
+        if (window.isLowPerfDevice && document.body) {
+            document.body.classList.add("low-perf");
+        }
+    }
+
+    requestAnimationFrame(samplePerformance);
+})();
