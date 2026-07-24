@@ -423,6 +423,22 @@ h1 {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 14px;
+    position: relative;
+}
+
+/* בלור אחד משותף מאחורי כל רשת 9 הכרטיסים, במקום backdrop-filter נפרד על כל .link-btn -
+   שקוף לגמרי חוץ מהטשטוש עצמו; כל כרטיס שומר על הרקע/גבול/clip-path/hover שלו בדיוק
+   כמו קודם. ה"מחיר" היחיד: מרווחי הרשת שבין הכרטיסים (שהיו קודם חדים/לא מטושטשים,
+   כי כל בלור נחתך בדיוק לצורת הכרטיס שלו) מטושטשים עכשיו גם הם, כי שכבה אחת מלבנית
+   מכסה את כל אזור הרשת */
+#tab-home.tab-panel.active::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    pointer-events: none;
 }
 
 @media (max-width: 640px) {
@@ -483,10 +499,11 @@ h1 {
 .link-btn {
     /* אקורד זהב מטאלי אחיד לכל 9 הכרטיסים - לא עוד צבע קשת/מותג שונה לכל כרטיס */
     --brand: 212 175 55;
-    /* זכוכית קפואה עם גוון כהה עדין - לשמור על ניגודיות טקסט מול הרקע הבהיר */
+    /* זכוכית קפואה עם גוון כהה עדין - לשמור על ניגודיות טקסט מול הרקע הבהיר.
+       backdrop-filter הוסר מכאן בכוונה: 9 בלורים נפרדים (אחד לכל כרטיס) הוחלפו בבלור
+       אחד משותף שיושב מאחורי כל הרשת (ר' #tab-home::before) - הרקע/גבול/צורה של כל
+       כרטיס נשארו זהים לחלוטין */
     background: rgba(15, 20, 10, 0.45);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
     text-decoration: none;
     padding: 14px 8px;
     /* צורת "שבבים חתוכים" (ניסוי עיצובי) - זווית ישרה חדה למעלה-שמאל/מטה-ימין, פינה מעוגלת למעלה-ימין/מטה-שמאל */
@@ -765,6 +782,30 @@ footer {
     text-align: center;
 }
 
+/* עוטף את 4 פאנלי הזכוכית (hero/podium/timer/table) בשכבת backdrop-filter אחת ומשותפת
+   במקום 4 בלורים נפרדים - אותו gap:20px כמו ב-.leaderboard כדי שהמרווחים בין הפאנלים
+   יישארו זהים לחלוטין, בין אם הם ישירות בתוך .leaderboard או בתוך העטיפה הזו */
+.leaderboard-glass-group {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    position: relative;
+}
+
+/* שכבת הבלור המשותפת עצמה - שקופה לגמרי חוץ מהטשטוש; כל פאנל שומר על הרקע/גבול/צורה
+   שלו בדיוק כמו קודם, רק בלי backdrop-filter משלו. ה"מחיר" היחיד: פינות הריווח שבין
+   הפאנלים (שהיו קודם חדים/לא מטושטשים) מטושטשות עכשיו גם הן, כי שכבה אחת מלבנית
+   מכסה את כל האזור במקום טשטוש נפרד שנחתך בדיוק לצורת כל פאנל */
+.leaderboard-glass-group::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    pointer-events: none;
+}
+
 /* === אזהרת אחריות (הימורים) בתחתית הלידרבורד === */
 .leaderboard-disclaimer {
     max-width: 90%;
@@ -812,11 +853,10 @@ footer {
     /* צורת "שבבים חתוכים" (ניסוי עיצובי) - תואם לכרטיסי הבית */
     border-radius: 0 20px 0 20px;
     clip-path: polygon(22px 0, 100% 0, 100% calc(100% - 22px), calc(100% - 22px) 100%, 0 100%, 0 22px);
-    /* זכוכית זהובה זהה בדיוק לכרטיסי הבית (ניסוי עיצובי) - איחוד מלא בין הטאבים */
+    /* זכוכית זהובה זהה בדיוק לכרטיסי הבית (ניסוי עיצובי) - איחוד מלא בין הטאבים.
+       backdrop-filter הוסר מכאן - מוחלף בבלור אחד משותף על .leaderboard-glass-group */
     background: rgba(15, 20, 10, 0.45);
     border: 1px solid rgba(255, 220, 100, 0.45);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
     /* filter:drop-shadow לצל החיצוני (עוקב אחרי הצללית החתוכה) - הזוהר הפנימי נשאר box-shadow (inset) */
     filter: drop-shadow(0 12px 24px rgba(0, 0, 0, 0.4));
     box-shadow: inset 0 0 26px rgba(212, 175, 55, 0.05);
@@ -930,10 +970,9 @@ footer {
     /* צורת "שבבים חתוכים" (ניסוי עיצובי) - תואם לכרטיסי הבית */
     border-radius: 0 20px 0 20px;
     clip-path: polygon(22px 0, 100% 0, 100% calc(100% - 22px), calc(100% - 22px) 100%, 0 100%, 0 22px);
-    /* זכוכית זהובה זהה בדיוק לכרטיסי הבית (ניסוי עיצובי) - איחוד מלא בין הטאבים */
+    /* זכוכית זהובה זהה בדיוק לכרטיסי הבית (ניסוי עיצובי) - איחוד מלא בין הטאבים.
+       backdrop-filter הוסר מכאן - מוחלף בבלור אחד משותף על .leaderboard-glass-group */
     background: rgba(15, 20, 10, 0.45);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
     border: 1px solid rgba(255, 220, 100, 0.45);
     contain: layout style;
 }
@@ -1206,10 +1245,9 @@ footer {
     border-radius: 0 16px 0 16px;
     clip-path: polygon(18px 0, 100% 0, 100% calc(100% - 18px), calc(100% - 18px) 100%, 0 100%, 0 18px);
     padding: 16px;
-    /* זכוכית זהובה זהה בדיוק לכרטיסי הבית (ניסוי עיצובי) - !important לנצח בוודאות כל שכבה/מטמון קודם */
+    /* זכוכית זהובה זהה בדיוק לכרטיסי הבית (ניסוי עיצובי) - !important לנצח בוודאות כל שכבה/מטמון קודם.
+       backdrop-filter הוסר מכאן - מוחלף בבלור אחד משותף על .leaderboard-glass-group */
     background: rgba(15, 20, 10, 0.45) !important;
-    backdrop-filter: blur(20px) !important;
-    -webkit-backdrop-filter: blur(20px) !important;
     border: 1px solid rgba(255, 220, 100, 0.45) !important;
     opacity: 0;
     will-change: transform;
@@ -1355,10 +1393,9 @@ footer {
     border-radius: 0 16px 0 16px;
     clip-path: polygon(18px 0, 100% 0, 100% calc(100% - 18px), calc(100% - 18px) 100%, 0 100%, 0 18px);
     overflow: hidden;
-    /* זכוכית זהובה זהה בדיוק לכרטיסי הבית (ניסוי עיצובי) - !important לנצח בוודאות כל שכבה/מטמון קודם */
+    /* זכוכית זהובה זהה בדיוק לכרטיסי הבית (ניסוי עיצובי) - !important לנצח בוודאות כל שכבה/מטמון קודם.
+       backdrop-filter הוסר מכאן - מוחלף בבלור אחד משותף על .leaderboard-glass-group */
     background: rgba(15, 20, 10, 0.45) !important;
-    backdrop-filter: blur(20px) !important;
-    -webkit-backdrop-filter: blur(20px) !important;
     border: 1px solid rgba(255, 220, 100, 0.45) !important;
     /* filter:drop-shadow במקום box-shadow - עוקב אחרי הצללית החתוכה בפועל (clip-path) */
     filter: drop-shadow(0 10px 22px rgba(0, 0, 0, 0.4));
