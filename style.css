@@ -1606,36 +1606,38 @@ footer {
 .donators-toggle {
     display: flex;
     justify-content: center;
-    margin-bottom: 20px;
+    margin-bottom: 24px;
 }
 
 /* זכוכית זהובה + פיל מעוגל - עקבי עם .tabs-nav (אותו גודל/סוג אלמנט - פיל תמידי-נוכח
    קטן, לא לוח זכוכית גדול - ולכן שומר על בלור עצמאי משלו בדיוק כמו .tabs-nav, ולא
    מאוחד לתוך הבלור המשותף הגדול של .donators-grid). position:relative כדי לשמש עוגן
-   מיקום ל-.donators-toggle-indicator (השכבה הזהובה שנעה) */
+   מיקום ל-.donators-toggle-indicator (השכבה הזהובה שנעה) ול-.donators-toggle-progress
+   (קו הטיימר). padding-bottom מוגדל מעט (10px במקום 6px) כדי לפנות מקום נקי לקו
+   הטיימר בלי שהוא ייגע/יחפוף לטקסט הכפתורים */
 .donators-toggle-group {
     position: relative;
     display: inline-flex;
     gap: 6px;
     background: rgba(15, 20, 10, 0.45);
-    border: 1px solid rgba(255, 220, 100, 0.45);
-    padding: 6px;
+    border: 1px solid rgba(255, 220, 100, 0.55);
+    padding: 6px 6px 10px;
     border-radius: 999px;
     backdrop-filter: blur(15px);
     -webkit-backdrop-filter: blur(15px);
-    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.08);
     contain: layout style;
 }
 
 /* שכבת האינדיקטור הזהובה היחידה שנעה בין שני הכפתורים (script.js קובע left/width
    בפועל, לפי המידות האמיתיות של הכפתור הפעיל - הרוחב משתנה בין "GIFTED SUBS"
    ל-"TOP KICKS" כך שלא ניתן לחשב זאת מראש רק ב-CSS). z-index:0 - מתחת לטקסט הכפתורים
-   עצמם, שקופים מעליה */
+   עצמם, שקופים מעליה. height מחושב לפי padding האסימטרי של ההורה (6px למעלה, 10px למטה) */
 .donators-toggle-indicator {
     position: absolute;
     top: 6px;
     left: 6px;
-    height: calc(100% - 12px);
+    height: calc(100% - 16px);
     width: 0;
     border-radius: 999px;
     background: linear-gradient(145deg, #ffd966, #ff8c00);
@@ -1648,6 +1650,41 @@ footer {
     z-index: 0;
     pointer-events: none;
     will-change: transform;
+}
+
+/* קו הטיימר הזהוב - ממלא לאורך 8 שניות (בדיוק כמחזור הרוטציה האוטומטית), עוצר/מתאפס
+   ב-hover, ומופעל/מתאפס מחדש ע"י script.js (מוסיף/מסיר את .filling, עם double-rAF כדי
+   לא לכפות reflow סינכרוני - אותו דפוס בדיוק כמו .timer-box.tick). מבוטל לגמרי תחת
+   body.low-perf */
+.donators-toggle-progress {
+    position: absolute;
+    left: 10px;
+    right: 10px;
+    bottom: 4px;
+    height: 2px;
+    border-radius: 999px;
+    background: rgba(255, 204, 51, 0.15);
+    overflow: hidden;
+    z-index: 2;
+    pointer-events: none;
+}
+
+.donators-toggle-progress-fill {
+    display: block;
+    height: 100%;
+    width: 0;
+    border-radius: 999px;
+    background: linear-gradient(90deg, #ffcc33, #ff8c00);
+    box-shadow: 0 0 8px rgba(255, 204, 51, 0.7);
+}
+
+.donators-toggle-progress-fill.filling {
+    animation: donatorsProgressFill 8s linear forwards;
+}
+
+@keyframes donatorsProgressFill {
+    from { width: 0%; }
+    to { width: 100%; }
 }
 
 /* הכפתורים עצמם שקופים לגמרי - האינדיקטור שמתחתם הוא שמספק את הרקע/הזוהר הזהוב.
@@ -2047,6 +2084,14 @@ body.low-perf .donators-toggle-group {
     backdrop-filter: none;
     -webkit-backdrop-filter: none;
     background: rgba(15, 20, 10, 0.88);
+}
+
+/* STRICTLY DISABLE: קו הטיימר המתמלא מבוטל לגמרי תחת low-perf - script.js גם לא
+   מתחיל את מחזור הרוטציה האוטומטית בכלל במצב הזה (ר' index.html), כך שהשכבה נשארת
+   ריקה תמידית; display:none כאן הוא הבטחה כפולה שלא ייצרך שום ציור אפילו אם מחלקת
+   .filling תתווסף בטעות */
+body.low-perf .donators-toggle-progress {
+    display: none;
 }
 
 body.low-perf .modal-overlay {

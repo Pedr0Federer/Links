@@ -12,18 +12,18 @@
 
     <!-- Preload/preconnect - מתחילים להוריד את הנכסים הקריטיים (וידאו האינטרו, תמונת הפרופיל, גופן חיצוני)
          מוקדם ככל האפשר, במקביל לפרסור ה-HTML, במקום לחכות שהדפדפן יגיע אליהם בהמשך המסמך -->
-    <link rel="preload" as="video" href="intro.mp4?v=8.2-toggle-redesign-and-particle-physics-fix" type="video/mp4">
+    <link rel="preload" as="video" href="intro.mp4?v=8.3-kicks-live-data-and-progress-timer" type="video/mp4">
     <link rel="preload" as="image" href="profile.jpg">
     <link rel="preload" as="image" href="bg-jungle.webp">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-    <link rel="stylesheet" href="style.css?v=8.2-toggle-redesign-and-particle-physics-fix">
+    <link rel="stylesheet" href="style.css?v=8.3-kicks-live-data-and-progress-timer">
     <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;700;900&display=swap" rel="stylesheet">
 
     <!-- script.js נטען מוקדם עם defer - מתחיל להוריד אותו מיד (במקביל לפרסור ה-HTML) במקום להמתין
          שהפרסר יגיע לתחתית הגוף, בלי לחסום את הרינדור (defer מריץ אותו רק אחרי שה-DOM מוכן) -->
-    <script src="script.js?v=8.2-toggle-redesign-and-particle-physics-fix" defer></script>
+    <script src="script.js?v=8.3-kicks-live-data-and-progress-timer" defer></script>
 </head>
 <body>
 
@@ -31,7 +31,7 @@
         <video
             class="intro-video"
             id="introVideo"
-            src="intro.mp4?v=8.2-toggle-redesign-and-particle-physics-fix"
+            src="intro.mp4?v=8.3-kicks-live-data-and-progress-timer"
             muted
             playsinline
             webkit-playsinline="true"
@@ -177,6 +177,9 @@
                             <span class="donators-toggle-indicator" aria-hidden="true"></span>
                             <button class="donators-toggle-btn active" data-donators-mode="gifts" type="button" role="tab" aria-selected="true">GIFTED SUBS</button>
                             <button class="donators-toggle-btn" data-donators-mode="kicks" type="button" role="tab" aria-selected="false">TOP KICKS</button>
+                            <span class="donators-toggle-progress" aria-hidden="true">
+                                <span class="donators-toggle-progress-fill"></span>
+                            </span>
                         </div>
                     </div>
 
@@ -373,9 +376,16 @@
                     // offsetLeft/offsetWidth של כפתורי המתג הפנימי מחזירים 0 כל עוד הטאב
                     // display:none (זו התנהגות דפדפן תקנית לכל אלמנט בתוך הורה מוסתר) - לכן
                     // חובה למדוד/למקם מחדש את האינדיקטור הזהוב רק אחרי שהטאב DONATORS עצמו
-                    // כבר הפך ל-display:flex, לא בטעינת העמוד כשהוא עדיין מוסתר מאחורי HOME
-                    if (btn.dataset.tab === "donators" && typeof updateDonatorsToggleIndicator === "function") {
-                        updateDonatorsToggleIndicator();
+                    // כבר הפך ל-display:flex, לא בטעינת העמוד כשהוא עדיין מוסתר מאחורי HOME.
+                    // מאותה סיבה בדיוק, מחזור הרוטציה האוטומטית/קו הטיימר גם הוא מתחיל כאן -
+                    // לא ב-load הדף - כדי שאנימציית ה-CSS תתחיל נקייה בדיוק כשהיא נהיית גלויה
+                    if (btn.dataset.tab === "donators") {
+                        if (typeof updateDonatorsToggleIndicator === "function") {
+                            updateDonatorsToggleIndicator();
+                        }
+                        if (typeof startDonatorsAutoRotateCycle === "function") {
+                            startDonatorsAutoRotateCycle();
+                        }
                     }
                 });
             });
@@ -745,7 +755,8 @@
             }
 
             // כרטיס תצוגה מקדימה מטופל ל-"Top Kicks" (במקום שורת טקסט פשוטה) - סטטי לגמרי,
-            // בלי שום אנימציה, כך שאין לו שום עלות low-perf
+            // בלי שום אנימציה, כך שאין לו שום עלות low-perf. נשאר בשימוש רק עבור All-Time
+            // Kicks (ר' ההסבר למטה על loadKicksWeekly) - אין לו כרגע מקור נתונים אמיתי
             function renderKicksPreview(tbodyId) {
                 const tbody = document.getElementById(tbodyId);
                 if (!tbody) return;
@@ -754,27 +765,37 @@
                         <td colspan="3" class="donators-kicks-preview">
                             <div class="donators-kicks-preview-inner">
                                 <span class="donators-kicks-preview-icon" aria-hidden="true">⚡</span>
-                                <div class="donators-kicks-preview-title">Top Kicks — Coming Soon</div>
-                                <div class="donators-kicks-preview-desc">Kick doesn't publicly expose live Kicks leaderboard data yet - this view switches on automatically the moment it does.</div>
+                                <div class="donators-kicks-preview-title">All-Time Kicks — Coming Soon</div>
+                                <div class="donators-kicks-preview-desc">Kick doesn't publicly expose comprehensive all-time Kicks totals yet - this view switches on automatically the moment it does.</div>
                             </div>
                         </td>
                     </tr>`;
             }
 
             // === מתג "Gifted Subs" / "Top Kicks" ===
-            // נכון לעכשיו קיק לא חושף שום endpoint ציבורי שמחזיר נתוני "Top Kicks" - נבדק ישירות
-            // מול ה-API (כולל מול כמה מהערוצים הגדולים ביותר בפלטפורמה, לא רק הערוץ הזה, וגם
-            // מול אירועי ה-websocket/Pusher) ולא נמצא מקור נתונים זמין. במקום להציג נתוני
-            // Gifted Subs מתויגים בטעות כ-Kicks, מצב Kicks מציג כרטיס תצוגה מקדימה מטופל,
-            // ומוכן להתחבר למקור אמיתי ברגע שיימצא/ייחשף אחד כזה
+            // Kick עצמו לא חושף שום endpoint ציבורי לנתוני Kicks (נבדק ישירות מול ה-API,
+            // כולל מול כמה מהערוצים הגדולים ביותר בפלטפורמה, ומול אירועי websocket/Pusher).
+            // KickLogz.com (כלי אנליטיקס חיצוני, לא Kick עצמו) חושף endpoint ציבורי עם עדכוני
+            // "מתנות" (Kicks) אחרונים בזמן אמת לכל ערוץ - אימות נעשה ישירות מול ה-API, לא הונח
+            // מראש: https://kicklogz.com/api/streamer/{streamerId}/latest-gifts מחזיר רשימת
+            // אירועי מתנה בודדים (לא "טבלת מובילים" מוכנה מראש) עם timestamp אמיתי לכל אחד.
+            // מצרפים (summing) את זה בעצמנו לפי שם משתמש כדי לבנות "Weekly Top Kicks" מדויק -
+            // מסננים לפי 7 הימים האחרונים בפועל (event_time אמיתי), לא רק "N האירועים
+            // האחרונים שהוחזרו". אין לנו דרך לאמת שה-feed הזה כולל היסטוריה מקיפה מספיק בשביל
+            // "All-Time" אמיתי (ולא רק חלון מוגבל/מתגלגל) - ולכן טאב ה-All-Time Kicks נשאר
+            // עם כרטיס "בקרוב" כנה, במקום תיוג שגוי של נתונים חלקיים כ"כל הזמנים"
+            const KICKLOGZ_STREAMER_ID = 7940746; // מזהה pedrofederer באתר KickLogz (צד שלישי)
+            const KICKS_WEEKLY_WINDOW_MS = 7 * 24 * 60 * 60 * 1000;
+
             let donatorsMode = "gifts"; // "gifts" | "kicks"
             let lastGiftsAllTime = [];
             let lastGiftsWeekly = [];
+            let lastKicksWeekly = [];
 
             function renderDonators() {
                 if (donatorsMode === "kicks") {
                     renderKicksPreview("donatorsAllTimeRows");
-                    renderKicksPreview("donatorsWeeklyRows");
+                    renderDonatorTable("donatorsWeeklyRows", lastKicksWeekly, "אין נתוני Kicks לשבוע האחרון", "⚡");
                 } else {
                     renderDonatorTable("donatorsAllTimeRows", lastGiftsAllTime, "אין נתוני מתנות עדיין", "🎁");
                     renderDonatorTable("donatorsWeeklyRows", lastGiftsWeekly, "אין נתוני מתנות עדיין", "🎁");
@@ -786,11 +807,42 @@
             // הבא מצליח, במקום להציג מספרים מומצאים
             async function loadDonators() {
                 const data = await fetchJsonWithProxyFallback(`https://kick.com/api/v2/channels/pedrofederer/leaderboards?t=${Date.now()}`);
-                if (!data) return;
+                if (data) {
+                    lastGiftsAllTime = Array.isArray(data.gifts) ? data.gifts : [];
+                    lastGiftsWeekly = Array.isArray(data.gifts_week) ? data.gifts_week : [];
+                }
 
-                lastGiftsAllTime = Array.isArray(data.gifts) ? data.gifts : [];
-                lastGiftsWeekly = Array.isArray(data.gifts_week) ? data.gifts_week : [];
+                lastKicksWeekly = await loadKicksWeekly();
                 renderDonators();
+            }
+
+            // מצרף את פיד ה"מתנות אחרונות" הגולמי של KickLogz לטבלת "Weekly Top Kicks" -
+            // מסכם quantity לכל שם משתמש, מסנן לפי event_time אמיתי בתוך 7 הימים האחרונים,
+            // וממיין מהגבוה לנמוך
+            async function loadKicksWeekly() {
+                const data = await fetchJsonWithProxyFallback(`https://kicklogz.com/api/streamer/${KICKLOGZ_STREAMER_ID}/latest-gifts?t=${Date.now()}`);
+                if (!data || !data.success || !Array.isArray(data.data)) return [];
+
+                const cutoffMs = Date.now() - KICKS_WEEKLY_WINDOW_MS;
+                const totals = {};
+
+                data.data.forEach(function (event) {
+                    if (!event || typeof event.event_time !== "string") return;
+                    // event_time מגיע כ-"YYYY-MM-DD HH:MM:SS" - ממירים לפורמט ISO תקני כדי
+                    // ש-Date יפרש אותו באופן עקבי בכל דפדפן (לא רק בכרום)
+                    const eventMs = new Date(event.event_time.replace(" ", "T") + "Z").getTime();
+                    if (!isFinite(eventMs) || eventMs < cutoffMs) return;
+
+                    const username = event.sender_username;
+                    if (!username) return;
+                    totals[username] = (totals[username] || 0) + Number(event.gift_amount || 0);
+                });
+
+                return Object.keys(totals)
+                    .map(function (username) {
+                        return { username: username, quantity: totals[username] };
+                    })
+                    .sort(function (a, b) { return b.quantity - a.quantity; });
             }
 
             const DONATORS_UNIT_LABELS = { gifts: "Gifted Subs", kicks: "Kicks" };
@@ -845,47 +897,75 @@
             donatorsToggleBtns.forEach(function (btn) {
                 btn.addEventListener("click", function () {
                     setDonatorsMode(btn.dataset.donatorsMode);
-                    // איפוס הטיימר האוטומטי אחרי אינטראקציה ידנית - כדי שהמתג לא "יקפוץ" שוב
-                    // מיד אחרי שהמשתמש בחר במפורש
-                    scheduleDonatorsAutoRotate();
+                    // איפוס מלא (לא רק "השהיה") של המחזור האוטומטי + קו הטיימר אחרי אינטראקציה
+                    // ידנית - כדי שהמתג לא "יקפוץ" שוב כמעט מיד אחרי שהמשתמש בחר במפורש
+                    startDonatorsAutoRotateCycle();
                 });
             });
 
-            // === רוטציה אוטומטית - מחליפה בין Gifted Subs ל-Top Kicks כל 8 שניות כשהמשתמש
-            // לא מתערב, ורק כשטאב ה-DONATORS בפועל פעיל/גלוי. זו לולאת רקע מתמשכת (לא
-            // אינטראקציה חד-פעמית של משתמש כמו קליק) ולכן מבוטלת לגמרי תחת body.low-perf,
-            // עקבי עם מדיניות "strict" הזהה לשאר הלולאות המתמשכות באתר (קנבס, אנימציות רקע) -
-            // בניגוד לקליק ידני על המתג, שממשיך לקבל את מלוא אנימציית ההחלקה גם ב-low-perf
-            // (אינטראקציה בודדת מקומית שהמשתמש עצמו יזם, לא עומס מתמשך) ===
+            // === רוטציה אוטומטית + קו טיימר חזותי - מחליפה בין Gifted Subs ל-Top Kicks כל
+            // 8 שניות כשהמשתמש לא מתערב, ורק כשטאב ה-DONATORS בפועל פעיל/גלוי. זו לולאת רקע
+            // מתמשכת (לא אינטראקציה חד-פעמית של משתמש כמו קליק) ולכן מבוטלת לגמרי תחת
+            // body.low-perf, עקבי עם מדיניות "strict" הזהה לשאר הלולאות המתמשכות באתר (קנבס,
+            // אנימציות רקע) - בניגוד לקליק ידני על המתג, שממשיך לקבל את מלוא אנימציית ההחלקה
+            // גם ב-low-perf (אינטראקציה בודדת מקומית שהמשתמש עצמו יזם, לא עומס מתמשך).
+            // hover לא רק "משהה" - הוא עוצר ומאפס את הטיימר לגמרי (clearTimeout, לא רק דגל),
+            // כך שקו ההתקדמות תמיד משקף באמת כמה זמן נשאר, בלי לקפוץ מיד אחרי mouseleave ===
             const DONATORS_AUTO_ROTATE_MS = 8000;
             let donatorsAutoRotateTimerId = null;
-            let donatorsAutoRotatePaused = false;
+            const donatorsProgressFillEl = document.querySelector(".donators-toggle-progress-fill");
 
-            function scheduleDonatorsAutoRotate() {
+            function startDonatorsProgressBar() {
+                if (!donatorsProgressFillEl || window.isLowPerfDevice) return;
+                // הסרה+הוספה מחדש עם שני rAF עוקבים (לא void offsetWidth) כדי להפעיל את
+                // האנימציה מההתחלה בלי לכפות reflow סינכרוני על כל הדף - אותו דפוס בדיוק
+                // כמו .timer-box.tick ב-updateCountdown()
+                donatorsProgressFillEl.classList.remove("filling");
+                requestAnimationFrame(function () {
+                    requestAnimationFrame(function () {
+                        donatorsProgressFillEl.classList.add("filling");
+                    });
+                });
+            }
+
+            function stopDonatorsProgressBar() {
+                if (!donatorsProgressFillEl) return;
+                donatorsProgressFillEl.classList.remove("filling");
+            }
+
+            function startDonatorsAutoRotateCycle() {
                 clearTimeout(donatorsAutoRotateTimerId);
-                if (window.isLowPerfDevice) return;
+                if (window.isLowPerfDevice) {
+                    stopDonatorsProgressBar();
+                    return;
+                }
 
+                startDonatorsProgressBar();
                 donatorsAutoRotateTimerId = setTimeout(function () {
                     // בודקים שוב (לא רק בתזמון) - מד ה-FPS האסינכרוני עשוי לסמן low-perf
                     // מאוחר יותר ממה שהיה ידוע כשהטיימר הזה תוזמן
-                    if (window.isLowPerfDevice) return;
+                    if (window.isLowPerfDevice) {
+                        stopDonatorsProgressBar();
+                        return;
+                    }
 
                     const panel = document.getElementById("tab-donators");
                     const isVisible = !!(panel && panel.classList.contains("active"));
-                    if (!donatorsAutoRotatePaused && isVisible) {
+                    if (isVisible) {
                         setDonatorsMode(donatorsMode === "gifts" ? "kicks" : "gifts");
                     }
-                    scheduleDonatorsAutoRotate();
+                    startDonatorsAutoRotateCycle();
                 }, DONATORS_AUTO_ROTATE_MS);
             }
 
+            function pauseDonatorsAutoRotateCycle() {
+                clearTimeout(donatorsAutoRotateTimerId);
+                stopDonatorsProgressBar();
+            }
+
             if (donatorsToggleGroupEl) {
-                donatorsToggleGroupEl.addEventListener("mouseenter", function () {
-                    donatorsAutoRotatePaused = true;
-                });
-                donatorsToggleGroupEl.addEventListener("mouseleave", function () {
-                    donatorsAutoRotatePaused = false;
-                });
+                donatorsToggleGroupEl.addEventListener("mouseenter", pauseDonatorsAutoRotateCycle);
+                donatorsToggleGroupEl.addEventListener("mouseleave", startDonatorsAutoRotateCycle);
             }
 
             // הרוחב/padding של הכפתורים משתנים ב-@media (max-width:420px) - ממקמים מחדש את
@@ -893,7 +973,6 @@
             window.addEventListener("resize", updateDonatorsToggleIndicator);
 
             updateDonatorsToggleIndicator();
-            scheduleDonatorsAutoRotate();
 
             // === רענון תקופתי של הלידרבורד (כל שעה) ===
             const LEADERBOARD_POLL_INTERVAL_MS = 3600000; // שעה - איזון בין נתונים עדכניים לעומס מינימלי על השרת
