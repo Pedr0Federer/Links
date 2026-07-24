@@ -12,18 +12,18 @@
 
     <!-- Preload/preconnect - מתחילים להוריד את הנכסים הקריטיים (וידאו האינטרו, תמונת הפרופיל, גופן חיצוני)
          מוקדם ככל האפשר, במקביל לפרסור ה-HTML, במקום לחכות שהדפדפן יגיע אליהם בהמשך המסמך -->
-    <link rel="preload" as="video" href="intro.mp4?v=8.4-sleek-progress-line-donators" type="video/mp4">
+    <link rel="preload" as="video" href="intro.mp4?v=8.5-bold-donators-ui-and-kicks-fix" type="video/mp4">
     <link rel="preload" as="image" href="profile.jpg">
     <link rel="preload" as="image" href="bg-jungle.webp">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-    <link rel="stylesheet" href="style.css?v=8.4-sleek-progress-line-donators">
+    <link rel="stylesheet" href="style.css?v=8.5-bold-donators-ui-and-kicks-fix">
     <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;700;900&display=swap" rel="stylesheet">
 
     <!-- script.js נטען מוקדם עם defer - מתחיל להוריד אותו מיד (במקביל לפרסור ה-HTML) במקום להמתין
          שהפרסר יגיע לתחתית הגוף, בלי לחסום את הרינדור (defer מריץ אותו רק אחרי שה-DOM מוכן) -->
-    <script src="script.js?v=8.4-sleek-progress-line-donators" defer></script>
+    <script src="script.js?v=8.5-bold-donators-ui-and-kicks-fix" defer></script>
 </head>
 <body>
 
@@ -31,7 +31,7 @@
         <video
             class="intro-video"
             id="introVideo"
-            src="intro.mp4?v=8.4-sleek-progress-line-donators"
+            src="intro.mp4?v=8.5-bold-donators-ui-and-kicks-fix"
             muted
             playsinline
             webkit-playsinline="true"
@@ -169,10 +169,10 @@
 
                 <section class="tab-panel" id="tab-donators">
 
-                    <!-- מציג בסבב אוטומטי בין נתוני "Gifted Subs" ו-"Top Kicks" (שניהם חיים, ר'
-                         script.js) - ללא כפתורי בחירה ידניים; מעבר ה-hover על תוכן הטאב עוצר/
-                         מאפס את קו ההתקדמות (ר' #tab-donators:hover ב-JS/CSS) -->
-                    <div class="donators-toggle">
+                    <!-- סבב אוטומטי בין נתוני "Gifted Subs" ו-"Top Kicks" (שניהם חיים, ר' script.js) -
+                         לחיצה/Enter/Space על האזור עצמו מחליפה מצב מיידית ומאפסת את הטיימר; מעבר
+                         ה-hover על תוכן הטאב עוצר/מאפס את קו ההתקדמות (ר' #tab-donators ב-JS/CSS) -->
+                    <div class="donators-toggle" id="donatorsToggle" role="button" tabindex="0" aria-label="החלף בין תצוגת Gifted Subs לתצוגת Top Kicks">
                         <div class="donators-toggle-label" aria-live="polite">
                             <span class="donators-toggle-label-text" id="donatorsModeLabel">GIFTED SUBS</span>
                         </div>
@@ -670,11 +670,20 @@
                 }
             }
 
-            // === שכבת שליפה עם גיבוי דרך CORS Proxy ===
-            // nickpf.com לא שולח כותרות CORS, אז מנסים קריאה ישירה קודם,
-            // ואם היא נחסמת ע"י הדפדפן נופלים חזרה לפרוקסי כדי לאפשר נתונים חיים מהדומיין הזה.
-            // כל קריאה מוגבלת ב-timeout כדי שפרוקסי איטי/תקוע (למשל corsproxy.io) לעולם לא יתלה לנצח.
-            const CORS_PROXY = "https://corsproxy.io/?url=";
+            // === שכבת שליפה עם גיבוי דרך שרשרת CORS Proxies ===
+            // nickpf.com/kick.com/kicklogz.com לא שולחים כותרות access-control-allow-origin
+            // בפועל (נבדק ישירות מול כל שלושת השרתים), אז מנסים קריאה ישירה קודם, ואם היא
+            // נחסמת ע"י הדפדפן נופלים חזרה לרשימת פרוקסי ציבוריים - לא רק אחד. corsproxy.io
+            // התחיל להחזיר 403 "Server-side requests are not allowed on your plan" (נבדק
+            // ישירות מול ה-API שלו) - כלומר הסתמכות על פרוקסי בודד הופכת את שלושת מקורות
+            // הנתונים (CSGORoll, Gifted Subs, Kicks) לשבירים בבת אחת ברגע שהוא מפסיק לעבוד.
+            // עוברים ברשימה אחד אחרי השני עד שאחד מצליח. כל קריאה מוגבלת ב-timeout כדי
+            // שפרוקסי איטי/תקוע לעולם לא יתלה את כל השרשרת
+            const CORS_PROXIES = [
+                url => "https://corsproxy.io/?url=" + encodeURIComponent(url),
+                url => "https://api.allorigins.win/raw?url=" + encodeURIComponent(url),
+                url => "https://api.codetabs.com/v1/proxy?quest=" + encodeURIComponent(url)
+            ];
             const LEADERBOARD_FETCH_TIMEOUT_MS = 6000;
 
             async function fetchJson(url) {
@@ -687,12 +696,16 @@
                 try {
                     return await fetchJson(url);
                 } catch (directErr) {
-                    // חסימת CORS, timeout, או כל כשל רשת אחר בקריאה הישירה - עוברים לפרוקסי
-                    try {
-                        return await fetchJson(CORS_PROXY + encodeURIComponent(url));
-                    } catch (proxyErr) {
-                        return null;
+                    // חסימת CORS, timeout, או כל כשל רשת אחר בקריאה הישירה - עוברים לרשימת
+                    // הפרוקסי אחד אחרי השני, ועוצרים ברגע שאחד מהם מצליח
+                    for (const buildProxyUrl of CORS_PROXIES) {
+                        try {
+                            return await fetchJson(buildProxyUrl(url));
+                        } catch (proxyErr) {
+                            // ממשיכים לפרוקסי הבא ברשימה
+                        }
                     }
+                    return null;
                 }
             }
 
@@ -747,9 +760,15 @@
                 }).join("");
             }
 
-            // === סבב אוטומטי "Gifted Subs" / "Top Kicks" - ללא בחירה ידנית ===
-            // Kick עצמו לא חושף שום endpoint ציבורי לנתוני Kicks (נבדק ישירות מול ה-API, כולל
-            // מול כמה מהערוצים הגדולים ביותר בפלטפורמה, ומול אירועי websocket/Pusher).
+            // === סבב אוטומטי "Gifted Subs" / "Top Kicks" ===
+            // Kick עצמו לא חושף שום מקור נתונים ל-Kicks (מטבע הפלטפורמה, נפרד ממתנות-מנוי) -
+            // נבדק ישירות מול ה-REST API (כולל מול כמה מהערוצים הגדולים ביותר בפלטפורמה) וגם
+            // מול ה-Pusher WebSocket האמיתי של Kick (wss://ws-us2.pusher.com, app key ציבורי
+            // 32cbd69e4b950bf97679 - נלכד ישירות מתעבורת הרשת של kick.com/{channel} ולא הונח
+            // מראש). כל סוגי האירועים הידועים על אותו ערוץ Pusher (giftedSubscriptions,
+            // giftsLeaderboardUpdated וכו', לפי ספריית קוד פתוח שממפה את הפרוטוקול המלא) נוגעים
+            // אך ורק ל"Gifted Subscriptions" - אין שום אירוע Kicks. זה עקבי גם עם תיעוד עזרה
+            // של Kick עצמו: תרומות/טיפים לא נתמכים באופן טבעי ב-API הפומבי שלהם כלל.
             // KickLogz.com (כלי אנליטיקס חיצוני, לא Kick עצמו) חושף endpoint ציבורי עם עדכוני
             // "מתנות" (Kicks) אחרונים בזמן אמת לכל ערוץ - אימות נעשה ישירות מול ה-API, לא הונח
             // מראש: https://kicklogz.com/api/streamer/{streamerId}/latest-gifts מחזיר רשימת
@@ -927,6 +946,24 @@
             if (donatorsPanelEl) {
                 donatorsPanelEl.addEventListener("mouseenter", pauseDonatorsAutoRotateCycle);
                 donatorsPanelEl.addEventListener("mouseleave", startDonatorsAutoRotateCycle);
+            }
+
+            // לחיצה/מקלדת (Enter/Space, תואם ARIA role="button") על אזור התווית/קו ההתקדמות
+            // מחליפה מצב באופן מיידי ומאפסת את מחזור ה-8 שניות מההתחלה - כך שהמעבר הידני
+            // לא "יבוטל" כמעט מיד ע"י המחזור האוטומטי שכבר היה בעיצומו
+            const donatorsToggleEl = document.getElementById("donatorsToggle");
+            function triggerDonatorsManualSwitch() {
+                setDonatorsMode(donatorsMode === "gifts" ? "kicks" : "gifts");
+                startDonatorsAutoRotateCycle();
+            }
+            if (donatorsToggleEl) {
+                donatorsToggleEl.addEventListener("click", triggerDonatorsManualSwitch);
+                donatorsToggleEl.addEventListener("keydown", function (e) {
+                    if (e.key === "Enter" || e.key === " " || e.key === "Spacebar") {
+                        e.preventDefault();
+                        triggerDonatorsManualSwitch();
+                    }
+                });
             }
 
             // === רענון תקופתי של הלידרבורד (כל שעה) ===

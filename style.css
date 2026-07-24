@@ -1608,25 +1608,28 @@ footer {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 10px;
+    gap: 12px;
     margin-bottom: 24px;
+    cursor: pointer;
 }
 
 .donators-toggle-label {
-    min-height: 1.1em;
+    min-height: 1.4em;
+    width: 100%;
+    text-align: center;
 }
 
-/* התווית עצמה - טקסט זהב נקי, בלי מסגרת/רקע. transition על opacity בלבד - קל וזול
-   גם ברינדור תוכנה, ולכן לא זקוק לחריגת low-perf נפרדת (עקבי עם ההחלטה הקודמת
+/* התווית עצמה - טקסט זהב בולט וממורכז. transition על opacity בלבד - קל וזול גם
+   ברינדור תוכנה, ולכן לא זקוק לחריגת low-perf נפרדת (עקבי עם ההחלטה הקודמת
    שאינטראקציה/מעבר בודד ומוגבל בזמן, לא לולאה מתמדת, נשאר מלא גם ב-low-perf) */
 .donators-toggle-label-text {
     display: inline-block;
-    font-weight: 800;
-    font-size: 0.85rem;
+    font-weight: 900;
+    font-size: 1.3rem;
     letter-spacing: 2px;
     text-transform: uppercase;
     color: #ffcc33;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8), 0 0 2px rgba(0, 0, 0, 0.9), 0 0 10px rgba(255, 204, 51, 0.3);
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.85), 0 0 2px rgba(0, 0, 0, 0.9), 0 0 14px rgba(255, 204, 51, 0.5);
     opacity: 1;
     transition: opacity 0.3s ease;
 }
@@ -1635,13 +1638,19 @@ footer {
     opacity: 0;
 }
 
-/* מסלול קו ההתקדמות - דק, עדין, ממורכז - לא לוח זכוכית עוד, רק קו זוהר */
+/* רמז חזותי עדין לכך שהאזור לחיץ - הגברת הזוהר בלבד, אין תזוזה/שינוי גודל */
+.donators-toggle:hover .donators-toggle-label-text,
+.donators-toggle:focus-visible .donators-toggle-label-text {
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.85), 0 0 2px rgba(0, 0, 0, 0.9), 0 0 20px rgba(255, 204, 51, 0.75);
+}
+
+/* מסלול קו ההתקדמות - עבה יותר, ממורכז, קצוות מעוגלים */
 .donators-toggle-progress-track {
     width: 160px;
     max-width: 50vw;
-    height: 3px;
+    height: 4px;
     border-radius: 999px;
-    background: rgba(255, 204, 51, 0.12);
+    background: rgba(255, 204, 51, 0.15);
     overflow: hidden;
 }
 
@@ -1651,7 +1660,7 @@ footer {
     width: 0;
     border-radius: 999px;
     background: linear-gradient(90deg, #ffcc33, #ff8c00);
-    box-shadow: 0 0 10px rgba(255, 204, 51, 0.7);
+    box-shadow: 0 0 10px rgba(255, 204, 51, 0.6);
 }
 
 /* קו ההתקדמות ממלא לאורך 8 שניות (בדיוק כמחזור הרוטציה האוטומטית) - מבוטל לגמרי תחת
