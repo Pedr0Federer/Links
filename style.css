@@ -1621,8 +1621,15 @@ footer {
     clip-path: polygon(18px 0, 100% 0, 100% calc(100% - 18px), calc(100% - 18px) 100%, 0 100%, 0 18px);
     padding: 20px 16px;
     opacity: 0;
-    /* רק כניסה חד-פעמית - בלי ריחוף אינסופי נוסף, כדי לא להוסיף עוד לולאה מתמדת לעמוד */
-    animation: fadeInUp 0.6s ease-out forwards;
+    will-change: transform;
+    /* ריחוף עדין ומתמשך (@keyframes float הגלובלי, כמו הטיימר/הטבלה) לצד הכניסה החד-פעמית -
+       מבוטל לגמרי תחת body.low-perf (ר' למטה) כדי שרינדור תוכנה יישאר חלק לגמרי */
+    animation: fadeInUp 0.6s ease-out forwards, float 11s ease-in-out infinite;
+}
+
+/* עיכוב מדורג לריחוף כדי ששני הכרטיסים "יבשלו" בלי-סינכרון, לא זזים באותו קצב בדיוק */
+.donator-card:nth-child(2) {
+    animation-delay: 0s, -5.5s;
 }
 
 .donator-card-title {
@@ -1648,13 +1655,18 @@ footer {
 
 .donator-table thead th {
     background: rgba(255, 255, 255, 0.04);
-    color: #9a8f85;
-    font-size: 0.65rem;
-    letter-spacing: 1px;
+    color: #ffcc33;
+    font-size: 0.68rem;
+    font-weight: 900;
+    letter-spacing: 1.2px;
     text-transform: uppercase;
     padding: 10px 8px;
     text-align: center;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8), 0 0 2px rgba(0, 0, 0, 0.9);
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8), 0 0 8px rgba(255, 204, 51, 0.4);
+    /* קו זוהר נקי מתחת לכותרות - גבול זהב עדין + זוהר box-shadow סטטי (חד-פעמי לצייר, לא
+       מונפש) שנצמד לקצה התחתון בלבד */
+    border-bottom: 1px solid rgba(255, 204, 51, 0.45);
+    box-shadow: 0 1px 8px -2px rgba(255, 204, 51, 0.5);
 }
 
 .donator-table tbody td {
@@ -1666,13 +1678,18 @@ footer {
     border-top: 1px solid rgba(255, 255, 255, 0.06);
 }
 
+/* זהה בדיוק להתנהגות ה-hover של .leaderboard-table tbody tr - אותם ערכי background/
+   box-shadow/transform ואותם timing, לאיחוד מלא בין שני הטאבים. תחת body.low-perf
+   (למטה) מוחלף במעברי background-color/opacity בלבד, ללא transform/scale */
 .donator-table tbody tr {
-    /* מעבר על background בלבד - זול לחישוב גם ברינדור תוכנה, בלי שום צורך בהתאמת low-perf נפרדת */
-    transition: background-color 0.2s ease;
+    transition: background 0.25s ease, box-shadow 0.25s ease, transform 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    will-change: transform;
 }
 
 .donator-table tbody tr:hover {
-    background: rgba(255, 204, 51, 0.08);
+    background: rgba(255, 204, 51, 0.09);
+    box-shadow: inset 0 0 0 1px rgba(255, 204, 51, 0.3);
+    transform: translateY(-6px) scale(1.01) !important;
 }
 
 .donator-table .gift-count-cell {
@@ -1825,8 +1842,7 @@ body.low-perf .modal-overlay {
    האינסופית שלהם למטה (באותה חתימת סלקטור), כדי לא לפצל אותו סלקטור לשני בלוקים נפרדים */
 body.low-perf .link-btn,
 body.low-perf .csgoroll-hero,
-body.low-perf .leaderboard-podium,
-body.low-perf .donator-card {
+body.low-perf .leaderboard-podium {
     background: rgba(15, 20, 10, 0.88);
 }
 
@@ -1852,6 +1868,13 @@ body.low-perf .link-btn::before {
 }
 
 body.low-perf .csgoroll-hero {
+    animation-name: fadeInUp;
+}
+
+/* CRITICAL: הריחוף האינסופי (float) על כרטיסי הגיפטרים מבוטל לגמרי תחת low-perf - נשארת
+   רק אנימציית הכניסה החד-פעמית, עם אותו עיכוב/timing מקוריים (animation-name longhand) */
+body.low-perf .donator-card {
+    background: rgba(15, 20, 10, 0.88);
     animation-name: fadeInUp;
 }
 
@@ -1898,6 +1921,10 @@ body.low-perf .leaderboard-table-wrap {
 
 body.low-perf .leaderboard-table tbody tr {
     animation: none;
+    transition: background-color 0.15s ease, opacity 0.15s ease;
+}
+
+body.low-perf .donator-table tbody tr {
     transition: background-color 0.15s ease, opacity 0.15s ease;
 }
 
@@ -1974,6 +2001,12 @@ body.low-perf .podium-card:hover .podium-avatar {
 }
 
 body.low-perf .leaderboard-table tbody tr:hover {
+    transform: none !important;
+    box-shadow: none;
+    opacity: 0.97;
+}
+
+body.low-perf .donator-table tbody tr:hover {
     transform: none !important;
     box-shadow: none;
     opacity: 0.97;
