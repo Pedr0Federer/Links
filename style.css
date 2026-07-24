@@ -1708,19 +1708,13 @@ body.low-perf .modal-overlay {
     background-color: rgba(0, 0, 0, 0.92);
 }
 
-/* כל כרטיס/פאנל זכוכית - אותו גוון, אטום משמעותית יותר במקום הטשטוש */
+/* כל כרטיס/פאנל זכוכית - אותו גוון, אטום משמעותית יותר במקום הטשטוש.
+   .leaderboard-timer/.leaderboard-table-wrap מקבלים את אותו רקע יחד עם ביטול האנימציה
+   האינסופית שלהם למטה (באותה חתימת סלקטור), כדי לא לפצל אותו סלקטור לשני בלוקים נפרדים */
 body.low-perf .link-btn,
 body.low-perf .csgoroll-hero,
 body.low-perf .leaderboard-podium {
     background: rgba(15, 20, 10, 0.88);
-}
-
-body.low-perf .leaderboard-timer {
-    background: rgba(15, 20, 10, 0.88) !important;
-}
-
-body.low-perf .leaderboard-table-wrap {
-    background: rgba(15, 20, 10, 0.88) !important;
 }
 
 /* עצירה מלאה של שכבות הרקע המונפשות - הקנבס נעצר גם ב-JS (ר' index.html), וההסתרה כאן
@@ -1765,6 +1759,7 @@ body.low-perf .podium-sparkle {
 }
 
 body.low-perf .leaderboard-timer {
+    background: rgba(15, 20, 10, 0.88) !important;
     animation-name: fadeInUp;
 }
 
@@ -1782,6 +1777,7 @@ body.low-perf .live-pill.live .dot {
 }
 
 body.low-perf .leaderboard-table-wrap {
+    background: rgba(15, 20, 10, 0.88) !important;
     animation-name: fadeInUp;
 }
 

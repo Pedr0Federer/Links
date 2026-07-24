@@ -12,18 +12,18 @@
 
     <!-- Preload/preconnect - מתחילים להוריד את הנכסים הקריטיים (וידאו האינטרו, תמונת הפרופיל, גופן חיצוני)
          מוקדם ככל האפשר, במקביל לפרסור ה-HTML, במקום לחכות שהדפדפן יגיע אליהם בהמשך המסמך -->
-    <link rel="preload" as="video" href="intro.mp4?v=5.8-lowperf-hover-restored" type="video/mp4">
+    <link rel="preload" as="video" href="intro.mp4?v=5.9-final-audit-clean" type="video/mp4">
     <link rel="preload" as="image" href="profile.jpg">
     <link rel="preload" as="image" href="bg-jungle.webp">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-    <link rel="stylesheet" href="style.css?v=5.8-lowperf-hover-restored">
+    <link rel="stylesheet" href="style.css?v=5.9-final-audit-clean">
     <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;700;900&display=swap" rel="stylesheet">
 
     <!-- script.js נטען מוקדם עם defer - מתחיל להוריד אותו מיד (במקביל לפרסור ה-HTML) במקום להמתין
          שהפרסר יגיע לתחתית הגוף, בלי לחסום את הרינדור (defer מריץ אותו רק אחרי שה-DOM מוכן) -->
-    <script src="script.js?v=5.8-lowperf-hover-restored" defer></script>
+    <script src="script.js?v=5.9-final-audit-clean" defer></script>
 </head>
 <body>
 
@@ -31,7 +31,7 @@
         <video
             class="intro-video"
             id="introVideo"
-            src="intro.mp4?v=5.8-lowperf-hover-restored"
+            src="intro.mp4?v=5.9-final-audit-clean"
             muted
             playsinline
             webkit-playsinline="true"
@@ -65,7 +65,7 @@
 
                 <section class="tab-panel active" id="tab-home">
 
-                    <a href="https://discord.com/invite/E6NmAAdjzJ" class="link-btn discord" target="_blank">
+                    <a href="https://discord.com/invite/E6NmAAdjzJ" class="link-btn" target="_blank">
                         <span class="icon">
                             <img src="Discord_logo.png" alt="Discord" class="original-logo">
                         </span>
@@ -75,7 +75,7 @@
                         <div class="badge-slot"></div>
                     </a>
 
-                    <a href="https://kick.com/pedrofederer" class="link-btn kick" target="_blank">
+                    <a href="https://kick.com/pedrofederer" class="link-btn" target="_blank">
                         <span class="icon">
                             <img src="Kick_logo.png" alt="Kick" class="original-logo">
                         </span>
@@ -90,7 +90,7 @@
                         </div>
                     </a>
 
-                    <a href="https://www.youtube.com/@PedroFederer" class="link-btn youtube" target="_blank">
+                    <a href="https://www.youtube.com/@PedroFederer" class="link-btn" target="_blank">
                         <span class="icon">
                             <img src="Youtube_logo.png" alt="YouTube" class="original-logo">
                         </span>
@@ -100,7 +100,7 @@
                         <div class="badge-slot"></div>
                     </a>
 
-                    <a href="https://www.instagram.com/nick.seff/" class="link-btn instagram" target="_blank">
+                    <a href="https://www.instagram.com/nick.seff/" class="link-btn" target="_blank">
                         <span class="icon">
                             <img src="instagram_logo.png" alt="Instagram" class="original-logo">
                         </span>
@@ -110,7 +110,7 @@
                         <div class="badge-slot"></div>
                     </a>
 
-                    <a href="https://www.tiktok.com/@nick.seff" class="link-btn tiktok" target="_blank">
+                    <a href="https://www.tiktok.com/@nick.seff" class="link-btn" target="_blank">
                         <span class="icon">
                             <img src="tiktok_logo.png" alt="TikTok" class="original-logo">
                         </span>
