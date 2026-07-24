@@ -901,9 +901,14 @@ footer {
 
 /* כותרת מעורבת - "CODE"/"LEADERBOARD" בלבן נקי, והסכום/הקוד בולטים באדום עז (ר' .hero-amount/.hero-code) */
 .csgoroll-hero-title {
-    font-size: 1.15rem;
+    /* flex:1 - הכותרת גדלה כדי למלא את המרחב הפנוי בין שני הלוגואים (עקבי עם ה-
+       justify-content:space-between שכבר על .csgoroll-hero), נותן לה נוכחות רחבה
+       ומרכזית יותר בבאנר. text-align:center שומר על הטקסט ממורכז בתוך הקופסה הרחבה יותר */
+    flex: 1;
+    text-align: center;
+    font-size: 1.4rem;
     font-weight: 700;
-    letter-spacing: 1.5px;
+    letter-spacing: 2px;
     text-transform: uppercase;
     color: #ffffff;
     white-space: nowrap;
@@ -1268,7 +1273,6 @@ footer {
 .timer-badge {
     display: inline-flex;
     align-items: center;
-    gap: 9px;
     margin-bottom: 1.2rem;
 }
 
@@ -1280,22 +1284,6 @@ footer {
     letter-spacing: 2px;
     text-transform: uppercase;
     white-space: nowrap;
-}
-
-.timer-led {
-    display: inline-block;
-    width: 9px;
-    height: 9px;
-    border-radius: 50%;
-    background: #ffcc33;
-    box-shadow: 0 0 8px rgba(255, 204, 51, 0.9);
-    animation: ledPulse 1.4s ease-in-out infinite;
-    flex-shrink: 0;
-}
-
-@keyframes ledPulse {
-    0%, 100% { opacity: 1; box-shadow: 0 0 6px rgba(255, 204, 51, 0.7); }
-    50% { opacity: 0.5; box-shadow: 0 0 14px rgba(255, 204, 51, 1); }
 }
 
 .timer-boxes {
@@ -2007,10 +1995,6 @@ body.low-perf .leaderboard-timer {
 
 body.low-perf .timer-box,
 body.low-perf .timer-box.tick {
-    animation: none;
-}
-
-body.low-perf .timer-led {
     animation: none;
 }
 

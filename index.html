@@ -12,18 +12,18 @@
 
     <!-- Preload/preconnect - מתחילים להוריד את הנכסים הקריטיים (וידאו האינטרו, תמונת הפרופיל, גופן חיצוני)
          מוקדם ככל האפשר, במקביל לפרסור ה-HTML, במקום לחכות שהדפדפן יגיע אליהם בהמשך המסמך -->
-    <link rel="preload" as="video" href="intro.mp4?v=7.6-leaderboard-fullwidth-header" type="video/mp4">
+    <link rel="preload" as="video" href="intro.mp4?v=7.7-particles-wandering-and-header-clean" type="video/mp4">
     <link rel="preload" as="image" href="profile.jpg">
     <link rel="preload" as="image" href="bg-jungle.webp">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-    <link rel="stylesheet" href="style.css?v=7.6-leaderboard-fullwidth-header">
+    <link rel="stylesheet" href="style.css?v=7.7-particles-wandering-and-header-clean">
     <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;700;900&display=swap" rel="stylesheet">
 
     <!-- script.js נטען מוקדם עם defer - מתחיל להוריד אותו מיד (במקביל לפרסור ה-HTML) במקום להמתין
          שהפרסר יגיע לתחתית הגוף, בלי לחסום את הרינדור (defer מריץ אותו רק אחרי שה-DOM מוכן) -->
-    <script src="script.js?v=7.6-leaderboard-fullwidth-header" defer></script>
+    <script src="script.js?v=7.7-particles-wandering-and-header-clean" defer></script>
 </head>
 <body>
 
@@ -31,7 +31,7 @@
         <video
             class="intro-video"
             id="introVideo"
-            src="intro.mp4?v=7.6-leaderboard-fullwidth-header"
+            src="intro.mp4?v=7.7-particles-wandering-and-header-clean"
             muted
             playsinline
             webkit-playsinline="true"
@@ -237,8 +237,7 @@
 
                             <div class="leaderboard-timer">
                                 <div class="timer-badge" dir="ltr">
-                                    <span class="timer-led" aria-hidden="true"></span>
-                                    <span class="timer-badge-text">Leaderboard Ends In:</span>
+                                    <span class="timer-badge-text">Leaderboard Ends In</span>
                                 </div>
                                 <div class="timer-boxes" dir="ltr">
                                     <div class="timer-box"><span id="cdDays">--</span><label>Days</label></div>
@@ -408,9 +407,11 @@
                         y: Math.random() * canvas.height,
                         // רדיוס גדול משמעותית (היה 0.4-2.0px) - כל גחלת בודדת בולטת וניכרת יותר
                         r: Math.random() * 2.5 + 1.5,
+                        // תנועה משוטטת דו-ממדית - vx/vy סימטריים סביב 0 בשני הצירים, כל חלקיק
+                        // נודד במסלול האקראי-עצמאי שלו על פני כל המסך, בלי הטיה קבועה לכיוון
+                        // מסוים (לא "עולה" יותר, לא "שוקעת" - נודדת)
                         vx: (Math.random() - 0.5) * 0.2,
-                        // הטיה כלפי מעלה - "גחלים" עולות במקום ריחוף אקראי סימטרי
-                        vy: -(Math.random() * 0.18 + 0.02),
+                        vy: (Math.random() - 0.5) * 0.2,
                         o,
                         // מחרוזת ה-rgba מחושבת פעם אחת בזמן היצירה במקום להיבנות מחדש
                         // בכל פריים לכל חלקיק (עד 480 הקצאות מחרוזת מיותרות בשנייה, שהיו
@@ -449,14 +450,26 @@
                     particles.forEach(p => {
                         p.x += p.vx * speedScale;
                         p.y += p.vy * speedScale;
-                        if (p.x < 0) p.x = canvas.width;
-                        if (p.x > canvas.width) p.x = 0;
-                        // גחלים תמיד עולות כלפי מעלה - כשהן נעלמות למעלה, מפציעות מחדש למטה,
-                        // עם קואורדינטת X אקראית וטרייה (לא אותו X שהיה לה לפני שעלתה) - כדי
-                        // שכל "לידה מחדש" תיראה אורגנית ומפוזרת על פני כל הרוחב, ולא תיצור
-                        // "עמודות" קבועות של חלקיקים שחוזרים תמיד לאותה נקודה אנכית
+
+                        // גלישה על כל ארבעת הצדדים (לא רק שמאל/ימין) - כל חלקיק נודד בכיוון
+                        // האקראי-קבוע שלו וחוזר מהצד הנגדי כשהוא יוצא מהמסך, כך שהחלקיקים
+                        // לעולם לא מצטברים/שוקעים בקצה אחד ומתפזרים על פני כל הגובה והרוחב
+                        // באופן שווה לאורך זמן. בכל גלישה מקבל החלקיק גם קואורדינטה טרייה
+                        // ואקראית על הציר הניצב - כדי שהלידה-מחדש תיראה אורגנית ומפוזרת,
+                        // ולא תיצור "עמודות"/"שורות" קבועות שתמיד חוזרות לאותה נקודה
+                        if (p.x < 0) {
+                            p.x = canvas.width;
+                            p.y = Math.random() * canvas.height;
+                        } else if (p.x > canvas.width) {
+                            p.x = 0;
+                            p.y = Math.random() * canvas.height;
+                        }
+
                         if (p.y < 0) {
                             p.y = canvas.height;
+                            p.x = Math.random() * canvas.width;
+                        } else if (p.y > canvas.height) {
+                            p.y = 0;
                             p.x = Math.random() * canvas.width;
                         }
 
