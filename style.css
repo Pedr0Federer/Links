@@ -1415,17 +1415,24 @@ footer {
 .leaderboard-table thead th {
     /* position:relative + z-index - אותה תקלת stacking פוטנציאלית כמו בטבלת ה-donators:
        transform:translateY/scale על שורה #1 ב-hover יוצר הקשר-ערימה חדש שעלול לצייר מעל
-       הכותרת בלי z-index מפורש כאן */
+       הכותרת בלי z-index מפורש כאן. overflow:visible מוצהר במפורש (גם אם זה כבר ברירת
+       המחדל) כדי לוודא שאף עטיפה לא תגזור את קו הזוהר התחתון */
     position: relative;
-    z-index: 10;
+    z-index: 5;
+    overflow: visible;
     background: rgba(255, 255, 255, 0.04);
-    color: #9a8f85;
+    /* טיפוגרפיית כותרת זהה בדיוק ל-.donator-table thead th - זהב בוהק, מודגש, עם קו זוהר
+       תחתון - איחוד מלא של אסתטיקת הכותרות בין שני הטאבים */
+    color: #ffcc33;
     font-size: 0.7rem;
-    letter-spacing: 1px;
+    font-weight: 900;
+    letter-spacing: 1.2px;
     text-transform: uppercase;
     padding: 12px 10px;
     text-align: center;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8), 0 0 2px rgba(0, 0, 0, 0.9);
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8), 0 0 8px rgba(255, 204, 51, 0.4);
+    border-bottom: 1px solid rgba(255, 204, 51, 0.45);
+    box-shadow: 0 1px 8px -2px rgba(255, 204, 51, 0.5);
 }
 
 .leaderboard-table tbody td {
@@ -1682,11 +1689,11 @@ footer {
 }
 
 .donator-table thead th {
-    /* position:relative + z-index כדי שהכותרת תמיד תישאר מעל שורה #1 כשהיא מקבלת
-       transform:translateY/scale ב-hover - transform יוצר הקשר-ערימה (stacking context)
-       חדש לשורה, ובלי z-index מפורש כאן היא הייתה עלולה לצייר מעל טקסט הכותרת */
+    /* position:relative + z-index כדי שהכותרת תמיד תישאר מעל שורה #1 - overflow:visible
+       מוצהר במפורש (גם אם זו כבר ברירת המחדל) כדי לוודא שקו הזוהר התחתון לעולם לא נחתך */
     position: relative;
-    z-index: 10;
+    z-index: 5;
+    overflow: visible;
     background: rgba(255, 255, 255, 0.04);
     color: #ffcc33;
     font-size: 0.68rem;
@@ -1711,18 +1718,16 @@ footer {
     border-top: 1px solid rgba(255, 255, 255, 0.06);
 }
 
-/* זהה בדיוק להתנהגות ה-hover של .leaderboard-table tbody tr - אותם ערכי background/
-   box-shadow/transform ואותם timing, לאיחוד מלא בין שני הטאבים. תחת body.low-perf
-   (למטה) מוחלף במעברי background-color/opacity בלבד, ללא transform/scale */
+/* hover נקי ותחום - בכוונה בלי שום transform (translateY/scale הוסרו), כדי שהשורה
+   לעולם לא "תתפח" ותחפוף לכותרת שמעליה. רק גוון רקע עדין + זוהר inset רך - שניהם
+   נשארים בגבולות תא/שורה. תחת body.low-perf (למטה) נשאר רק background-color/opacity */
 .donator-table tbody tr {
-    transition: background 0.25s ease, box-shadow 0.25s ease, transform 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    will-change: transform;
+    transition: background-color 0.25s ease, box-shadow 0.25s ease;
 }
 
 .donator-table tbody tr:hover {
     background: rgba(255, 204, 51, 0.09);
-    box-shadow: inset 0 0 0 1px rgba(255, 204, 51, 0.3);
-    transform: translateY(-6px) scale(1.01) !important;
+    box-shadow: inset 0 0 16px rgba(255, 204, 51, 0.15);
 }
 
 .donator-table .gift-count-cell {
@@ -2046,7 +2051,6 @@ body.low-perf .leaderboard-table tbody tr:hover {
 }
 
 body.low-perf .donator-table tbody tr:hover {
-    transform: none !important;
     box-shadow: none;
     opacity: 0.97;
 }
