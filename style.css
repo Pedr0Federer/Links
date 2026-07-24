@@ -1677,6 +1677,23 @@ footer {
     margin-bottom: 14px;
 }
 
+/* אייקון כתר/גביע מונפש - ריחוף עדין (אותו דפוס תנועה כמו .csgoroll-hero-logo/-roll
+   בטאב הלידרבורד), עם זוהר drop-shadow. מבוטל לגמרי תחת body.low-perf */
+.donator-icon {
+    display: inline-block;
+    filter: drop-shadow(0 0 6px rgba(255, 204, 51, 0.5));
+    animation: donatorIconFloat 3.4s ease-in-out infinite;
+}
+
+.donator-card:nth-child(2) .donator-icon {
+    animation-delay: -1.7s;
+}
+
+@keyframes donatorIconFloat {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-4px); }
+}
+
 .donator-table-wrap {
     border-radius: 12px;
     overflow: hidden;
@@ -1710,12 +1727,34 @@ footer {
 }
 
 .donator-table tbody td {
+    position: relative;
     padding: 10px 8px;
     text-align: center;
     font-size: 0.82rem;
     font-weight: 700;
     color: #ffffff;
     border-top: 1px solid rgba(255, 255, 255, 0.06);
+    overflow: hidden;
+}
+
+/* קרן אור זכוכית שחולפת על פני השורה ב-hover - זהה בדיוק לאפקט הקיים ב-.leaderboard-table
+   tbody td::before, לאיחוד מלא בין שני הטאבים. תחת body.low-perf (למטה) מוסתר לגמרי
+   (display:none) - נשאר רק גוון הרקע הקל */
+.donator-table tbody td::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -150%;
+    width: 60%;
+    height: 100%;
+    background: linear-gradient(120deg, transparent, rgba(255, 204, 51, 0.28), transparent);
+    transform: skewX(-20deg);
+    transition: left 0.6s ease;
+    pointer-events: none;
+}
+
+.donator-table tbody tr:hover td::before {
+    left: 150%;
 }
 
 /* hover נקי ותחום - בכוונה בלי שום transform (translateY/scale הוסרו), כדי שהשורה
@@ -1922,6 +1961,11 @@ body.low-perf .donator-card::after {
     animation: none;
 }
 
+/* אייקון הכתר/גביע מרחף - מבוטל לגמרי תחת low-perf, נשאר סטטי */
+body.low-perf .donator-icon {
+    animation: none;
+}
+
 body.low-perf .leaderboard-podium::before,
 body.low-perf .leaderboard-podium::after {
     animation: none;
@@ -2060,6 +2104,10 @@ body.low-perf .leaderboard-table tbody tr:hover .row-avatar {
 }
 
 body.low-perf .leaderboard-table tbody td::before {
+    display: none;
+}
+
+body.low-perf .donator-table tbody td::before {
     display: none;
 }
 
