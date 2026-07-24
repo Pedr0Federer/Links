@@ -12,18 +12,18 @@
 
     <!-- Preload/preconnect - מתחילים להוריד את הנכסים הקריטיים (וידאו האינטרו, תמונת הפרופיל, גופן חיצוני)
          מוקדם ככל האפשר, במקביל לפרסור ה-HTML, במקום לחכות שהדפדפן יגיע אליהם בהמשך המסמך -->
-    <link rel="preload" as="video" href="intro.mp4?v=8.1-fix-toggle-visibility" type="video/mp4">
+    <link rel="preload" as="video" href="intro.mp4?v=8.2-toggle-redesign-and-particle-physics-fix" type="video/mp4">
     <link rel="preload" as="image" href="profile.jpg">
     <link rel="preload" as="image" href="bg-jungle.webp">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-    <link rel="stylesheet" href="style.css?v=8.1-fix-toggle-visibility">
+    <link rel="stylesheet" href="style.css?v=8.2-toggle-redesign-and-particle-physics-fix">
     <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;700;900&display=swap" rel="stylesheet">
 
     <!-- script.js נטען מוקדם עם defer - מתחיל להוריד אותו מיד (במקביל לפרסור ה-HTML) במקום להמתין
          שהפרסר יגיע לתחתית הגוף, בלי לחסום את הרינדור (defer מריץ אותו רק אחרי שה-DOM מוכן) -->
-    <script src="script.js?v=8.1-fix-toggle-visibility" defer></script>
+    <script src="script.js?v=8.2-toggle-redesign-and-particle-physics-fix" defer></script>
 </head>
 <body>
 
@@ -31,7 +31,7 @@
         <video
             class="intro-video"
             id="introVideo"
-            src="intro.mp4?v=8.1-fix-toggle-visibility"
+            src="intro.mp4?v=8.2-toggle-redesign-and-particle-physics-fix"
             muted
             playsinline
             webkit-playsinline="true"
@@ -170,12 +170,13 @@
                 <section class="tab-panel" id="tab-donators">
 
                     <!-- מתג מפולח - עובר בין נתוני "Gifted Subs" (חיים, מ-kick.com) לבין "Top Kicks"
-                         (עדיין אין endpoint ציבורי שחושף את הנתון הזה - ר' script.js; מציג מצב ריק
-                         נקי במקום נתונים מומצאים/מוטעים, עד שמקור אמיתי יחובר) -->
+                         (עדיין אין endpoint ציבורי שחושף את הנתון הזה - ר' script.js; מציג כרטיס
+                         תצוגה מקדימה מטופל במקום נתונים מומצאים/מוטעים, עד שמקור אמיתי יחובר) -->
                     <div class="donators-toggle">
                         <div class="donators-toggle-group" role="tablist" aria-label="Donators data type">
-                            <button class="donators-toggle-btn active" data-donators-mode="gifts" type="button" role="tab" aria-selected="true">🎁 GIFTED SUBS</button>
-                            <button class="donators-toggle-btn" data-donators-mode="kicks" type="button" role="tab" aria-selected="false">⚡ TOP KICKS</button>
+                            <span class="donators-toggle-indicator" aria-hidden="true"></span>
+                            <button class="donators-toggle-btn active" data-donators-mode="gifts" type="button" role="tab" aria-selected="true">GIFTED SUBS</button>
+                            <button class="donators-toggle-btn" data-donators-mode="kicks" type="button" role="tab" aria-selected="false">TOP KICKS</button>
                         </div>
                     </div>
 
@@ -368,6 +369,14 @@
 
                     btn.classList.add("active");
                     document.getElementById("tab-" + btn.dataset.tab).classList.add("active");
+
+                    // offsetLeft/offsetWidth של כפתורי המתג הפנימי מחזירים 0 כל עוד הטאב
+                    // display:none (זו התנהגות דפדפן תקנית לכל אלמנט בתוך הורה מוסתר) - לכן
+                    // חובה למדוד/למקם מחדש את האינדיקטור הזהוב רק אחרי שהטאב DONATORS עצמו
+                    // כבר הפך ל-display:flex, לא בטעינת העמוד כשהוא עדיין מוסתר מאחורי HOME
+                    if (btn.dataset.tab === "donators" && typeof updateDonatorsToggleIndicator === "function") {
+                        updateDonatorsToggleIndicator();
+                    }
                 });
             });
 
@@ -461,26 +470,18 @@
                         p.x += p.vx * speedScale;
                         p.y += p.vy * speedScale;
 
-                        // גלישה על כל ארבעת הצדדים (לא רק שמאל/ימין) - כל חלקיק נודד בכיוון
-                        // האקראי-קבוע שלו וחוזר מהצד הנגדי כשהוא יוצא מהמסך, כך שהחלקיקים
-                        // לעולם לא מצטברים/שוקעים בקצה אחד ומתפזרים על פני כל הגובה והרוחב
-                        // באופן שווה לאורך זמן. בכל גלישה מקבל החלקיק גם קואורדינטה טרייה
-                        // ואקראית על הציר הניצב - כדי שהלידה-מחדש תיראה אורגנית ומפוזרת,
-                        // ולא תיצור "עמודות"/"שורות" קבועות שתמיד חוזרות לאותה נקודה
-                        if (p.x < 0) {
-                            p.x = canvas.width;
-                            p.y = Math.random() * canvas.height;
-                        } else if (p.x > canvas.width) {
-                            p.x = 0;
-                            p.y = Math.random() * canvas.height;
-                        }
-
-                        if (p.y < 0) {
-                            p.y = canvas.height;
-                            p.x = Math.random() * canvas.width;
-                        } else if (p.y > canvas.height) {
-                            p.y = 0;
-                            p.x = Math.random() * canvas.width;
+                        // ברגע שחלקיק מגיע לטווח של EDGE_MARGIN פיקסלים מכל אחד מארבעת קצוות
+                        // המסך, הוא "נולד מחדש" מיידית בנקודה פנימית אקראית (10%-90% מהרוחב/
+                        // הגובה) עם וקטור מהירות חדש ואקראי לגמרי - במקום רק לגלוש לצד הנגדי.
+                        // כך חלקיקים לעולם לא מצטברים/קופאים קרוב לקצוות, ותמיד נעים בצורה
+                        // חלקה ורציפה בתוך שטח המסך
+                        const EDGE_MARGIN = 20;
+                        if (p.x < EDGE_MARGIN || p.x > canvas.width - EDGE_MARGIN ||
+                            p.y < EDGE_MARGIN || p.y > canvas.height - EDGE_MARGIN) {
+                            p.x = canvas.width * (0.1 + Math.random() * 0.8);
+                            p.y = canvas.height * (0.1 + Math.random() * 0.8);
+                            p.vx = (Math.random() - 0.5) * 0.2;
+                            p.vy = (Math.random() - 0.5) * 0.2;
                         }
 
                         ctx.beginPath();
@@ -743,19 +744,37 @@
                 }).join("");
             }
 
+            // כרטיס תצוגה מקדימה מטופל ל-"Top Kicks" (במקום שורת טקסט פשוטה) - סטטי לגמרי,
+            // בלי שום אנימציה, כך שאין לו שום עלות low-perf
+            function renderKicksPreview(tbodyId) {
+                const tbody = document.getElementById(tbodyId);
+                if (!tbody) return;
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="3" class="donators-kicks-preview">
+                            <div class="donators-kicks-preview-inner">
+                                <span class="donators-kicks-preview-icon" aria-hidden="true">⚡</span>
+                                <div class="donators-kicks-preview-title">Top Kicks — Coming Soon</div>
+                                <div class="donators-kicks-preview-desc">Kick doesn't publicly expose live Kicks leaderboard data yet - this view switches on automatically the moment it does.</div>
+                            </div>
+                        </td>
+                    </tr>`;
+            }
+
             // === מתג "Gifted Subs" / "Top Kicks" ===
             // נכון לעכשיו קיק לא חושף שום endpoint ציבורי שמחזיר נתוני "Top Kicks" - נבדק ישירות
-            // מול ה-API (כולל מול כמה מהערוצים הגדולים ביותר בפלטפורמה, לא רק הערוץ הזה) ולא
-            // נמצא מקור נתונים זמין. במקום להציג נתוני Gifted Subs מתויגים בטעות כ-Kicks, מצב
-            // Kicks מציג מצב ריק וברור, ומוכן להתחבר למקור אמיתי ברגע שיימצא/ייחשף אחד כזה
+            // מול ה-API (כולל מול כמה מהערוצים הגדולים ביותר בפלטפורמה, לא רק הערוץ הזה, וגם
+            // מול אירועי ה-websocket/Pusher) ולא נמצא מקור נתונים זמין. במקום להציג נתוני
+            // Gifted Subs מתויגים בטעות כ-Kicks, מצב Kicks מציג כרטיס תצוגה מקדימה מטופל,
+            // ומוכן להתחבר למקור אמיתי ברגע שיימצא/ייחשף אחד כזה
             let donatorsMode = "gifts"; // "gifts" | "kicks"
             let lastGiftsAllTime = [];
             let lastGiftsWeekly = [];
 
             function renderDonators() {
                 if (donatorsMode === "kicks") {
-                    renderDonatorTable("donatorsAllTimeRows", [], "אין עדיין נתוני Kicks זמינים", "⚡");
-                    renderDonatorTable("donatorsWeeklyRows", [], "אין עדיין נתוני Kicks זמינים", "⚡");
+                    renderKicksPreview("donatorsAllTimeRows");
+                    renderKicksPreview("donatorsWeeklyRows");
                 } else {
                     renderDonatorTable("donatorsAllTimeRows", lastGiftsAllTime, "אין נתוני מתנות עדיין", "🎁");
                     renderDonatorTable("donatorsWeeklyRows", lastGiftsWeekly, "אין נתוני מתנות עדיין", "🎁");
@@ -778,38 +797,103 @@
             const donatorsToggleBtns = document.querySelectorAll(".donators-toggle-btn");
             const donatorsUnitHeaders = document.querySelectorAll(".donators-unit-header");
             const donatorsTableWraps = document.querySelectorAll(".donator-table-wrap");
+            const donatorsToggleGroupEl = document.querySelector(".donators-toggle-group");
+            const donatorsToggleIndicatorEl = document.querySelector(".donators-toggle-indicator");
+
+            // ממקם את שכבת האינדיקטור הזהובה בדיוק מעל הכפתור הפעיל, לפי המידות האמיתיות שלו
+            // (offsetLeft/offsetWidth) - הרוחב של "GIFTED SUBS" מול "TOP KICKS" שונה, כך שאי
+            // אפשר לחשב את זה מראש רק ב-CSS
+            function updateDonatorsToggleIndicator() {
+                if (!donatorsToggleIndicatorEl) return;
+                const activeBtn = document.querySelector(".donators-toggle-btn.active");
+                if (!activeBtn) return;
+                donatorsToggleIndicatorEl.style.width = activeBtn.offsetWidth + "px";
+                donatorsToggleIndicatorEl.style.transform = `translateX(${activeBtn.offsetLeft - 6}px)`;
+            }
+
+            function setDonatorsMode(mode) {
+                if (mode === donatorsMode) return;
+                donatorsMode = mode;
+
+                donatorsToggleBtns.forEach(function (b) {
+                    const active = b.dataset.donatorsMode === mode;
+                    b.classList.toggle("active", active);
+                    b.setAttribute("aria-selected", active ? "true" : "false");
+                });
+                updateDonatorsToggleIndicator();
+
+                donatorsUnitHeaders.forEach(function (th) {
+                    th.textContent = DONATORS_UNIT_LABELS[mode];
+                });
+
+                // מעבר עומק/דעיכה עדין (ר' .donator-table-wrap.donators-switching ב-style.css) -
+                // מוסיפים את המחלקה (דועך החוצה), מחליפים את תוכן הטבלה כשהיא כבר שקופה, ואז
+                // מסירים אותה כדי שתדעך חזרה פנימה עם התוכן החדש. משך ההמתנה תואם בדיוק את
+                // משך ה-transition בפועל (0.15s תחת low-perf, בלי opacity בלבד; 0.25s במצב רגיל)
+                const switchDelayMs = window.isLowPerfDevice ? 150 : 250;
+                donatorsTableWraps.forEach(function (wrap) {
+                    wrap.classList.add("donators-switching");
+                });
+                setTimeout(function () {
+                    renderDonators();
+                    donatorsTableWraps.forEach(function (wrap) {
+                        wrap.classList.remove("donators-switching");
+                    });
+                }, switchDelayMs);
+            }
 
             donatorsToggleBtns.forEach(function (btn) {
                 btn.addEventListener("click", function () {
-                    const mode = btn.dataset.donatorsMode;
-                    if (mode === donatorsMode) return;
-                    donatorsMode = mode;
-
-                    donatorsToggleBtns.forEach(function (b) {
-                        const active = b === btn;
-                        b.classList.toggle("active", active);
-                        b.setAttribute("aria-selected", active ? "true" : "false");
-                    });
-                    donatorsUnitHeaders.forEach(function (th) {
-                        th.textContent = DONATORS_UNIT_LABELS[mode];
-                    });
-
-                    // מעבר עומק/דעיכה עדין (ר' .donator-table-wrap.donators-switching ב-style.css) -
-                    // מוסיפים את המחלקה (דועך החוצה), מחליפים את תוכן הטבלה כשהיא כבר שקופה, ואז
-                    // מסירים אותה כדי שתדעך חזרה פנימה עם התוכן החדש. משך ההמתנה תואם בדיוק את
-                    // משך ה-transition בפועל (0.15s תחת low-perf, בלי opacity בלבד; 0.25s במצב רגיל)
-                    const switchDelayMs = window.isLowPerfDevice ? 150 : 250;
-                    donatorsTableWraps.forEach(function (wrap) {
-                        wrap.classList.add("donators-switching");
-                    });
-                    setTimeout(function () {
-                        renderDonators();
-                        donatorsTableWraps.forEach(function (wrap) {
-                            wrap.classList.remove("donators-switching");
-                        });
-                    }, switchDelayMs);
+                    setDonatorsMode(btn.dataset.donatorsMode);
+                    // איפוס הטיימר האוטומטי אחרי אינטראקציה ידנית - כדי שהמתג לא "יקפוץ" שוב
+                    // מיד אחרי שהמשתמש בחר במפורש
+                    scheduleDonatorsAutoRotate();
                 });
             });
+
+            // === רוטציה אוטומטית - מחליפה בין Gifted Subs ל-Top Kicks כל 8 שניות כשהמשתמש
+            // לא מתערב, ורק כשטאב ה-DONATORS בפועל פעיל/גלוי. זו לולאת רקע מתמשכת (לא
+            // אינטראקציה חד-פעמית של משתמש כמו קליק) ולכן מבוטלת לגמרי תחת body.low-perf,
+            // עקבי עם מדיניות "strict" הזהה לשאר הלולאות המתמשכות באתר (קנבס, אנימציות רקע) -
+            // בניגוד לקליק ידני על המתג, שממשיך לקבל את מלוא אנימציית ההחלקה גם ב-low-perf
+            // (אינטראקציה בודדת מקומית שהמשתמש עצמו יזם, לא עומס מתמשך) ===
+            const DONATORS_AUTO_ROTATE_MS = 8000;
+            let donatorsAutoRotateTimerId = null;
+            let donatorsAutoRotatePaused = false;
+
+            function scheduleDonatorsAutoRotate() {
+                clearTimeout(donatorsAutoRotateTimerId);
+                if (window.isLowPerfDevice) return;
+
+                donatorsAutoRotateTimerId = setTimeout(function () {
+                    // בודקים שוב (לא רק בתזמון) - מד ה-FPS האסינכרוני עשוי לסמן low-perf
+                    // מאוחר יותר ממה שהיה ידוע כשהטיימר הזה תוזמן
+                    if (window.isLowPerfDevice) return;
+
+                    const panel = document.getElementById("tab-donators");
+                    const isVisible = !!(panel && panel.classList.contains("active"));
+                    if (!donatorsAutoRotatePaused && isVisible) {
+                        setDonatorsMode(donatorsMode === "gifts" ? "kicks" : "gifts");
+                    }
+                    scheduleDonatorsAutoRotate();
+                }, DONATORS_AUTO_ROTATE_MS);
+            }
+
+            if (donatorsToggleGroupEl) {
+                donatorsToggleGroupEl.addEventListener("mouseenter", function () {
+                    donatorsAutoRotatePaused = true;
+                });
+                donatorsToggleGroupEl.addEventListener("mouseleave", function () {
+                    donatorsAutoRotatePaused = false;
+                });
+            }
+
+            // הרוחב/padding של הכפתורים משתנים ב-@media (max-width:420px) - ממקמים מחדש את
+            // האינדיקטור אחרי כל resize כדי שלא יישאר "תקוע" במידות הישנות
+            window.addEventListener("resize", updateDonatorsToggleIndicator);
+
+            updateDonatorsToggleIndicator();
+            scheduleDonatorsAutoRotate();
 
             // === רענון תקופתי של הלידרבורד (כל שעה) ===
             const LEADERBOARD_POLL_INTERVAL_MS = 3600000; // שעה - איזון בין נתונים עדכניים לעומס מינימלי על השרת

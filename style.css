@@ -1609,10 +1609,12 @@ footer {
     margin-bottom: 20px;
 }
 
-/* זכוכית זהובה + פיל מעוגל - עקבי בדיוק עם .tabs-nav (אותו גודל/סוג אלמנט - פיל תמידי-
-   נוכח קטן, לא לוח זכוכית גדול - ולכן שומר על בלור עצמאי משלו בדיוק כמו .tabs-nav,
-   ולא מאוחד לתוך הבלור המשותף הגדול של .donators-grid) */
+/* זכוכית זהובה + פיל מעוגל - עקבי עם .tabs-nav (אותו גודל/סוג אלמנט - פיל תמידי-נוכח
+   קטן, לא לוח זכוכית גדול - ולכן שומר על בלור עצמאי משלו בדיוק כמו .tabs-nav, ולא
+   מאוחד לתוך הבלור המשותף הגדול של .donators-grid). position:relative כדי לשמש עוגן
+   מיקום ל-.donators-toggle-indicator (השכבה הזהובה שנעה) */
 .donators-toggle-group {
+    position: relative;
     display: inline-flex;
     gap: 6px;
     background: rgba(15, 20, 10, 0.45);
@@ -1625,42 +1627,57 @@ footer {
     contain: layout style;
 }
 
-/* טיפוגרפיה/מצב hover/active זהים בדיוק ל-.tab-btn - איחוד מלא של אסתטיקת ה"פיל" בין
-   ניווט הטאבים הראשי לבין המתג הפנימי הזה */
-.donators-toggle-btn {
-    background: rgba(20, 25, 15, 0.7);
-    border: 1px solid rgba(255, 204, 51, 0.5);
-    color: #ffe9a8;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8), 0 0 2px rgba(0, 0, 0, 0.9);
-    font-family: inherit;
-    font-weight: 800;
-    font-size: 0.85rem;
-    letter-spacing: 0.3px;
-    padding: 10px 20px;
+/* שכבת האינדיקטור הזהובה היחידה שנעה בין שני הכפתורים (script.js קובע left/width
+   בפועל, לפי המידות האמיתיות של הכפתור הפעיל - הרוחב משתנה בין "GIFTED SUBS"
+   ל-"TOP KICKS" כך שלא ניתן לחשב זאת מראש רק ב-CSS). z-index:0 - מתחת לטקסט הכפתורים
+   עצמם, שקופים מעליה */
+.donators-toggle-indicator {
+    position: absolute;
+    top: 6px;
+    left: 6px;
+    height: calc(100% - 12px);
+    width: 0;
     border-radius: 999px;
-    cursor: pointer;
-    transition: background 0.3s ease, border-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
-    white-space: nowrap;
-}
-
-.donators-toggle-btn:hover {
-    color: #ffcc33;
-    background: rgba(255, 204, 51, 0.18);
-    border-color: rgba(255, 204, 51, 0.7);
-    box-shadow: 0 0 16px rgba(255, 204, 51, 0.25);
-}
-
-.donators-toggle-btn.active {
     background: linear-gradient(145deg, #ffd966, #ff8c00);
-    color: #111111;
-    text-shadow: none;
-    font-weight: 900;
-    border-color: rgba(255, 204, 51, 0.7);
     box-shadow:
         inset 0 1px 0 rgba(255, 255, 255, 0.5),
         inset 0 -3px 8px rgba(120, 50, 0, 0.25),
         0 8px 22px rgba(255, 140, 0, 0.45),
         0 0 30px rgba(255, 204, 51, 0.35);
+    transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1), width 0.35s ease;
+    z-index: 0;
+    pointer-events: none;
+    will-change: transform;
+}
+
+/* הכפתורים עצמם שקופים לגמרי - האינדיקטור שמתחתם הוא שמספק את הרקע/הזוהר הזהוב.
+   טיפוגרפיה עקבית עם .tab-btn (אותה משפחת "פיל" בכל האתר) */
+.donators-toggle-btn {
+    position: relative;
+    z-index: 1;
+    background: transparent;
+    border: none;
+    color: #ffe9a8;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8), 0 0 2px rgba(0, 0, 0, 0.9);
+    font-family: inherit;
+    font-weight: 800;
+    font-size: 0.85rem;
+    letter-spacing: 0.5px;
+    padding: 10px 20px;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: color 0.3s ease;
+    white-space: nowrap;
+}
+
+.donators-toggle-btn:hover:not(.active) {
+    color: #ffcc33;
+}
+
+.donators-toggle-btn.active {
+    color: #111111;
+    text-shadow: none;
+    font-weight: 900;
 }
 
 @media (max-width: 420px) {
@@ -1858,6 +1875,40 @@ footer {
     font-weight: 800;
 }
 
+/* כרטיס תצוגה מקדימה מטופל ל-"Top Kicks" - קיק לא חושף כרגע endpoint ציבורי לנתון הזה
+   (נבדק ישירות מול ה-API, כולל מול חמישה ערוצים שונים, ומול השדות ב-i18n של האתר) - במקום
+   שורת טקסט פשוטה, כרטיס סטטי ומעוצב. הכל סטטי/לא מונפש - אין עלות low-perf כלשהי */
+.donators-kicks-preview {
+    padding: 32px 16px !important;
+}
+
+.donators-kicks-preview-inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+}
+
+.donators-kicks-preview-icon {
+    font-size: 1.8rem;
+    filter: drop-shadow(0 0 8px rgba(255, 204, 51, 0.5));
+}
+
+.donators-kicks-preview-title {
+    font-weight: 900;
+    font-size: 0.95rem;
+    letter-spacing: 0.5px;
+    color: #ffcc33;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8), 0 0 2px rgba(0, 0, 0, 0.9);
+}
+
+.donators-kicks-preview-desc {
+    font-size: 0.72rem;
+    line-height: 1.5;
+    color: #9a8f85;
+    max-width: 240px;
+}
+
 @media (max-width: 480px) {
     .donator-card {
         padding: 14px 10px;
@@ -1996,10 +2047,6 @@ body.low-perf .donators-toggle-group {
     backdrop-filter: none;
     -webkit-backdrop-filter: none;
     background: rgba(15, 20, 10, 0.88);
-}
-
-body.low-perf .donators-toggle-btn:hover {
-    box-shadow: none;
 }
 
 body.low-perf .modal-overlay {
