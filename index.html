@@ -12,18 +12,18 @@
 
     <!-- Preload/preconnect - מתחילים להוריד את הנכסים הקריטיים (וידאו האינטרו, תמונת הפרופיל, גופן חיצוני)
          מוקדם ככל האפשר, במקביל לפרסור ה-HTML, במקום לחכות שהדפדפן יגיע אליהם בהמשך המסמך -->
-    <link rel="preload" as="video" href="intro.mp4?v=7.7-particles-wandering-and-header-clean" type="video/mp4">
+    <link rel="preload" as="video" href="intro.mp4?v=8.0-donators-top-kicks-toggle" type="video/mp4">
     <link rel="preload" as="image" href="profile.jpg">
     <link rel="preload" as="image" href="bg-jungle.webp">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-    <link rel="stylesheet" href="style.css?v=7.7-particles-wandering-and-header-clean">
+    <link rel="stylesheet" href="style.css?v=8.0-donators-top-kicks-toggle">
     <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;700;900&display=swap" rel="stylesheet">
 
     <!-- script.js נטען מוקדם עם defer - מתחיל להוריד אותו מיד (במקביל לפרסור ה-HTML) במקום להמתין
          שהפרסר יגיע לתחתית הגוף, בלי לחסום את הרינדור (defer מריץ אותו רק אחרי שה-DOM מוכן) -->
-    <script src="script.js?v=7.7-particles-wandering-and-header-clean" defer></script>
+    <script src="script.js?v=8.0-donators-top-kicks-toggle" defer></script>
 </head>
 <body>
 
@@ -31,7 +31,7 @@
         <video
             class="intro-video"
             id="introVideo"
-            src="intro.mp4?v=7.7-particles-wandering-and-header-clean"
+            src="intro.mp4?v=8.0-donators-top-kicks-toggle"
             muted
             playsinline
             webkit-playsinline="true"
@@ -169,6 +169,16 @@
 
                 <section class="tab-panel" id="tab-donators">
 
+                    <!-- מתג מפולח - עובר בין נתוני "Gifted Subs" (חיים, מ-kick.com) לבין "Top Kicks"
+                         (עדיין אין endpoint ציבורי שחושף את הנתון הזה - ר' script.js; מציג מצב ריק
+                         נקי במקום נתונים מומצאים/מוטעים, עד שמקור אמיתי יחובר) */
+                    <div class="donators-toggle">
+                        <div class="donators-toggle-group" role="tablist" aria-label="Donators data type">
+                            <button class="donators-toggle-btn active" data-donators-mode="gifts" type="button" role="tab" aria-selected="true">🎁 GIFTED SUBS</button>
+                            <button class="donators-toggle-btn" data-donators-mode="kicks" type="button" role="tab" aria-selected="false">⚡ TOP KICKS</button>
+                        </div>
+                    </div>
+
                     <!-- בלור אחד משותף מאחורי שני כרטיסי הגיפטרים (ר' .donators-grid ב-CSS) - עקבי
                          עם הדפוס שכבר קיים ב-#tab-home/.leaderboard-glass-group, במקום backdrop-filter
                          נפרד לכל כרטיס -->
@@ -182,7 +192,7 @@
                                         <tr>
                                             <th>RANK</th>
                                             <th>Username</th>
-                                            <th>Gifted Subs</th>
+                                            <th class="donators-unit-header">Gifted Subs</th>
                                         </tr>
                                     </thead>
                                     <tbody id="donatorsAllTimeRows">
@@ -200,7 +210,7 @@
                                         <tr>
                                             <th>RANK</th>
                                             <th>Username</th>
-                                            <th>Gifted Subs</th>
+                                            <th class="donators-unit-header">Gifted Subs</th>
                                         </tr>
                                     </thead>
                                     <tbody id="donatorsWeeklyRows">
@@ -714,12 +724,12 @@
                 });
             }
 
-            function renderDonatorTable(tbodyId, gifters) {
+            function renderDonatorTable(tbodyId, gifters, emptyMessage, icon) {
                 const tbody = document.getElementById(tbodyId);
                 if (!tbody) return;
 
                 if (!Array.isArray(gifters) || gifters.length === 0) {
-                    tbody.innerHTML = `<tr><td colspan="3" class="loading-row">אין נתוני מתנות עדיין</td></tr>`;
+                    tbody.innerHTML = `<tr><td colspan="3" class="loading-row">${emptyMessage}</td></tr>`;
                     return;
                 }
 
@@ -728,14 +738,28 @@
                         <tr>
                             <td><span class="rank-badge">${idx + 1}</span></td>
                             <td>${escapeHtml(g.username)}</td>
-                            <td class="gift-count-cell">🎁 ${Number(g.quantity || 0).toLocaleString("en-US")}</td>
+                            <td class="gift-count-cell">${icon} ${Number(g.quantity || 0).toLocaleString("en-US")}</td>
                         </tr>`;
                 }).join("");
             }
 
-            function renderDonators(allTime, weekly) {
-                renderDonatorTable("donatorsAllTimeRows", allTime);
-                renderDonatorTable("donatorsWeeklyRows", weekly);
+            // === מתג "Gifted Subs" / "Top Kicks" ===
+            // נכון לעכשיו קיק לא חושף שום endpoint ציבורי שמחזיר נתוני "Top Kicks" - נבדק ישירות
+            // מול ה-API (כולל מול כמה מהערוצים הגדולים ביותר בפלטפורמה, לא רק הערוץ הזה) ולא
+            // נמצא מקור נתונים זמין. במקום להציג נתוני Gifted Subs מתויגים בטעות כ-Kicks, מצב
+            // Kicks מציג מצב ריק וברור, ומוכן להתחבר למקור אמיתי ברגע שיימצא/ייחשף אחד כזה
+            let donatorsMode = "gifts"; // "gifts" | "kicks"
+            let lastGiftsAllTime = [];
+            let lastGiftsWeekly = [];
+
+            function renderDonators() {
+                if (donatorsMode === "kicks") {
+                    renderDonatorTable("donatorsAllTimeRows", [], "אין עדיין נתוני Kicks זמינים", "⚡");
+                    renderDonatorTable("donatorsWeeklyRows", [], "אין עדיין נתוני Kicks זמינים", "⚡");
+                } else {
+                    renderDonatorTable("donatorsAllTimeRows", lastGiftsAllTime, "אין נתוני מתנות עדיין", "🎁");
+                    renderDonatorTable("donatorsWeeklyRows", lastGiftsWeekly, "אין נתוני מתנות עדיין", "🎁");
+                }
             }
 
             // אין לזה "נתוני גיבוי" אמיתיים כמו ל-CSGORoll (אין תמונת מצב ישנה ידועה ואמיתית
@@ -745,10 +769,47 @@
                 const data = await fetchJsonWithProxyFallback(`https://kick.com/api/v2/channels/pedrofederer/leaderboards?t=${Date.now()}`);
                 if (!data) return;
 
-                const allTime = Array.isArray(data.gifts) ? data.gifts : [];
-                const weekly = Array.isArray(data.gifts_week) ? data.gifts_week : [];
-                renderDonators(allTime, weekly);
+                lastGiftsAllTime = Array.isArray(data.gifts) ? data.gifts : [];
+                lastGiftsWeekly = Array.isArray(data.gifts_week) ? data.gifts_week : [];
+                renderDonators();
             }
+
+            const DONATORS_UNIT_LABELS = { gifts: "Gifted Subs", kicks: "Kicks" };
+            const donatorsToggleBtns = document.querySelectorAll(".donators-toggle-btn");
+            const donatorsUnitHeaders = document.querySelectorAll(".donators-unit-header");
+            const donatorsTableWraps = document.querySelectorAll(".donator-table-wrap");
+
+            donatorsToggleBtns.forEach(function (btn) {
+                btn.addEventListener("click", function () {
+                    const mode = btn.dataset.donatorsMode;
+                    if (mode === donatorsMode) return;
+                    donatorsMode = mode;
+
+                    donatorsToggleBtns.forEach(function (b) {
+                        const active = b === btn;
+                        b.classList.toggle("active", active);
+                        b.setAttribute("aria-selected", active ? "true" : "false");
+                    });
+                    donatorsUnitHeaders.forEach(function (th) {
+                        th.textContent = DONATORS_UNIT_LABELS[mode];
+                    });
+
+                    // מעבר עומק/דעיכה עדין (ר' .donator-table-wrap.donators-switching ב-style.css) -
+                    // מוסיפים את המחלקה (דועך החוצה), מחליפים את תוכן הטבלה כשהיא כבר שקופה, ואז
+                    // מסירים אותה כדי שתדעך חזרה פנימה עם התוכן החדש. משך ההמתנה תואם בדיוק את
+                    // משך ה-transition בפועל (0.15s תחת low-perf, בלי opacity בלבד; 0.25s במצב רגיל)
+                    const switchDelayMs = window.isLowPerfDevice ? 150 : 250;
+                    donatorsTableWraps.forEach(function (wrap) {
+                        wrap.classList.add("donators-switching");
+                    });
+                    setTimeout(function () {
+                        renderDonators();
+                        donatorsTableWraps.forEach(function (wrap) {
+                            wrap.classList.remove("donators-switching");
+                        });
+                    }, switchDelayMs);
+                });
+            });
 
             // === רענון תקופתי של הלידרבורד (כל שעה) ===
             const LEADERBOARD_POLL_INTERVAL_MS = 3600000; // שעה - איזון בין נתונים עדכניים לעומס מינימלי על השרת

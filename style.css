@@ -1602,6 +1602,75 @@ footer {
     .leaderboard-table tbody td:nth-child(2) { text-align: right; }
 }
 
+/* === DONATORS - מתג מפולח בין "Gifted Subs" ל-"Top Kicks" === */
+.donators-toggle {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+/* זכוכית זהובה + פיל מעוגל - עקבי בדיוק עם .tabs-nav (אותו גודל/סוג אלמנט - פיל תמידי-
+   נוכח קטן, לא לוח זכוכית גדול - ולכן שומר על בלור עצמאי משלו בדיוק כמו .tabs-nav,
+   ולא מאוחד לתוך הבלור המשותף הגדול של .donators-grid) */
+.donators-toggle-group {
+    display: inline-flex;
+    gap: 6px;
+    background: rgba(15, 20, 10, 0.45);
+    border: 1px solid rgba(255, 220, 100, 0.45);
+    padding: 6px;
+    border-radius: 999px;
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+    contain: layout style;
+}
+
+/* טיפוגרפיה/מצב hover/active זהים בדיוק ל-.tab-btn - איחוד מלא של אסתטיקת ה"פיל" בין
+   ניווט הטאבים הראשי לבין המתג הפנימי הזה */
+.donators-toggle-btn {
+    background: rgba(20, 25, 15, 0.7);
+    border: 1px solid rgba(255, 204, 51, 0.5);
+    color: #ffe9a8;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8), 0 0 2px rgba(0, 0, 0, 0.9);
+    font-family: inherit;
+    font-weight: 800;
+    font-size: 0.85rem;
+    letter-spacing: 0.3px;
+    padding: 10px 20px;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: background 0.3s ease, border-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
+    white-space: nowrap;
+}
+
+.donators-toggle-btn:hover {
+    color: #ffcc33;
+    background: rgba(255, 204, 51, 0.18);
+    border-color: rgba(255, 204, 51, 0.7);
+    box-shadow: 0 0 16px rgba(255, 204, 51, 0.25);
+}
+
+.donators-toggle-btn.active {
+    background: linear-gradient(145deg, #ffd966, #ff8c00);
+    color: #111111;
+    text-shadow: none;
+    font-weight: 900;
+    border-color: rgba(255, 204, 51, 0.7);
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.5),
+        inset 0 -3px 8px rgba(120, 50, 0, 0.25),
+        0 8px 22px rgba(255, 140, 0, 0.45),
+        0 0 30px rgba(255, 204, 51, 0.35);
+}
+
+@media (max-width: 420px) {
+    .donators-toggle-btn {
+        font-size: 0.72rem;
+        padding: 9px 12px;
+        letter-spacing: 0;
+    }
+}
+
 /* === DONATORS - שני לוחות "טופ גיפטרים" (Kick) - All-Time ו-Weekly === */
 .donators-grid {
     display: grid;
@@ -1698,10 +1767,21 @@ footer {
     50% { transform: translateY(-4px); }
 }
 
+/* מעבר עומק/דעיכה עדין כשמחליפים מצב (Gifted Subs <-> Top Kicks) - script.js מוסיף/מסיר
+   את .donators-switching סביב עדכון תוכן הטבלה. תחת body.low-perf (למטה) מוגבל אך ורק
+   ל-opacity - transform מבוטל לגמרי */
 .donator-table-wrap {
     border-radius: 12px;
     overflow: hidden;
     background: rgba(255, 255, 255, 0.02);
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+.donator-table-wrap.donators-switching {
+    opacity: 0;
+    transform: translateY(10px) scale(0.98);
 }
 
 .donator-table {
@@ -1912,6 +1992,16 @@ body.low-perf .tabs-nav {
     background: rgba(15, 20, 10, 0.88);
 }
 
+body.low-perf .donators-toggle-group {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    background: rgba(15, 20, 10, 0.88);
+}
+
+body.low-perf .donators-toggle-btn:hover {
+    box-shadow: none;
+}
+
 body.low-perf .modal-overlay {
     backdrop-filter: none;
     -webkit-backdrop-filter: none;
@@ -1968,6 +2058,17 @@ body.low-perf .donator-card::after {
 /* אייקון הכתר/גביע מרחף - מבוטל לגמרי תחת low-perf, נשאר סטטי */
 body.low-perf .donator-icon {
     animation: none;
+}
+
+/* STRICTLY DISABLE: מעבר החלפת המצב (Gifted Subs <-> Top Kicks) מוגבל אך ורק ל-opacity
+   מהיר - transform:translateY/scale מבוטל לגמרי, בלי שום עומק/הזזה מונפשים */
+body.low-perf .donator-table-wrap {
+    transform: none;
+    transition: opacity 0.15s ease;
+}
+
+body.low-perf .donator-table-wrap.donators-switching {
+    transform: none;
 }
 
 body.low-perf .leaderboard-podium::before,
