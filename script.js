@@ -1,3 +1,32 @@
+// === זיהוי מיידי וסינכרוני של רינדור-תוכנה (Hardware Acceleration כבוי) ===
+// מד ה-FPS למטה (בהמשך הקובץ) לוקח 1.5 שניות עד שיש תוצאה - יותר מדי זמן כדי להחליט
+// אם בכלל להתחיל לנגן את וידאו האינטרו: אם הוא יתחיל לנגן על רינדור תוכנה, המשתמש כבר
+// יראה גמגום/סטאטר לפני שהמדידה תספיק לזהות זאת ולעצור אותו. כשכרום מכבה האצת חומרה,
+// WebGL נופל לרנדרר-תוכנה (בד"כ "SwiftShader"/"llvmpipe"/"Basic Render") - את זה אפשר
+// לבדוק באופן מיידי וסינכרוני, לפני שמנסים לנגן כל מדיה שהיא
+(function () {
+    "use strict";
+
+    function detectSoftwareRendering() {
+        try {
+            const canvas = document.createElement("canvas");
+            const gl = canvas.getContext("webgl") || canvas.getContext("experimental-webgl");
+            if (!gl) return true; // אין WebGL בכלל בדפדפן הזה - נתייחס כאל מקרה בעייתי
+            const debugInfo = gl.getExtension("WEBGL_debug_renderer_info");
+            if (!debugInfo) return false; // לא ניתן לזהות - לא מניחים את הגרוע מכל
+            const renderer = String(gl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL) || "");
+            return /swiftshader|software|llvmpipe|basic render/i.test(renderer);
+        } catch (e) {
+            return false;
+        }
+    }
+
+    if (detectSoftwareRendering()) {
+        window.isLowPerfDevice = true;
+        document.body.classList.add("low-perf");
+    }
+})();
+
 // === מסך פתיחה - וידאו אינטרו (Intro Splash) + טעינה מקדימה של נכסים קריטיים ===
 (function () {
     "use strict";
@@ -27,6 +56,15 @@
     // כדי שהאוברליי ישמש כ"מסך טעינה" נקי לאורך כל הזמן הזה בלי הבזק של רקע לא טעון באמצע.
     function playIntroSplash() {
         return new Promise((resolve) => {
+            // ביצועים נמוכים (רינדור תוכנה) - פענוח וידאו הוא בדיוק אחד הדברים היקרים ביותר
+            // במצב הזה. מדלגים על הסרטון לגמרי במקום לתת לו להתחיל ולגמגם - עדיין ממתינים
+            // ל-waitForPageReady (התמונות הקריטיות), כך שהמעבר לאתר הראשי נשאר "מסך טעינה"
+            // נקי ללא הבזק, רק בלי סטאטר של פענוח וידאו
+            if (window.isLowPerfDevice) {
+                resolve();
+                return;
+            }
+
             const videoEl = document.getElementById("introVideo");
             if (!videoEl) { resolve(); return; }
 
@@ -164,8 +202,11 @@
 
         const fps = (frameCount / elapsed) * 1000;
         // דגל גלובלי - נבדק פר-פריים בלולאת הקנבס ב-index.html, כדי שהיא תיעצר גם אם
-        // כבר התחילה לרוץ לפני שהמדידה כאן הסתיימה
-        window.isLowPerfDevice = fps < LOW_FPS_THRESHOLD;
+        // כבר התחילה לרוץ לפני שהמדידה כאן הסתיימה. לא "מבטלים" זיהוי low-perf קודם
+        // (למשל מה-detectSoftwareRendering הסינכרוני למעלה) גם אם ה-FPS יצא תקין -
+        // ברגע שזוהה כבד פעם אחת, נשארים במצב הזה למשך כל הביקור בעמוד
+        const measuredLowPerf = fps < LOW_FPS_THRESHOLD;
+        window.isLowPerfDevice = window.isLowPerfDevice || measuredLowPerf;
         if (window.isLowPerfDevice && document.body) {
             document.body.classList.add("low-perf");
         }

@@ -1730,3 +1730,127 @@ body.low-perf #particles-bg,
 body.low-perf .glow-orb {
     display: none;
 }
+
+/* --- אנימציות דקורטיביות אינסופיות (ריחוף/פעימות זוהר) - מבוטלות לגמרי; נשארת רק
+   אנימציית הכניסה החד-פעמית של כל אלמנט (fadeInUp/podiumFadeIn), עם אותו עיכוב מדורג
+   בדיוק כמו קודם. משתמשים ב-animation-name (longhand) במקום ה-shorthand המלא כדי
+   שה-duration/delay/timing-function/fill-mode המקוריים של אנימציית הכניסה יישארו --- */
+body.low-perf .link-btn {
+    animation-name: fadeInUp;
+}
+
+body.low-perf .link-btn::before {
+    animation: none;
+}
+
+body.low-perf .csgoroll-hero {
+    animation-name: fadeInUp;
+}
+
+body.low-perf .leaderboard-podium::before,
+body.low-perf .leaderboard-podium::after {
+    animation: none;
+}
+
+body.low-perf .podium-card {
+    animation-name: podiumFadeIn;
+}
+
+body.low-perf .podium-card.rank-1 .podium-medal {
+    animation: none;
+}
+
+body.low-perf .podium-sparkle {
+    animation: none;
+}
+
+body.low-perf .leaderboard-timer {
+    animation-name: fadeInUp;
+}
+
+body.low-perf .timer-box,
+body.low-perf .timer-box.tick {
+    animation: none;
+}
+
+body.low-perf .timer-led {
+    animation: none;
+}
+
+body.low-perf .live-pill.live .dot {
+    animation: none;
+}
+
+body.low-perf .leaderboard-table-wrap {
+    animation-name: fadeInUp;
+}
+
+body.low-perf .leaderboard-table tbody tr {
+    animation: none;
+}
+
+body.low-perf .leaderboard-table tbody td {
+    animation: none;
+}
+
+/* --- hover/מעבר "כבד" (transform, filter מונפש, box-shadow מטושטש) - מנוטרל;
+   שינויי צבע/גבול קלים שכבר קיימים בכל מקרה (background/border-color) ממשיכים
+   לספק משוב hover מיידי כמעט בלי עלות רינדור --- */
+body.low-perf .profile-link:hover,
+body.low-perf .profile-link:focus-visible {
+    transform: none;
+}
+
+body.low-perf .profile-link:hover .profile-img,
+body.low-perf .profile-link:focus-visible .profile-img {
+    box-shadow: 0 0 20px rgba(241, 164, 3, 0.4);
+    filter: none;
+}
+
+body.low-perf .tab-btn:hover {
+    box-shadow: none;
+}
+
+body.low-perf .link-btn:hover {
+    transform: none !important;
+    filter: drop-shadow(0 8px 18px rgba(0, 0, 0, 0.35));
+}
+
+body.low-perf .link-btn::after {
+    display: none;
+}
+
+body.low-perf .link-btn:hover .icon {
+    animation: none;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+}
+
+body.low-perf .podium-card:hover {
+    transform: none !important;
+}
+
+body.low-perf .podium-card.rank-1:hover {
+    /* -14px = ההגבהה הקבועה של מקום ראשון גם במנוחה - כדי שהמצב לא "יקפוץ" ב-hover */
+    transform: translateY(-14px) !important;
+}
+
+body.low-perf .podium-card:hover .podium-avatar {
+    animation: none;
+}
+
+body.low-perf .leaderboard-table tbody tr:hover {
+    transform: none !important;
+    box-shadow: none;
+}
+
+body.low-perf .leaderboard-table tbody tr:hover .row-avatar {
+    animation: none;
+}
+
+body.low-perf .leaderboard-table tbody td::before {
+    display: none;
+}
+
+body.low-perf .close-modal:hover {
+    transform: none;
+}
