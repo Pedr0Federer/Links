@@ -12,18 +12,18 @@
 
     <!-- Preload/preconnect - מתחילים להוריד את הנכסים הקריטיים (וידאו האינטרו, תמונת הפרופיל, גופן חיצוני)
          מוקדם ככל האפשר, במקביל לפרסור ה-HTML, במקום לחכות שהדפדפן יגיע אליהם בהמשך המסמך -->
-    <link rel="preload" as="video" href="intro.mp4?v=5.3-chrome-rendering-fix" type="video/mp4">
+    <link rel="preload" as="video" href="intro.mp4?v=5.4-chrome-canvas-blur-fix" type="video/mp4">
     <link rel="preload" as="image" href="profile.jpg">
     <link rel="preload" as="image" href="bg-jungle.webp">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-    <link rel="stylesheet" href="style.css?v=5.3-chrome-rendering-fix">
+    <link rel="stylesheet" href="style.css?v=5.4-chrome-canvas-blur-fix">
     <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;700;900&display=swap" rel="stylesheet">
 
     <!-- script.js נטען מוקדם עם defer - מתחיל להוריד אותו מיד (במקביל לפרסור ה-HTML) במקום להמתין
          שהפרסר יגיע לתחתית הגוף, בלי לחסום את הרינדור (defer מריץ אותו רק אחרי שה-DOM מוכן) -->
-    <script src="script.js?v=5.3-chrome-rendering-fix" defer></script>
+    <script src="script.js?v=5.4-chrome-canvas-blur-fix" defer></script>
 </head>
 <body>
 
@@ -31,7 +31,7 @@
         <video
             class="intro-video"
             id="introVideo"
-            src="intro.mp4?v=5.3-chrome-rendering-fix"
+            src="intro.mp4?v=5.4-chrome-canvas-blur-fix"
             muted
             playsinline
             webkit-playsinline="true"
@@ -365,14 +365,27 @@
                 });
             }
 
-            function drawParticles() {
-                // כשהטאב לא גלוי בכלל אין טעם לצייר/להזיז חלקיקים - חוסך CPU ברקע
-                // בלי שום השפעה על מה שבפועל נראה על המסך (הרי שום דבר לא מוצג)
-                if (!document.hidden) {
+            // הקנבס יושב מתחת לכל פאנלי הזכוכית (backdrop-filter: blur) - כל פעם שהוא נצבע
+            // מחדש, כרום נאלץ לדגום ולטשטש מחדש את הרקע שמאחורי כל פאנל כזה. הגבלה מפורשת
+            // ל-30fps (במקום להסתמך על 60fps של requestAnimationFrame) חוצה בערך לחצי את
+            // תדירות הטריגר הזה. המהירות הנתפסת של הגחלים (px/שנייה) נשארת זהה במדויק כי
+            // התזוזה בכל עדכון מנורמלת לפי הזמן שבאמת חלף (deltaTime), לא לפי מספר הפריימים -
+            // כך שהעיצוב/התנועה הכוללת זהים, רק קצב הדגימה בפועל נמוך יותר
+            const PARTICLE_FRAME_INTERVAL_MS = 1000 / 30;
+            const REFERENCE_FRAME_MS = 1000 / 60;
+            let lastParticleFrameTime = null;
+
+            function drawParticles(timestamp) {
+                if (!document.hidden &&
+                    (lastParticleFrameTime === null || timestamp - lastParticleFrameTime >= PARTICLE_FRAME_INTERVAL_MS)) {
+                    const dt = lastParticleFrameTime === null ? REFERENCE_FRAME_MS : (timestamp - lastParticleFrameTime);
+                    lastParticleFrameTime = timestamp;
+                    const speedScale = dt / REFERENCE_FRAME_MS;
+
                     ctx.clearRect(0, 0, canvas.width, canvas.height);
                     particles.forEach(p => {
-                        p.x += p.vx;
-                        p.y += p.vy;
+                        p.x += p.vx * speedScale;
+                        p.y += p.vy * speedScale;
                         if (p.x < 0) p.x = canvas.width;
                         if (p.x > canvas.width) p.x = 0;
                         // גחלים תמיד עולות כלפי מעלה - כשהן נעלמות למעלה, מפציעות מחדש למטה
@@ -405,7 +418,7 @@
 
             resizeCanvas();
             initParticles();
-            drawParticles();
+            requestAnimationFrame(drawParticles);
 
             // === זוהר עוקב אחר העכבר - מעקב מיידי, ללא עיכוב/אינטרפולציה ===
             // עדכון ה-DOM מרוכז דרך requestAnimationFrame - גם אם mousemove יורה עשרות פעמים
@@ -415,9 +428,20 @@
             let cursorX = 0;
             let cursorY = 0;
             let cursorRafPending = false;
+            // הזוהר הזה יושב על z-index:-1, מתחת לאותם פאנלי זכוכית - כל תזוזה שלו במהלך
+            // ניווט/מעבר עכבר מעל הכרטיסים מכריחה את כרום לדגום מחדש את ה-backdrop-filter שלהם,
+            // בדיוק כמו הקנבס. אותה הגבלת קצב (30fps) כדי לא להציף בטריגרים בזמן תנועת עכבר רציפה
+            let lastCursorGlowFrameTime = 0;
 
-            function applyCursorGlow() {
+            function applyCursorGlow(timestamp) {
+                // עדיין בתוך חלון ה-throttle - נשארים "pending" ומבקשים פריים נוסף במקום
+                // לאפס את הדגל, כדי ש-mousemove לא יתזמן רצף כפול של rAF במקביל
+                if (timestamp - lastCursorGlowFrameTime < PARTICLE_FRAME_INTERVAL_MS) {
+                    requestAnimationFrame(applyCursorGlow);
+                    return;
+                }
                 cursorRafPending = false;
+                lastCursorGlowFrameTime = timestamp;
                 cursorGlow.style.transform = `translate(${cursorX}px, ${cursorY}px)`;
             }
 
