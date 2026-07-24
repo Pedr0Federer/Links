@@ -12,18 +12,18 @@
 
     <!-- Preload/preconnect - מתחילים להוריד את הנכסים הקריטיים (וידאו האינטרו, תמונת הפרופיל, גופן חיצוני)
          מוקדם ככל האפשר, במקביל לפרסור ה-HTML, במקום לחכות שהדפדפן יגיע אליהם בהמשך המסמך -->
-    <link rel="preload" as="video" href="intro.mp4?v=8.5-bold-donators-ui-and-kicks-fix" type="video/mp4">
+    <link rel="preload" as="video" href="intro.mp4?v=8.6-kicks-verified-live" type="video/mp4">
     <link rel="preload" as="image" href="profile.jpg">
     <link rel="preload" as="image" href="bg-jungle.webp">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-    <link rel="stylesheet" href="style.css?v=8.5-bold-donators-ui-and-kicks-fix">
+    <link rel="stylesheet" href="style.css?v=8.6-kicks-verified-live">
     <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;700;900&display=swap" rel="stylesheet">
 
     <!-- script.js נטען מוקדם עם defer - מתחיל להוריד אותו מיד (במקביל לפרסור ה-HTML) במקום להמתין
          שהפרסר יגיע לתחתית הגוף, בלי לחסום את הרינדור (defer מריץ אותו רק אחרי שה-DOM מוכן) -->
-    <script src="script.js?v=8.5-bold-donators-ui-and-kicks-fix" defer></script>
+    <script src="script.js?v=8.6-kicks-verified-live" defer></script>
 </head>
 <body>
 
@@ -31,7 +31,7 @@
         <video
             class="intro-video"
             id="introVideo"
-            src="intro.mp4?v=8.5-bold-donators-ui-and-kicks-fix"
+            src="intro.mp4?v=8.6-kicks-verified-live"
             muted
             playsinline
             webkit-playsinline="true"
@@ -673,40 +673,60 @@
             // === שכבת שליפה עם גיבוי דרך שרשרת CORS Proxies ===
             // nickpf.com/kick.com/kicklogz.com לא שולחים כותרות access-control-allow-origin
             // בפועל (נבדק ישירות מול כל שלושת השרתים), אז מנסים קריאה ישירה קודם, ואם היא
-            // נחסמת ע"י הדפדפן נופלים חזרה לרשימת פרוקסי ציבוריים - לא רק אחד. corsproxy.io
-            // התחיל להחזיר 403 "Server-side requests are not allowed on your plan" (נבדק
-            // ישירות מול ה-API שלו) - כלומר הסתמכות על פרוקסי בודד הופכת את שלושת מקורות
-            // הנתונים (CSGORoll, Gifted Subs, Kicks) לשבירים בבת אחת ברגע שהוא מפסיק לעבוד.
-            // עוברים ברשימה אחד אחרי השני עד שאחד מצליח. כל קריאה מוגבלת ב-timeout כדי
-            // שפרוקסי איטי/תקוע לעולם לא יתלה את כל השרשרת
+            // נחסמת ע"י הדפדפן נופלים חזרה לרשימת פרוקסי ציבוריים. הסדר והזמנים כאן מבוססים
+            // על בדיקה חיה אמיתית (לא הנחה): corsproxy.io חוסם כעת לגמרי שימוש production
+            // בטיר החינמי ("Free usage is limited to localhost and development environments")
+            // - לכן הוזז לסוף כ"אין מה להפסיד". api.allorigins.win/raw אומת כעובד באמת מול
+            // יעד אמיתי, אבל עם latency אמיתי של כ-7-9 שניות (לא באג, זו התנהגותו הרגילה) -
+            // לכן ה-timeout של קריאות פרוקסי ארוך יותר מזה של קריאות ישירות, כדי לא לבטל
+            // ניסיון שהיה עומד להצליח. api.codetabs.com נשאר כגיבוי אמצעי אך אומת כלא יציב
+            // (522 גם מול יעד פשוט ומהיר) - לא מוסר, כי לא עולה כלום לנסות
             const CORS_PROXIES = [
-                url => "https://corsproxy.io/?url=" + encodeURIComponent(url),
                 url => "https://api.allorigins.win/raw?url=" + encodeURIComponent(url),
-                url => "https://api.codetabs.com/v1/proxy?quest=" + encodeURIComponent(url)
+                url => "https://api.codetabs.com/v1/proxy?quest=" + encodeURIComponent(url),
+                url => "https://corsproxy.io/?url=" + encodeURIComponent(url)
             ];
-            const LEADERBOARD_FETCH_TIMEOUT_MS = 6000;
+            const DIRECT_FETCH_TIMEOUT_MS = 6000;
+            const PROXY_FETCH_TIMEOUT_MS = 15000;
 
-            async function fetchJson(url) {
-                const res = await fetchWithTimeout(url, { headers: { "Accept": "application/json" } }, LEADERBOARD_FETCH_TIMEOUT_MS);
+            async function fetchJson(url, timeoutMs) {
+                const res = await fetchWithTimeout(url, { headers: { "Accept": "application/json" } }, timeoutMs);
                 if (!res.ok) throw new Error("bad response: " + res.status);
                 return res.json();
             }
 
             async function fetchJsonWithProxyFallback(url) {
                 try {
-                    return await fetchJson(url);
+                    return await fetchJson(url, DIRECT_FETCH_TIMEOUT_MS);
                 } catch (directErr) {
                     // חסימת CORS, timeout, או כל כשל רשת אחר בקריאה הישירה - עוברים לרשימת
                     // הפרוקסי אחד אחרי השני, ועוצרים ברגע שאחד מהם מצליח
                     for (const buildProxyUrl of CORS_PROXIES) {
                         try {
-                            return await fetchJson(buildProxyUrl(url));
+                            return await fetchJson(buildProxyUrl(url), PROXY_FETCH_TIMEOUT_MS);
                         } catch (proxyErr) {
                             // ממשיכים לפרוקסי הבא ברשימה
                         }
                     }
                     return null;
                 }
+            }
+
+            function delay(ms) {
+                return new Promise(function (resolve) { setTimeout(resolve, ms); });
+            }
+
+            // עוטף fetchJsonWithProxyFallback בכמה ניסיונות חוזרים - נמצא בבדיקה חיה שהשרת
+            // המקורי של kicklogz.com עצמו (לא רק הפרוקסי) לא יציב (מחזיר 500/520/525 באופן
+            // בלתי סדיר בערך ב-30-40% מהקריאות, ומחלים תוך שניות) - לכן גם כשכל שרשרת
+            // הפרוקסי "נכשלת", ניסיון חוזר קצר אחריה בדרך כלל מצליח
+            async function fetchJsonWithRetries(url, attempts, delayMs) {
+                for (let i = 0; i < attempts; i++) {
+                    const result = await fetchJsonWithProxyFallback(url);
+                    if (result !== null) return result;
+                    if (i < attempts - 1) await delay(delayMs);
+                }
+                return null;
             }
 
             async function fetchMonthlyReward() {
@@ -838,15 +858,47 @@
                     .sort(function (a, b) { return b.quantity - a.quantity; });
             }
 
+            // ה-endpoint הזה מחזיר תוצאות עם pagination אמיתי (נמצא ומאומת בבדיקה חיה -
+            // pagination.totalItems/totalPages קיימים בתגובה בפועל) - עמוד 1 לבדו הוא רק
+            // 20 האירועים האחרונים. שולפים עוד עמוד אחד נוסף (לא יותר) ל"All-Time" - נבדק
+            // בפועל שהפרוקסי החינמיים הזמינים כרגע (allorigins/codetabs/corsproxy) עצמם
+            // לא יציבים לגמרי ומתחילים להיחסם/rate-limit מהר יחסית תחת עומס בקשות גבוה,
+            // אז יותר עומדים = יותר סיכוי לכשל כולל, לא פחות. עדיפות ברורה: קבלת נתונים
+            // אמיתיים כלשהם על פני עומק היסטורי מקסימלי. שני העמודים נשלפים במקביל
+            // (לא ברצף) כדי לא להכפיל את זמן ההמתנה הכולל
+            const KICKS_MAX_PAGES = 2;
+            const KICKS_FETCH_RETRY_ATTEMPTS = 2;
+            const KICKS_FETCH_RETRY_DELAY_MS = 1200;
+
+            async function fetchKicklogzPage(page) {
+                const url = `https://kicklogz.com/api/streamer/${KICKLOGZ_STREAMER_ID}/latest-gifts?page=${page}&t=${Date.now()}`;
+                return fetchJsonWithRetries(url, KICKS_FETCH_RETRY_ATTEMPTS, KICKS_FETCH_RETRY_DELAY_MS);
+            }
+
             async function loadKicksData() {
-                const data = await fetchJsonWithProxyFallback(`https://kicklogz.com/api/streamer/${KICKLOGZ_STREAMER_ID}/latest-gifts?t=${Date.now()}`);
-                if (!data || !data.success || !Array.isArray(data.data)) {
+                const firstPage = await fetchKicklogzPage(1);
+                if (!firstPage || !firstPage.success || !Array.isArray(firstPage.data)) {
                     return { allTime: [], weekly: [] };
                 }
+
+                const allEvents = firstPage.data.slice();
+                const totalPages = firstPage.pagination && typeof firstPage.pagination.totalPages === "number"
+                    ? firstPage.pagination.totalPages
+                    : 1;
+
+                if (Math.min(totalPages, KICKS_MAX_PAGES) >= 2) {
+                    // כשל בעמוד הנוסף לא מפיל את כל הפעולה - עמוד 1 כבר בידינו ומספיק כדי
+                    // להציג נתונים אמיתיים גם אם העמוד השני נכשל
+                    const secondPage = await fetchKicklogzPage(2);
+                    if (secondPage && secondPage.success && Array.isArray(secondPage.data)) {
+                        allEvents.push.apply(allEvents, secondPage.data);
+                    }
+                }
+
                 const cutoffMs = Date.now() - KICKS_WEEKLY_WINDOW_MS;
                 return {
-                    allTime: computeKicksTotals(data.data, null),
-                    weekly: computeKicksTotals(data.data, cutoffMs)
+                    allTime: computeKicksTotals(allEvents, null),
+                    weekly: computeKicksTotals(allEvents, cutoffMs)
                 };
             }
 
