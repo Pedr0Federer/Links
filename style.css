@@ -1731,6 +1731,7 @@ body.low-perf .glow-orb {
    שה-duration/delay/timing-function/fill-mode המקוריים של אנימציית הכניסה יישארו --- */
 body.low-perf .link-btn {
     animation-name: fadeInUp;
+    transition: background-color 0.15s ease, border-color 0.15s ease, opacity 0.15s ease;
 }
 
 body.low-perf .link-btn::before {
@@ -1748,6 +1749,7 @@ body.low-perf .leaderboard-podium::after {
 
 body.low-perf .podium-card {
     animation-name: podiumFadeIn;
+    transition: background-color 0.15s ease, border-color 0.15s ease, opacity 0.15s ease;
 }
 
 body.low-perf .podium-card.rank-1 .podium-medal {
@@ -1783,14 +1785,100 @@ body.low-perf .leaderboard-table-wrap {
 
 body.low-perf .leaderboard-table tbody tr {
     animation: none;
+    transition: background-color 0.15s ease, opacity 0.15s ease;
 }
 
 body.low-perf .leaderboard-table tbody td {
     animation: none;
 }
 
-/* hover/מעבר עכבר - הוחזר במלואו לזהות למצב הרגיל (ר' commit "Restore interactive hover
-   transforms..."): עכשיו כשווידאו האינטרו מדולג לגמרי במצב low-perf, יש למעבד מספיק
-   מרווח נשימה כדי לספוג גם transform/scale/filter על hover בודד ומקומי - זה שונה
-   מהותית מלולאות רקע אינסופיות (ריחוף/פעימות) או backdrop-filter שרצות/מחושבות בלי
-   הפסקה; hover הוא אירוע חד-פעמי ומקומי שהמשתמש עצמו מפעיל, לא עומס מתמשך */
+/* --- hover/מעבר עכבר קליל וזול עבור body.low-perf בלבד ===
+   transform:scale/filter מונפש/box-shadow מטושטש עדיין גורמים לגמגום מורגש גם באירוע
+   hover בודד כשהרינדור כולו על ה-CPU (כל שינוי כזה מחייב raster/paint מחדש של השכבה
+   במקום העברה זולה בקומפוזיטור). מוחלף במעברי background-color/border-color/opacity
+   בלבד - שלושתם זולים להפליא לחשב גם ברינדור תוכנה, ועדיין נותנים משוב hover מיידי
+   וברור. מצב standard (ללא low-perf) ממשיך לקבל את מלוא ה-scale/glow המקוריים,
+   ללא שום שינוי - כל הכללים כאן ממוקדים ב-body.low-perf בלבד --- */
+
+body.low-perf .profile-link:hover,
+body.low-perf .profile-link:focus-visible {
+    transform: none;
+}
+
+body.low-perf .profile-img {
+    transition: opacity 0.15s ease, border-color 0.15s ease;
+}
+
+body.low-perf .profile-link:hover .profile-img,
+body.low-perf .profile-link:focus-visible .profile-img {
+    border-color: #ffcc33;
+    box-shadow: 0 0 20px rgba(241, 164, 3, 0.4);
+    filter: none;
+    opacity: 0.92;
+}
+
+body.low-perf .tab-btn {
+    transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+
+body.low-perf .tab-btn:hover {
+    box-shadow: none;
+}
+
+body.low-perf .link-btn:hover {
+    transform: none !important;
+    filter: drop-shadow(0 8px 18px rgba(0, 0, 0, 0.35));
+    background: rgba(255, 204, 51, 0.14);
+    opacity: 0.95;
+}
+
+body.low-perf .link-btn::after {
+    display: none;
+}
+
+body.low-perf .link-btn:hover .icon {
+    animation: none;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+}
+
+body.low-perf .podium-card:hover {
+    transform: none !important;
+    opacity: 0.95;
+}
+
+body.low-perf .podium-card.rank-1:hover {
+    /* -14px = ההגבהה הקבועה של מקום ראשון גם במנוחה - כדי שהמצב לא "יקפוץ" ב-hover */
+    transform: translateY(-14px) !important;
+    opacity: 0.95;
+}
+
+body.low-perf .podium-card::after {
+    display: none;
+}
+
+body.low-perf .podium-card:hover .podium-avatar {
+    animation: none;
+}
+
+body.low-perf .leaderboard-table tbody tr:hover {
+    transform: none !important;
+    box-shadow: none;
+    opacity: 0.97;
+}
+
+body.low-perf .leaderboard-table tbody tr:hover .row-avatar {
+    animation: none;
+}
+
+body.low-perf .leaderboard-table tbody td::before {
+    display: none;
+}
+
+body.low-perf .close-modal {
+    transition: background-color 0.15s ease, border-color 0.15s ease, opacity 0.15s ease;
+}
+
+body.low-perf .close-modal:hover {
+    transform: none;
+    opacity: 0.92;
+}
