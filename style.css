@@ -94,8 +94,8 @@ body {
 }
 
 /* === רקע חלקיקים מונפש === */
-/* will-change/translate3d כאן משפרים את קומפוזיציית האלמנט מול שאר העמוד (שכבה נפרדת) -
-   אך לא את עלות הציור הפנימי של כל חלקיק, שהיא מבוססת CPU (Canvas 2D, לא WebGL) */
+/* הקנבס לא מזיז transform משלו אף פעם - הסרנו will-change/translate3d מיותר שרק אילץ
+   שכבת קומפוזיציה נוספת חסרת תועלת בזיכרון ה-GPU בלי לשפר את ביצועי הציור בפועל */
 #particles-bg {
     position: fixed;
     inset: 0;
@@ -103,11 +103,12 @@ body {
     height: 100%;
     z-index: -1;
     pointer-events: none;
-    will-change: transform;
-    transform: translate3d(0, 0, 0);
 }
 
 /* === כתמי זוהר עדינים בגוון הלוגו (זהב/כתום) === */
+/* will-change:transform כאן מבטיח שהדפדפן יקדם מוקדם לשכבת GPU נפרדת ויזכור את הביטמאפ
+   המטושטש (blur(120px) יקר לחישוב) כדי שהאנימציה תזיז רק את השכבה המוכנה מראש בכל פריים,
+   במקום לחשב את הבלור-הענק מחדש בכל שינוי transform */
 .glow-orb {
     position: fixed;
     border-radius: 50%;
@@ -115,6 +116,7 @@ body {
     opacity: 0.28;
     z-index: -1;
     pointer-events: none;
+    will-change: transform;
     animation: orbFloat 14s ease-in-out infinite;
 }
 
@@ -328,9 +330,6 @@ h1 {
     -webkit-backdrop-filter: blur(15px);
     /* עומק לעטיפה החיצונית + הבהרה עדינה בקצה העליון לתחושת זכוכית */
     box-shadow: 0 12px 32px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.06);
-    /* קידום לשכבת GPU נפרדת - עוזר לדפדפן לקומפז את הבלור ביעילות במקום לצייר מחדש כל פריים */
-    will-change: transform;
-    transform: translate3d(0, 0, 0);
 }
 
 .tab-btn {
@@ -355,8 +354,6 @@ h1 {
         color 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275),
         box-shadow 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     white-space: nowrap;
-    will-change: transform;
-    transform: translate3d(0, 0, 0);
 }
 
 .tab-btn:hover {
@@ -903,12 +900,11 @@ footer {
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
     border: 1px solid rgba(255, 220, 100, 0.45);
-    /* קידום לשכבת GPU נפרדת - עוזר לדפדפן לקומפז את הבלור ביעילות במקום לצייר מחדש כל פריים */
-    will-change: transform;
-    transform: translate3d(0, 0, 0);
 }
 
 /* כתמי אור עדינים שמרחפים מאחורי הפודיום ומעניקים עומק תלת-ממדי */
+/* will-change:transform כדי שהבלור הכבד (70px) יחושב פעם אחת ויוקפא בשכבת GPU נפרדת,
+   ולא ייצבע מחדש בכל פריים של אנימציית ה-transform האינסופית */
 .leaderboard-podium::before,
 .leaderboard-podium::after {
     content: "";
@@ -919,6 +915,7 @@ footer {
     filter: blur(70px);
     z-index: -1;
     pointer-events: none;
+    will-change: transform;
     animation: podiumGlowFloat 8s ease-in-out infinite;
 }
 
@@ -957,8 +954,9 @@ footer {
     box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
     opacity: 0;
     margin-top: 24px;
-    will-change: top;
-    /* transform נשאר חופשי לריחוף מעבר עכבר וההגבהה הקבועה של מקום ראשון (translateY סטטי) - הכניסה זזה דרך margin-top, והריחוף האיטי והעדין דרך top, כך ששתי האנימציות לא מתנגשות ב-transform */
+    /* will-change:top הוסר בכוונה - top הוא תכונת layout ולעולם לא יכול להיות compositor-only,
+       כך שההינט הזה לא סיפק שום תועלת בפועל, רק אילץ ניסיון קידום שכבה מיותר.
+       transform נשאר חופשי לריחוף מעבר עכבר וההגבהה הקבועה של מקום ראשון (translateY סטטי) - הכניסה זזה דרך margin-top, והריחוף האיטי והעדין דרך top, כך ששתי האנימציות לא מתנגשות ב-transform */
     animation: podiumFadeIn 0.6s ease-out forwards, cardFloatTop 11s ease-in-out 0.6s infinite;
     transition: transform 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275), border-color 0.3s ease;
 }
