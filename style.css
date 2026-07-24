@@ -1586,6 +1586,117 @@ footer {
     .leaderboard-table tbody td:nth-child(2) { text-align: right; }
 }
 
+/* === DONATORS - שני לוחות "טופ גיפטרים" (Kick) - All-Time ו-Weekly === */
+.donators-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    position: relative;
+}
+
+/* בלור אחד משותף מאחורי שני הכרטיסים - עקבי עם הדפוס שכבר קיים ב-#tab-home/
+   .leaderboard-glass-group, במקום backdrop-filter נפרד לכל כרטיס (שהיה מכפיל שוב
+   את מספר משטחי הבלור הבו-זמניים שכרום צריך לחשב כל פריים) */
+.donators-grid::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    pointer-events: none;
+}
+
+@media (max-width: 768px) {
+    .donators-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.donator-card {
+    /* זכוכית זהובה זהה בדיוק לכרטיסי הבית/הלידרבורד - איחוד מלא של האסתטיקה בין הטאבים */
+    background: rgba(15, 20, 10, 0.45);
+    border: 1px solid rgba(255, 220, 100, 0.45);
+    border-radius: 0 16px 0 16px;
+    clip-path: polygon(18px 0, 100% 0, 100% calc(100% - 18px), calc(100% - 18px) 100%, 0 100%, 0 18px);
+    padding: 20px 16px;
+    opacity: 0;
+    /* רק כניסה חד-פעמית - בלי ריחוף אינסופי נוסף, כדי לא להוסיף עוד לולאה מתמדת לעמוד */
+    animation: fadeInUp 0.6s ease-out forwards;
+}
+
+.donator-card-title {
+    font-size: 1rem;
+    font-weight: 900;
+    letter-spacing: 0.5px;
+    text-align: center;
+    color: #ffcc33;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8), 0 0 2px rgba(0, 0, 0, 0.9), 0 0 10px rgba(255, 204, 51, 0.3);
+    margin-bottom: 14px;
+}
+
+.donator-table-wrap {
+    border-radius: 12px;
+    overflow: hidden;
+    background: rgba(255, 255, 255, 0.02);
+}
+
+.donator-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.donator-table thead th {
+    background: rgba(255, 255, 255, 0.04);
+    color: #9a8f85;
+    font-size: 0.65rem;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 10px 8px;
+    text-align: center;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8), 0 0 2px rgba(0, 0, 0, 0.9);
+}
+
+.donator-table tbody td {
+    padding: 10px 8px;
+    text-align: center;
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: #ffffff;
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.donator-table tbody tr {
+    /* מעבר על background בלבד - זול לחישוב גם ברינדור תוכנה, בלי שום צורך בהתאמת low-perf נפרדת */
+    transition: background-color 0.2s ease;
+}
+
+.donator-table tbody tr:hover {
+    background: rgba(255, 204, 51, 0.08);
+}
+
+.donator-table .gift-count-cell {
+    color: #ffcc33;
+    font-weight: 800;
+}
+
+@media (max-width: 480px) {
+    .donator-card {
+        padding: 14px 10px;
+    }
+    .donator-card-title {
+        font-size: 0.85rem;
+    }
+    .donator-table thead th {
+        font-size: 0.58rem;
+        padding: 8px 4px;
+    }
+    .donator-table tbody td {
+        font-size: 0.75rem;
+        padding: 8px 4px;
+    }
+}
+
 /* === הגדרות לפופ-אפ (Modal) === */
 .modal-overlay {
     display: flex;
@@ -1688,9 +1799,10 @@ footer {
    כל האלמנטים שומרים על אותה פריסה/צורה/טיפוגרפיה - רק הבלור מוסר ומוחלף ברקע כהה
    ואטום משמעותית יותר, שנותן מראה "זכוכית פרימיום" דומה בלי שום עלות טשטוש בזמן ריצה */
 
-/* שתי שכבות הבלור המשותפות (המחליפות את כל 10 הבלורים הבודדים המקוריים) */
+/* שכבות הבלור המשותפות (המחליפות בלורים בודדים נפרדים לכל כרטיס/פאנל) */
 body.low-perf #tab-home.tab-panel.active::before,
-body.low-perf .leaderboard-glass-group::before {
+body.low-perf .leaderboard-glass-group::before,
+body.low-perf .donators-grid::before {
     backdrop-filter: none;
     -webkit-backdrop-filter: none;
 }
@@ -1713,7 +1825,8 @@ body.low-perf .modal-overlay {
    האינסופית שלהם למטה (באותה חתימת סלקטור), כדי לא לפצל אותו סלקטור לשני בלוקים נפרדים */
 body.low-perf .link-btn,
 body.low-perf .csgoroll-hero,
-body.low-perf .leaderboard-podium {
+body.low-perf .leaderboard-podium,
+body.low-perf .donator-card {
     background: rgba(15, 20, 10, 0.88);
 }
 

@@ -12,18 +12,18 @@
 
     <!-- Preload/preconnect - מתחילים להוריד את הנכסים הקריטיים (וידאו האינטרו, תמונת הפרופיל, גופן חיצוני)
          מוקדם ככל האפשר, במקביל לפרסור ה-HTML, במקום לחכות שהדפדפן יגיע אליהם בהמשך המסמך -->
-    <link rel="preload" as="video" href="intro.mp4?v=6.0-ultra-smooth-lowperf-hover" type="video/mp4">
+    <link rel="preload" as="video" href="intro.mp4?v=7.0-donators-tab" type="video/mp4">
     <link rel="preload" as="image" href="profile.jpg">
     <link rel="preload" as="image" href="bg-jungle.webp">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-    <link rel="stylesheet" href="style.css?v=6.0-ultra-smooth-lowperf-hover">
+    <link rel="stylesheet" href="style.css?v=7.0-donators-tab">
     <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;700;900&display=swap" rel="stylesheet">
 
     <!-- script.js נטען מוקדם עם defer - מתחיל להוריד אותו מיד (במקביל לפרסור ה-HTML) במקום להמתין
          שהפרסר יגיע לתחתית הגוף, בלי לחסום את הרינדור (defer מריץ אותו רק אחרי שה-DOM מוכן) -->
-    <script src="script.js?v=6.0-ultra-smooth-lowperf-hover" defer></script>
+    <script src="script.js?v=7.0-donators-tab" defer></script>
 </head>
 <body>
 
@@ -31,7 +31,7 @@
         <video
             class="intro-video"
             id="introVideo"
-            src="intro.mp4?v=6.0-ultra-smooth-lowperf-hover"
+            src="intro.mp4?v=7.0-donators-tab"
             muted
             playsinline
             webkit-playsinline="true"
@@ -58,6 +58,7 @@
 
             <nav class="tabs-nav">
                 <button class="tab-btn active" data-tab="home" type="button">HOME</button>
+                <button class="tab-btn" data-tab="donators" type="button">DONATORS</button>
                 <button class="tab-btn" data-tab="codes" type="button">LEADERBOARD</button>
             </nav>
 
@@ -163,6 +164,53 @@
                         </div>
                         <div class="badge-slot"></div>
                     </a>
+
+                </section>
+
+                <section class="tab-panel" id="tab-donators">
+
+                    <!-- בלור אחד משותף מאחורי שני כרטיסי הגיפטרים (ר' .donators-grid ב-CSS) - עקבי
+                         עם הדפוס שכבר קיים ב-#tab-home/.leaderboard-glass-group, במקום backdrop-filter
+                         נפרד לכל כרטיס -->
+                    <div class="donators-grid">
+
+                        <div class="donator-card">
+                            <h2 class="donator-card-title">👑 All-Time Top Gifters</h2>
+                            <div class="donator-table-wrap">
+                                <table class="donator-table" dir="ltr">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Username</th>
+                                            <th>Gifted Subs</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="donatorsAllTimeRows">
+                                        <tr><td colspan="3" class="loading-row">טוען נתונים...</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div class="donator-card">
+                            <h2 class="donator-card-title">🏆 Weekly Top Gifters</h2>
+                            <div class="donator-table-wrap">
+                                <table class="donator-table" dir="ltr">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Username</th>
+                                            <th>Gifted Subs</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="donatorsWeeklyRows">
+                                        <tr><td colspan="3" class="loading-row">טוען נתונים...</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                    </div>
 
                 </section>
 
@@ -628,6 +676,52 @@
                 renderLeaderboard(players, monthlyReward);
             }
 
+            // === DONATORS (לוחות "טופ גיפטרים" חיים מ-Kick) ===
+            // שמות המשתמשים מגיעים ממקור חיצוני/ציבורי (כל משתמש קיק יכול לבחור את שם המשתמש
+            // שלו) - בניגוד לנתוני ה-CSGORoll למעלה שמקורם בשרת מהימן של בעל האתר עצמו, כאן
+            // חובה לברוח (escape) כל תו HTML לפני הזרקה ל-innerHTML כדי למנוע XSS משם משתמש זדוני
+            function escapeHtml(str) {
+                return String(str).replace(/[&<>"']/g, function (ch) {
+                    return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[ch];
+                });
+            }
+
+            function renderDonatorTable(tbodyId, gifters) {
+                const tbody = document.getElementById(tbodyId);
+                if (!tbody) return;
+
+                if (!Array.isArray(gifters) || gifters.length === 0) {
+                    tbody.innerHTML = `<tr><td colspan="3" class="loading-row">אין נתוני מתנות עדיין</td></tr>`;
+                    return;
+                }
+
+                tbody.innerHTML = gifters.slice(0, 10).map(function (g, idx) {
+                    return `
+                        <tr>
+                            <td><span class="rank-badge">${idx + 1}</span></td>
+                            <td>${escapeHtml(g.username)}</td>
+                            <td class="gift-count-cell">🎁 ${Number(g.quantity || 0).toLocaleString("en-US")}</td>
+                        </tr>`;
+                }).join("");
+            }
+
+            function renderDonators(allTime, weekly) {
+                renderDonatorTable("donatorsAllTimeRows", allTime);
+                renderDonatorTable("donatorsWeeklyRows", weekly);
+            }
+
+            // אין לזה "נתוני גיבוי" אמיתיים כמו ל-CSGORoll (אין תמונת מצב ישנה ידועה ואמיתית
+            // לבדות) - אם השליפה נכשלת, נשארים במסך "טוען..." הראשוני עד שהפולינג התקופתי
+            // הבא מצליח, במקום להציג מספרים מומצאים
+            async function loadDonators() {
+                const data = await fetchJsonWithProxyFallback(`https://kick.com/api/v2/channels/pedrofederer/leaderboards?t=${Date.now()}`);
+                if (!data) return;
+
+                const allTime = Array.isArray(data.gifts) ? data.gifts : [];
+                const weekly = Array.isArray(data.gifts_week) ? data.gifts_week : [];
+                renderDonators(allTime, weekly);
+            }
+
             // === רענון תקופתי של הלידרבורד (כל שעה) ===
             const LEADERBOARD_POLL_INTERVAL_MS = 3600000; // שעה - איזון בין נתונים עדכניים לעומס מינימלי על השרת
             let leaderboardPollTimerId = null; // נשמר כדי למנוע יצירת אינטרוול כפול בטעות
@@ -639,6 +733,11 @@
                 lastLeaderboardFetchAt = Date.now();
                 loadLeaderboard().catch(function (err) {
                     console.warn("[leaderboard] unexpected failure during periodic refresh, previous data stays visible", err);
+                });
+                // מחוברת לאותו מחזור פולינג/אינטרוול/visibilitychange בדיוק כמו הלידרבורד -
+                // ללא אינטרוול/טיימר נפרד משלה
+                loadDonators().catch(function (err) {
+                    console.warn("[donators] unexpected failure during periodic refresh, previous data stays visible", err);
                 });
             }
 
