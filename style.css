@@ -850,7 +850,11 @@ footer {
 .csgoroll-hero {
     display: flex;
     align-items: center;
-    justify-content: center;
+    /* space-between (במקום center) - שני הלוגואים נדחפים לקצוות הפאנל, בדיוק כמו הפודיום/הטבלה
+       שכבר משתרעים מקצה לקצה, במקום להשאיר "אי" ממורכז עם שוליים ריקים בצדדים. בנייד
+       (@media max-width:768px למטה) יש override נפרד שממשיך לשמור על center - שם הלוגואים
+       קטנים והכותרת עוברת לשורות, כך שספייס-בין לא מתאים שם */
+    justify-content: space-between;
     gap: 22px;
     padding: 22px 30px;
     /* צורת "שבבים חתוכים" (ניסוי עיצובי) - תואם לכרטיסי הבית */
@@ -1299,6 +1303,10 @@ footer {
     align-items: center;
     justify-content: center;
     gap: 12px;
+    /* width:100% מפורש - display:flex כבר תופס את מלוא הרוחב הפנוי כברירת מחדל (זה לא
+       inline-flex), אבל מוצהר כאן מפורשות כדי לבטל כל ספק שהשורה אכן פרושה על כל הפאנל
+       לפני שה-flex:1 של .timer-box מחלק את הרוחב הזה בין 4 התיבות */
+    width: 100%;
 }
 
 .timer-sep {
@@ -1314,6 +1322,11 @@ footer {
     border-radius: 16px;
     padding: 18px 20px;
     min-width: 96px;
+    /* flex:1 - שתי הארבע תיבות גדלות באופן שווה כדי למלא את כל הרוחב הפנוי בפאנל הטיימר,
+       במקום להישאר ברוחב קבוע (96px) שמצטמצם לקבוצה ממורכזת עם שוליים ריקים בצדדים.
+       min-width נשאר כרצפה - התיבות לעולם לא יצטמצמו מתחתיו. הפרידות (:) שביניהן
+       נשארות צמודות לתיבות (gap קבוע), כך שהמראה המקובץ של השעון לא נשבר */
+    flex: 1;
     display: flex;
     flex-direction: column;
     align-items: center;
