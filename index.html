@@ -12,18 +12,18 @@
 
     <!-- Preload/preconnect - מתחילים להוריד את הנכסים הקריטיים (וידאו האינטרו, תמונת הפרופיל, גופן חיצוני)
          מוקדם ככל האפשר, במקביל לפרסור ה-HTML, במקום לחכות שהדפדפן יגיע אליהם בהמשך המסמך -->
-    <link rel="preload" as="video" href="intro.mp4?v=7.4-donators-animated-icons-and-sweep" type="video/mp4">
+    <link rel="preload" as="video" href="intro.mp4?v=7.5-particles-fix" type="video/mp4">
     <link rel="preload" as="image" href="profile.jpg">
     <link rel="preload" as="image" href="bg-jungle.webp">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-    <link rel="stylesheet" href="style.css?v=7.4-donators-animated-icons-and-sweep">
+    <link rel="stylesheet" href="style.css?v=7.5-particles-fix">
     <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;700;900&display=swap" rel="stylesheet">
 
     <!-- script.js נטען מוקדם עם defer - מתחיל להוריד אותו מיד (במקביל לפרסור ה-HTML) במקום להמתין
          שהפרסר יגיע לתחתית הגוף, בלי לחסום את הרינדור (defer מריץ אותו רק אחרי שה-DOM מוכן) -->
-    <script src="script.js?v=7.4-donators-animated-icons-and-sweep" defer></script>
+    <script src="script.js?v=7.5-particles-fix" defer></script>
 </head>
 <body>
 
@@ -31,7 +31,7 @@
         <video
             class="intro-video"
             id="introVideo"
-            src="intro.mp4?v=7.4-donators-animated-icons-and-sweep"
+            src="intro.mp4?v=7.5-particles-fix"
             muted
             playsinline
             webkit-playsinline="true"
@@ -451,8 +451,14 @@
                         p.y += p.vy * speedScale;
                         if (p.x < 0) p.x = canvas.width;
                         if (p.x > canvas.width) p.x = 0;
-                        // גחלים תמיד עולות כלפי מעלה - כשהן נעלמות למעלה, מפציעות מחדש למטה
-                        if (p.y < 0) p.y = canvas.height;
+                        // גחלים תמיד עולות כלפי מעלה - כשהן נעלמות למעלה, מפציעות מחדש למטה,
+                        // עם קואורדינטת X אקראית וטרייה (לא אותו X שהיה לה לפני שעלתה) - כדי
+                        // שכל "לידה מחדש" תיראה אורגנית ומפוזרת על פני כל הרוחב, ולא תיצור
+                        // "עמודות" קבועות של חלקיקים שחוזרים תמיד לאותה נקודה אנכית
+                        if (p.y < 0) {
+                            p.y = canvas.height;
+                            p.x = Math.random() * canvas.width;
+                        }
 
                         ctx.beginPath();
                         ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
@@ -468,7 +474,7 @@
             // הדפוס שכבר קיים כאן עבור mousemove/cursorGlow - במקום לבנות מחדש את כל מערך
             // החלקיקים (עד 480 אובייקטים) בכל אירוע resize בודד תוך כדי הגרירה
             let resizeRafPending = false;
-            window.addEventListener("resize", function() {
+            function scheduleParticleResize() {
                 if (!resizeRafPending) {
                     resizeRafPending = true;
                     requestAnimationFrame(function() {
@@ -477,7 +483,16 @@
                         initParticles();
                     });
                 }
-            });
+            }
+            window.addEventListener("resize", scheduleParticleResize);
+
+            // חלק מדפדפני המובייל (בעיקר ב-iOS/אנדרואיד ישנים) לא תמיד יורים "resize" רגיל
+            // כשסרגל הכתובת/הכלים מתכווץ או מתרחב תוך כדי גלילה - מה שמשנה בפועל את הגובה
+            // הזמין אבל משאיר את canvas.height "תקוע" על מדידה ישנה. visualViewport.resize
+            // הוא אירוע נפרד, מדויק יותר, שמכסה בדיוק את המקרה הזה כשהוא קיים בדפדפן
+            if (window.visualViewport) {
+                window.visualViewport.addEventListener("resize", scheduleParticleResize);
+            }
 
             resizeCanvas();
             initParticles();
