@@ -133,10 +133,12 @@ body::after {
    הסטטי (body::before, z-index:-10) - "מחליף" אותו ויזואלית בלי להסיר אותו מה-DOM - אבל
    עדיין מתחת לכל תוכן האתר האמיתי ולשכבות #particles-bg/.glow-orb שמצוירות מעליו (אותה
    שכבת z-index בדיוק, אבל אחריו בסדר ה-DOM). object-fit:cover מבטיח כיסוי מלא של המסך
-   בלי עיוות יחס-גובה-רוחב, בדיוק כמו background-size:cover של הרקע הסטטי */
+   בלי עיוות יחס-גובה-רוחב, בדיוק כמו background-size:cover של הרקע הסטטי.
+   opacity מתחיל מ-0 כדי שהתמונה הסטטית (bg-jungle.webp) תישאר גלויה חלק עד שה-JS
+   מאשר (אירוע playing/timeupdate) שהפריים הראשון באמת מוצג על המסך - רק אז נוספת
+   .loaded שמעלה ל-opacity:1 עם fade חלק, ומונעת קפיצה/הבזק ברגע טעינת הווידאו */
 .bg-video {
     display: block !important;
-    opacity: 1 !important;
     visibility: visible !important;
     position: fixed;
     top: 0;
@@ -146,6 +148,12 @@ body::after {
     object-fit: cover;
     z-index: -1;
     pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.8s ease-in-out;
+}
+
+.bg-video.loaded {
+    opacity: 1;
 }
 
 /* === רקע חלקיקים מונפש === */

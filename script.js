@@ -305,6 +305,19 @@
             removeVideoBackground(video);
         });
 
+        // מוסיפים .loaded רק אחרי אישור אמיתי שהפריים הראשון כבר מוצג על המסך (אירוע
+        // "playing", עם timeupdate כגיבוי למקרה שהדפדפן לא יורה אותו באופן עקבי) - כך
+        // ה-opacity:0->1 ב-CSS (fade חלק) מתחיל בדיוק כשיש כבר תוכן וידאו אמיתי מתחתיו,
+        // במקום לקפוץ/להבהב מעל bg-jungle.webp ברגע ההזרקה ל-DOM לפני שיש פריים לצייר
+        let markLoaded = function () {
+            video.classList.add("loaded");
+            markLoaded = function () {}; // חד-פעמי - אין צורך לרוץ שוב בכל timeupdate
+        };
+        video.addEventListener("playing", function () { markLoaded(); });
+        video.addEventListener("timeupdate", function () {
+            if (video.currentTime > 0) markLoaded();
+        });
+
         // מוסיפים כילד ה-DOM הראשון של body (לפני #particles-bg/.glow-orb, שגם הם
         // z-index:-1) כדי שהם ימשיכו לצייר מעליו באותה שכבת עומק בדיוק כמו שהיו
         // מציירים מעל הרקע הסטטי
