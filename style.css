@@ -1602,22 +1602,30 @@ footer {
     .leaderboard-table tbody td:nth-child(2) { text-align: right; }
 }
 
-/* === DONATORS - מתג פילס מפולג בין "Gifted Subs" ל-"Top Kicks" - Kicks נטענים מ-
-   data/kicks.json סטטי (מעודכן ע"י GitHub Action מתוזמן), לא מ-fetch חי/פרוקסי, אז אין
-   כאן שום צורך בלוגיקת retry/pagination - קריאה אחת פשוטה, מקור נתונים, לא רשת ===
-   שני פלחים לחיצים בתוך מיכל זכוכית כהה אחד - הפלח הפעיל מודגש, וקו התקדמות זהוב-לכתום
-   משובץ בקצה התחתון שלו עצמו (לא מסלול משותף חיצוני), וממלא ברצף על פני 8 שניות עד
-   למעבר האוטומטי הבא - ר' script.js: hover לא עוצר את זה בכוונה, רק לחיצה/Enter/Space */
+/* === DONATORS - יחידה מאוחדת אחת: מתג פילוג + שתי טבלאות הגיפטרים, עטופים יחד ב-
+   .donators-panel כדי שהמתג ייקרא כפס כותרת-משנה מחובר לתוכן שמתחתיו, לא "אי" צף נפרד
+   (בעל צורת "כדור" זהה לתפריט הראשי) ממש מתחתיו - ר' index.html === */
+.donators-panel {
+    margin-bottom: 24px;
+}
+
+/* === מתג פילוג בין "Gifted Subs" ל-"Top Kicks" - Kicks נטענים מ-data/kicks.json סטטי
+   (מעודכן ע"י GitHub Action מתוזמן), לא מ-fetch חי/פרוקסי, אז אין כאן שום צורך בלוגיקת
+   retry/pagination - קריאה אחת פשוטה, מקור נתונים, לא רשת ===
+   רוחב מלא (לא כדור ממורכז קטן כמו .tabs-nav) וקצוות תחתונים כמעט ישרים, כדי שייראה
+   בבירור כפס כותרת עליון של .donators-grid שמתחתיו ולא ככפילות של תפריט הטאבים הראשי.
+   שני פלחים לחיצים - הפלח הפעיל מודגש, וקו התקדמות זהוב-לכתום משובץ בקצה התחתון שלו
+   עצמו (לא מסלול משותף חיצוני), וממלא ברצף על פני 8 שניות עד למעבר האוטומטי הבא -
+   ר' script.js: hover לא עוצר את זה בכוונה, רק לחיצה/Enter/Space */
 .donators-toggle {
     display: flex;
     width: 100%;
-    max-width: 420px;
-    margin: 0 auto 24px;
-    gap: 4px;
-    padding: 4px;
-    border-radius: 999px;
-    background: rgba(10, 12, 8, 0.55);
-    border: 1px solid rgba(255, 204, 51, 0.25);
+    gap: 3px;
+    padding: 5px;
+    border-radius: 16px 16px 6px 6px;
+    background: rgba(15, 20, 10, 0.55);
+    border: 1px solid rgba(255, 220, 100, 0.45);
+    border-bottom: none;
     -webkit-backdrop-filter: blur(6px);
     backdrop-filter: blur(6px);
 }
@@ -1630,7 +1638,7 @@ footer {
     justify-content: center;
     padding: 11px 10px 13px;
     border: none;
-    border-radius: 999px;
+    border-radius: 10px;
     background: transparent;
     color: rgba(255, 255, 255, 0.55);
     font-family: inherit;
@@ -1876,97 +1884,17 @@ footer {
     font-weight: 800;
 }
 
+/* אייקון PNG מוטבע (cash.png ל-Kicks, gift.png ל-Gifted Subs) - גודל קבוע וקומפקטי,
+   object-fit:contain כדי שהתמונה לעולם לא תימתח/תתעוות ללא קשר ליחס הגובה-רוחב המקורי
+   שלה, drop-shadow עדין כדי להשתלב עם זוהר הזהב הכללי של הטבלה */
 .donator-quantity-icon {
     display: inline-block;
-    width: 15px;
-    height: 15px;
-    vertical-align: -2px;
-    margin-inline-end: 2px;
-}
-
-/* === ערכות צבע דינמיות לפי המצב הפעיל (Gifted Subs / Top Kicks) - מוטבעות כ-.theme-subs/
-   .theme-kicks על #tab-donators כולו (ר' setDonatorsMode ב-script.js). זהב (#ffcc33) נשאר
-   הגוון המשותף/הקבוע (כותרת הכרטיס, אייקון הכתר/גביע), רק גוון ההדגשה המשני (גבולות הכרטיס,
-   כותרות הטבלה, ותגי הכמות) מתחלף - סגול מלכותי ל-Gifted Subs, ירוק ניאון ל-Top Kicks */
-#tab-donators.theme-kicks .donator-card {
-    border-color: rgba(0, 230, 118, 0.5);
-}
-
-#tab-donators.theme-subs .donator-card {
-    border-color: rgba(156, 39, 176, 0.5);
-}
-
-/* אותה לולאת "נשימה" אמביינטית שכבר קיימת (donatorAura) - רק מתחלף שם ה-keyframe לפי
-   הערכה, כדי לצבוע אותה בהתאם. body.low-perf ממשיך לבטל את זה לגמרי ללא קשר לשם
-   ה-keyframe (ר' body.low-perf .donator-card::after למטה) */
-#tab-donators.theme-kicks .donator-card::after {
-    animation-name: donatorAuraKicks;
-}
-
-#tab-donators.theme-subs .donator-card::after {
-    animation-name: donatorAuraSubs;
-}
-
-@keyframes donatorAuraKicks {
-    0%, 100% { box-shadow: inset 0 0 18px rgba(0, 230, 118, 0.05); }
-    50% { box-shadow: inset 0 0 32px rgba(0, 230, 118, 0.2); }
-}
-
-@keyframes donatorAuraSubs {
-    0%, 100% { box-shadow: inset 0 0 18px rgba(156, 39, 176, 0.05); }
-    50% { box-shadow: inset 0 0 32px rgba(156, 39, 176, 0.2); }
-}
-
-#tab-donators.theme-kicks .donator-table thead th {
-    color: #00e676;
-    border-bottom-color: rgba(0, 230, 118, 0.55);
-    box-shadow: 0 1px 8px -2px rgba(0, 230, 118, 0.55);
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8), 0 0 8px rgba(0, 230, 118, 0.45);
-}
-
-#tab-donators.theme-subs .donator-table thead th {
-    color: #9c27b0;
-    border-bottom-color: rgba(156, 39, 176, 0.6);
-    box-shadow: 0 1px 8px -2px rgba(156, 39, 176, 0.6);
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8), 0 0 10px rgba(156, 39, 176, 0.6);
-}
-
-#tab-donators.theme-kicks .donator-table .gift-count-cell {
-    color: #00e676;
-}
-
-#tab-donators.theme-subs .donator-table .gift-count-cell {
-    color: #9c27b0;
-}
-
-#tab-donators.theme-kicks .donator-quantity-icon {
-    filter: drop-shadow(0 0 4px rgba(0, 230, 118, 0.8));
-}
-
-#tab-donators.theme-subs .donator-quantity-icon {
-    filter: drop-shadow(0 0 4px rgba(156, 39, 176, 0.8));
-}
-
-/* הפלח הפעיל במתג עצמו גם מקבל את גוון הערכה (לא רק הטבלאות למטה) - כולל פס ההתקדמות
-   המשובץ בתוכו, שעובר להדרגה דו-גונית שתואמת */
-#tab-donators.theme-kicks .donators-toggle-segment.active {
-    background: rgba(0, 230, 118, 0.18);
-    color: #00e676;
-}
-
-#tab-donators.theme-kicks .donators-toggle-segment.active .donators-toggle-segment-progress {
-    background: linear-gradient(90deg, #00e676, #ffcc33);
-    box-shadow: 0 0 12px rgba(0, 230, 118, 0.8), 0 0 4px rgba(0, 230, 118, 0.95);
-}
-
-#tab-donators.theme-subs .donators-toggle-segment.active {
-    background: rgba(156, 39, 176, 0.2);
-    color: #9c27b0;
-}
-
-#tab-donators.theme-subs .donators-toggle-segment.active .donators-toggle-segment-progress {
-    background: linear-gradient(90deg, #9c27b0, #ffcc33);
-    box-shadow: 0 0 12px rgba(156, 39, 176, 0.8), 0 0 4px rgba(156, 39, 176, 0.95);
+    width: 20px;
+    height: 20px;
+    vertical-align: middle;
+    object-fit: contain;
+    margin-inline-end: 3px;
+    filter: drop-shadow(0 1px 3px rgba(0, 0, 0, 0.6));
 }
 
 @media (max-width: 480px) {
