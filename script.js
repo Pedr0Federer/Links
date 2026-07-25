@@ -16,7 +16,7 @@
             if (!debugInfo) return false; // לא ניתן לזהות - לא מניחים את הגרוע מכל
             const renderer = String(gl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL) || "");
             return /swiftshader|software|llvmpipe|basic render/i.test(renderer);
-        } catch (e) {
+        } catch {
             return false;
         }
     }
@@ -39,7 +39,7 @@
     try {
         sessionStorage.removeItem("introPlayed");
         localStorage.removeItem("introPlayed");
-    } catch (e) {
+    } catch {
         // אחסון חסום (למשל מצב פרטי) - לא קריטי, פשוט ממשיכים
     }
 
