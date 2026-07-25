@@ -6,21 +6,24 @@
 // קוד שגיאה בלי לכתוב כלום, כך שקובץ ה-JSON הקודם (עדיין תקין) נשאר במקום, ולא מוחלף
 // בנתונים ריקים/שבורים
 //
-// משתמשים ב-curl (child_process) במקום ב-fetch המובנה של Node בכוונה - נבדק ישירות: אותה
-// בקשה בדיוק, לאותו endpoint, מצליחה תמיד דרך curl אבל נחסמת ב-403 ע"י Cloudflare דרך
-// fetch/undici של Node. כנראה טביעת אצבע TLS/HTTP שונה בין השניים - לא הונח מראש, זו
-// תוצאה של בדיקה חיה. אם בעתיד גם curl ייחסם, יהיה צורך לעבור לדפדפן אמיתי (למשל Puppeteer
-// עם stealth plugin, בדומה לפתרון שנמצא באתר אחר שמשתמש באותו endpoint)
+// משתמשים ב-Puppeteer + puppeteer-extra-plugin-stealth, לא ב-fetch/curl - נבדק ישירות
+// ובאופן חד-משמעי: מהמכונה המקומית שלי גם fetch המובנה של Node וגם curl פשוט נחסמו/עברו
+// בהתאם ל-IP, אבל בהרצה אמיתית ב-GitHub Actions (לא הונח מראש - נבדק בהרצה חיה של ה-workflow
+// עצמו) גם curl נחסם ב-403 ע"י Cloudflare - כנראה טווחי ה-IP הידועים של GitHub Actions
+// חסומים/מסומנים מראש. דפדפן headless אמיתי עם stealth plugin (בדיוק כמו הפתרון שנמצא
+// באתר אחר שמשתמש באותו endpoint פנימי) הוא הדרך היחידה שאומתה כעובדת מתוך CI בפועל
 const fs = require("fs");
 const path = require("path");
-const { execFileSync } = require("child_process");
+const puppeteer = require("puppeteer-extra");
+const StealthPlugin = require("puppeteer-extra-plugin-stealth");
+
+puppeteer.use(StealthPlugin());
 
 const CHANNEL_ID = "7940746"; // pedrofederer
 const ENDPOINT = `https://web.kick.com/api/v1/kicks/${CHANNEL_ID}/leaderboard`;
 const OUTPUT_PATH = path.join(__dirname, "..", "data", "kicks.json");
 const MAX_ATTEMPTS = 3;
 const RETRY_DELAY_MS = 5000;
-const USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36";
 
 function delay(ms) {
     return new Promise((resolve) => setTimeout(resolve, ms));
@@ -34,13 +37,21 @@ function toEntries(rawList) {
 }
 
 async function fetchKicksLeaderboard() {
-    const rawJson = execFileSync(
-        "curl",
-        ["-s", "-f", "-A", USER_AGENT, "-H", "Accept: application/json", "--max-time", "15", ENDPOINT],
-        { encoding: "utf8" }
-    );
+    const browser = await puppeteer.launch({
+        headless: "new",
+        args: ["--no-sandbox", "--disable-setuid-sandbox"],
+    });
 
-    const json = JSON.parse(rawJson);
+    let json;
+    try {
+        const page = await browser.newPage();
+        await page.goto(ENDPOINT, { waitUntil: "networkidle2", timeout: 20000 });
+        const bodyText = await page.evaluate(() => document.body.innerText);
+        json = JSON.parse(bodyText);
+    } finally {
+        await browser.close();
+    }
+
     const data = json && json.data;
     if (!data || !Array.isArray(data.kicks_gifts_lifetime)) {
         throw new Error("unexpected response shape: missing data.kicks_gifts_lifetime");

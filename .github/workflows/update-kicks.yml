@@ -20,6 +20,9 @@ jobs:
         with:
           node-version: '20'
 
+      - name: Install Puppeteer dependencies
+        run: npm install puppeteer-extra puppeteer-extra-plugin-stealth puppeteer
+
       - name: Fetch Kicks leaderboard snapshot
         run: node scripts/update-kicks.js
 
