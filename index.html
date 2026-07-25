@@ -12,18 +12,18 @@
 
     <!-- Preload/preconnect - מתחילים להוריד את הנכסים הקריטיים (וידאו האינטרו, תמונת הפרופיל, גופן חיצוני)
          מוקדם ככל האפשר, במקביל לפרסור ה-HTML, במקום לחכות שהדפדפן יגיע אליהם בהמשך המסמך -->
-    <link rel="preload" as="video" href="intro.mp4?v=8.6-kicks-verified-live" type="video/mp4">
+    <link rel="preload" as="video" href="intro.mp4?v=9.0-donators-final" type="video/mp4">
     <link rel="preload" as="image" href="profile.jpg">
     <link rel="preload" as="image" href="bg-jungle.webp">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-    <link rel="stylesheet" href="style.css?v=8.6-kicks-verified-live">
+    <link rel="stylesheet" href="style.css?v=9.0-donators-final">
     <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;700;900&display=swap" rel="stylesheet">
 
     <!-- script.js נטען מוקדם עם defer - מתחיל להוריד אותו מיד (במקביל לפרסור ה-HTML) במקום להמתין
          שהפרסר יגיע לתחתית הגוף, בלי לחסום את הרינדור (defer מריץ אותו רק אחרי שה-DOM מוכן) -->
-    <script src="script.js?v=8.6-kicks-verified-live" defer></script>
+    <script src="script.js?v=9.0-donators-final" defer></script>
 </head>
 <body>
 
@@ -31,7 +31,7 @@
         <video
             class="intro-video"
             id="introVideo"
-            src="intro.mp4?v=8.6-kicks-verified-live"
+            src="intro.mp4?v=9.0-donators-final"
             muted
             playsinline
             webkit-playsinline="true"
@@ -169,18 +169,6 @@
 
                 <section class="tab-panel" id="tab-donators">
 
-                    <!-- סבב אוטומטי בין נתוני "Gifted Subs" ו-"Top Kicks" (שניהם חיים, ר' script.js) -
-                         לחיצה/Enter/Space על האזור עצמו מחליפה מצב מיידית ומאפסת את הטיימר; מעבר
-                         ה-hover על תוכן הטאב עוצר/מאפס את קו ההתקדמות (ר' #tab-donators ב-JS/CSS) -->
-                    <div class="donators-toggle" id="donatorsToggle" role="button" tabindex="0" aria-label="החלף בין תצוגת Gifted Subs לתצוגת Top Kicks">
-                        <div class="donators-toggle-label" aria-live="polite">
-                            <span class="donators-toggle-label-text" id="donatorsModeLabel">GIFTED SUBS</span>
-                        </div>
-                        <div class="donators-toggle-progress-track" aria-hidden="true">
-                            <span class="donators-toggle-progress-fill"></span>
-                        </div>
-                    </div>
-
                     <!-- בלור אחד משותף מאחורי שני כרטיסי הגיפטרים (ר' .donators-grid ב-CSS) - עקבי
                          עם הדפוס שכבר קיים ב-#tab-home/.leaderboard-glass-group, במקום backdrop-filter
                          נפרד לכל כרטיס -->
@@ -194,7 +182,7 @@
                                         <tr>
                                             <th>RANK</th>
                                             <th>Username</th>
-                                            <th class="donators-unit-header">Gifted Subs</th>
+                                            <th>Gifted Subs</th>
                                         </tr>
                                     </thead>
                                     <tbody id="donatorsAllTimeRows">
@@ -212,7 +200,7 @@
                                         <tr>
                                             <th>RANK</th>
                                             <th>Username</th>
-                                            <th class="donators-unit-header">Gifted Subs</th>
+                                            <th>Gifted Subs</th>
                                         </tr>
                                     </thead>
                                     <tbody id="donatorsWeeklyRows">
@@ -370,16 +358,6 @@
 
                     btn.classList.add("active");
                     document.getElementById("tab-" + btn.dataset.tab).classList.add("active");
-
-                    // מחזור הרוטציה האוטומטית/קו הטיימר מתחיל כאן - לא ב-load הדף - כי הוא
-                    // תלוי במידות/צביעה אמיתיות של אלמנטים בתוך הטאב, שמחזירות 0/לא-נכון כל
-                    // עוד הטאב display:none (זו התנהגות דפדפן תקנית לכל אלמנט בתוך הורה מוסתר).
-                    // ככה אנימציית קו ההתקדמות תמיד מתחילה נקייה בדיוק כשהטאב נהיה גלוי בפועל
-                    if (btn.dataset.tab === "donators") {
-                        if (typeof startDonatorsAutoRotateCycle === "function") {
-                            startDonatorsAutoRotateCycle();
-                        }
-                    }
                 });
             });
 
@@ -671,16 +649,16 @@
             }
 
             // === שכבת שליפה עם גיבוי דרך שרשרת CORS Proxies ===
-            // nickpf.com/kick.com/kicklogz.com לא שולחים כותרות access-control-allow-origin
-            // בפועל (נבדק ישירות מול כל שלושת השרתים), אז מנסים קריאה ישירה קודם, ואם היא
-            // נחסמת ע"י הדפדפן נופלים חזרה לרשימת פרוקסי ציבוריים. הסדר והזמנים כאן מבוססים
-            // על בדיקה חיה אמיתית (לא הנחה): corsproxy.io חוסם כעת לגמרי שימוש production
-            // בטיר החינמי ("Free usage is limited to localhost and development environments")
-            // - לכן הוזז לסוף כ"אין מה להפסיד". api.allorigins.win/raw אומת כעובד באמת מול
-            // יעד אמיתי, אבל עם latency אמיתי של כ-7-9 שניות (לא באג, זו התנהגותו הרגילה) -
-            // לכן ה-timeout של קריאות פרוקסי ארוך יותר מזה של קריאות ישירות, כדי לא לבטל
-            // ניסיון שהיה עומד להצליח. api.codetabs.com נשאר כגיבוי אמצעי אך אומת כלא יציב
-            // (522 גם מול יעד פשוט ומהיר) - לא מוסר, כי לא עולה כלום לנסות
+            // nickpf.com/kick.com לא שולחים כותרות access-control-allow-origin בפועל (נבדק
+            // ישירות מול שני השרתים), אז מנסים קריאה ישירה קודם, ואם היא נחסמת ע"י הדפדפן
+            // נופלים חזרה לרשימת פרוקסי ציבוריים. הסדר מבוסס על בדיקה חיה אמיתית: corsproxy.io
+            // חוסם כעת שימוש production בטיר החינמי ("Free usage is limited to localhost and
+            // development environments") - עובד רק מ-localhost/dev, לכן הוזז לסוף כ"אין מה
+            // להפסיד" בפרודקשן האמיתי. api.allorigins.win/raw הוא הראשי - אומת כעובד מול יעד
+            // אמיתי, עם latency אופייני של כ-7-9 שניות (לא באג, זו התנהגותו הרגילה), לכן
+            // timeout קריאות פרוקסי ארוך יותר מזה של קריאות ישירות. kick.com/nickpf.com עצמם
+            // (בניגוד ל-kicklogz.com שהוסר) הם שירותים יציבים ואמינים - שכבת הפרוקסי כאן קיימת
+            // רק כדי לעקוף חוסר CORS headers, לא כדי להתמודד עם origin לא יציב
             const CORS_PROXIES = [
                 url => "https://api.allorigins.win/raw?url=" + encodeURIComponent(url),
                 url => "https://api.codetabs.com/v1/proxy?quest=" + encodeURIComponent(url),
@@ -710,23 +688,6 @@
                     }
                     return null;
                 }
-            }
-
-            function delay(ms) {
-                return new Promise(function (resolve) { setTimeout(resolve, ms); });
-            }
-
-            // עוטף fetchJsonWithProxyFallback בכמה ניסיונות חוזרים - נמצא בבדיקה חיה שהשרת
-            // המקורי של kicklogz.com עצמו (לא רק הפרוקסי) לא יציב (מחזיר 500/520/525 באופן
-            // בלתי סדיר בערך ב-30-40% מהקריאות, ומחלים תוך שניות) - לכן גם כשכל שרשרת
-            // הפרוקסי "נכשלת", ניסיון חוזר קצר אחריה בדרך כלל מצליח
-            async function fetchJsonWithRetries(url, attempts, delayMs) {
-                for (let i = 0; i < attempts; i++) {
-                    const result = await fetchJsonWithProxyFallback(url);
-                    if (result !== null) return result;
-                    if (i < attempts - 1) await delay(delayMs);
-                }
-                return null;
             }
 
             async function fetchMonthlyReward() {
@@ -780,41 +741,21 @@
                 }).join("");
             }
 
-            // === סבב אוטומטי "Gifted Subs" / "Top Kicks" ===
-            // Kick עצמו לא חושף שום מקור נתונים ל-Kicks (מטבע הפלטפורמה, נפרד ממתנות-מנוי) -
-            // נבדק ישירות מול ה-REST API (כולל מול כמה מהערוצים הגדולים ביותר בפלטפורמה) וגם
-            // מול ה-Pusher WebSocket האמיתי של Kick (wss://ws-us2.pusher.com, app key ציבורי
-            // 32cbd69e4b950bf97679 - נלכד ישירות מתעבורת הרשת של kick.com/{channel} ולא הונח
-            // מראש). כל סוגי האירועים הידועים על אותו ערוץ Pusher (giftedSubscriptions,
-            // giftsLeaderboardUpdated וכו', לפי ספריית קוד פתוח שממפה את הפרוטוקול המלא) נוגעים
-            // אך ורק ל"Gifted Subscriptions" - אין שום אירוע Kicks. זה עקבי גם עם תיעוד עזרה
-            // של Kick עצמו: תרומות/טיפים לא נתמכים באופן טבעי ב-API הפומבי שלהם כלל.
-            // KickLogz.com (כלי אנליטיקס חיצוני, לא Kick עצמו) חושף endpoint ציבורי עם עדכוני
-            // "מתנות" (Kicks) אחרונים בזמן אמת לכל ערוץ - אימות נעשה ישירות מול ה-API, לא הונח
-            // מראש: https://kicklogz.com/api/streamer/{streamerId}/latest-gifts מחזיר רשימת
-            // אירועי מתנה בודדים (לא "טבלת מובילים" מוכנה מראש) עם timestamp אמיתי לכל אחד.
-            // מצרפים (summing) את זה בעצמנו לפי שם משתמש. ה-feed מוגבל למספר מוגבל של אירועים
-            // אחרונים (לא היסטוריה מקיפה מובטחת) - "Weekly" מסונן בפועל לפי 7 הימים האחרונים
-            // (event_time אמיתי), ו-"All-Time" מצטבר על פני כל מה שה-feed מחזיר כרגע (לא
-            // היסטוריה מקיפה באמת, אבל נתונים אמיתיים במקום כרטיס placeholder - לפי הנחיה
-            // מפורשת לקבל את הפשרה הזו)
-            const KICKLOGZ_STREAMER_ID = 7940746; // מזהה pedrofederer באתר KickLogz (צד שלישי)
-            const KICKS_WEEKLY_WINDOW_MS = 7 * 24 * 60 * 60 * 1000;
-
-            let donatorsMode = "gifts"; // "gifts" | "kicks"
+            // === "Gifted Subs" - טבלאות טופ-גיפטרים (Kick) בלבד ===
+            // הוסר לגמרי מסלול "Top Kicks": נבדק ואומת (כולל ניתוח Pusher WebSocket חי מול
+            // kick.com ומול ה-REST API הרשמי) ש-Kick לא חושף שום מקור רשמי/ציבורי לנתוני Kicks
+            // (מטבע הפלטפורמה) בלי אימות משתמש. ה-endpoint הרשמי היחיד שכן קיים,
+            // /public/v1/kicks/leaderboard, דורש UserAccessToken עם scope kicks:read - כלומר
+            // OAuth מלא מול בעל הערוץ + client secret ורענון טוקן מתמשך, מה שדורש שרת/backend
+            // ותחזוקה מתמשכת. מקור שלישי (KickLogz.com) כן החזיר נתוני Kicks אמיתיים, אבל רק
+            // דרך שרשרת CORS-proxy חיצונית לא יציבה - הוחלט במפורש שלא לתחזק את זה. הטבלאות
+            // כאן חוזרות למקור היחיד היציב, הרשמי, וללא תלות בפרוקסי: kick.com/leaderboards
             let lastGiftsAllTime = [];
             let lastGiftsWeekly = [];
-            let lastKicksAllTime = [];
-            let lastKicksWeekly = [];
 
             function renderDonators() {
-                if (donatorsMode === "kicks") {
-                    renderDonatorTable("donatorsAllTimeRows", lastKicksAllTime, "אין נתוני Kicks זמינים", "⚡");
-                    renderDonatorTable("donatorsWeeklyRows", lastKicksWeekly, "אין נתוני Kicks לשבוע האחרון", "⚡");
-                } else {
-                    renderDonatorTable("donatorsAllTimeRows", lastGiftsAllTime, "אין נתוני מתנות עדיין", "🎁");
-                    renderDonatorTable("donatorsWeeklyRows", lastGiftsWeekly, "אין נתוני מתנות עדיין", "🎁");
-                }
+                renderDonatorTable("donatorsAllTimeRows", lastGiftsAllTime, "אין נתוני מתנות עדיין", "🎁");
+                renderDonatorTable("donatorsWeeklyRows", lastGiftsWeekly, "אין נתוני מתנות עדיין", "🎁");
             }
 
             // אין לזה "נתוני גיבוי" אמיתיים כמו ל-CSGORoll (אין תמונת מצב ישנה ידועה ואמיתית
@@ -827,195 +768,7 @@
                     lastGiftsWeekly = Array.isArray(data.gifts_week) ? data.gifts_week : [];
                 }
 
-                const kicks = await loadKicksData();
-                lastKicksAllTime = kicks.allTime;
-                lastKicksWeekly = kicks.weekly;
-
                 renderDonators();
-            }
-
-            // מסכם quantity לכל שם משתמש מתוך רשימת אירועי מתנה גולמית - cutoffMs=null אומר
-            // "כל האירועים שהוחזרו" (All-Time), אחרת מסנן לפי event_time אמיתי
-            function computeKicksTotals(events, cutoffMs) {
-                const totals = {};
-                events.forEach(function (event) {
-                    if (!event || typeof event.event_time !== "string") return;
-                    if (cutoffMs !== null) {
-                        // event_time מגיע כ-"YYYY-MM-DD HH:MM:SS" - ממירים לפורמט ISO תקני כדי
-                        // ש-Date יפרש אותו באופן עקבי בכל דפדפן (לא רק בכרום)
-                        const eventMs = new Date(event.event_time.replace(" ", "T") + "Z").getTime();
-                        if (!isFinite(eventMs) || eventMs < cutoffMs) return;
-                    }
-                    const username = event.sender_username;
-                    if (!username) return;
-                    totals[username] = (totals[username] || 0) + Number(event.gift_amount || 0);
-                });
-
-                return Object.keys(totals)
-                    .map(function (username) {
-                        return { username: username, quantity: totals[username] };
-                    })
-                    .sort(function (a, b) { return b.quantity - a.quantity; });
-            }
-
-            // ה-endpoint הזה מחזיר תוצאות עם pagination אמיתי (נמצא ומאומת בבדיקה חיה -
-            // pagination.totalItems/totalPages קיימים בתגובה בפועל) - עמוד 1 לבדו הוא רק
-            // 20 האירועים האחרונים. שולפים עוד עמוד אחד נוסף (לא יותר) ל"All-Time" - נבדק
-            // בפועל שהפרוקסי החינמיים הזמינים כרגע (allorigins/codetabs/corsproxy) עצמם
-            // לא יציבים לגמרי ומתחילים להיחסם/rate-limit מהר יחסית תחת עומס בקשות גבוה,
-            // אז יותר עומדים = יותר סיכוי לכשל כולל, לא פחות. עדיפות ברורה: קבלת נתונים
-            // אמיתיים כלשהם על פני עומק היסטורי מקסימלי. שני העמודים נשלפים במקביל
-            // (לא ברצף) כדי לא להכפיל את זמן ההמתנה הכולל
-            const KICKS_MAX_PAGES = 2;
-            const KICKS_FETCH_RETRY_ATTEMPTS = 2;
-            const KICKS_FETCH_RETRY_DELAY_MS = 1200;
-
-            async function fetchKicklogzPage(page) {
-                const url = `https://kicklogz.com/api/streamer/${KICKLOGZ_STREAMER_ID}/latest-gifts?page=${page}&t=${Date.now()}`;
-                return fetchJsonWithRetries(url, KICKS_FETCH_RETRY_ATTEMPTS, KICKS_FETCH_RETRY_DELAY_MS);
-            }
-
-            async function loadKicksData() {
-                const firstPage = await fetchKicklogzPage(1);
-                if (!firstPage || !firstPage.success || !Array.isArray(firstPage.data)) {
-                    return { allTime: [], weekly: [] };
-                }
-
-                const allEvents = firstPage.data.slice();
-                const totalPages = firstPage.pagination && typeof firstPage.pagination.totalPages === "number"
-                    ? firstPage.pagination.totalPages
-                    : 1;
-
-                if (Math.min(totalPages, KICKS_MAX_PAGES) >= 2) {
-                    // כשל בעמוד הנוסף לא מפיל את כל הפעולה - עמוד 1 כבר בידינו ומספיק כדי
-                    // להציג נתונים אמיתיים גם אם העמוד השני נכשל
-                    const secondPage = await fetchKicklogzPage(2);
-                    if (secondPage && secondPage.success && Array.isArray(secondPage.data)) {
-                        allEvents.push.apply(allEvents, secondPage.data);
-                    }
-                }
-
-                const cutoffMs = Date.now() - KICKS_WEEKLY_WINDOW_MS;
-                return {
-                    allTime: computeKicksTotals(allEvents, null),
-                    weekly: computeKicksTotals(allEvents, cutoffMs)
-                };
-            }
-
-            const DONATORS_COLUMN_LABELS = { gifts: "Gifted Subs", kicks: "Kicks" };
-            const DONATORS_MODE_LABELS = { gifts: "GIFTED SUBS", kicks: "TOP KICKS" };
-            const donatorsUnitHeaders = document.querySelectorAll(".donators-unit-header");
-            const donatorsTableWraps = document.querySelectorAll(".donator-table-wrap");
-            const donatorsModeLabelEl = document.getElementById("donatorsModeLabel");
-            const donatorsPanelEl = document.getElementById("tab-donators");
-
-            function setDonatorsMode(mode) {
-                if (mode === donatorsMode) return;
-                donatorsMode = mode;
-
-                // תווית הטקסט דועכת החוצה, מתחלפת, ודועכת חזרה פנימה - transition על opacity
-                // בלבד (ר' .donators-toggle-label-text ב-style.css), נשאר בעלות זולה גם
-                // ב-low-perf כי זו אנימציה חד-פעמית ומוגבלת בזמן, לא לולאה מתמדת
-                if (donatorsModeLabelEl) {
-                    donatorsModeLabelEl.classList.add("donators-label-fading");
-                    setTimeout(function () {
-                        donatorsModeLabelEl.textContent = DONATORS_MODE_LABELS[mode];
-                        donatorsModeLabelEl.classList.remove("donators-label-fading");
-                    }, 300);
-                }
-
-                donatorsUnitHeaders.forEach(function (th) {
-                    th.textContent = DONATORS_COLUMN_LABELS[mode];
-                });
-
-                // מעבר עומק/דעיכה עדין (ר' .donator-table-wrap.donators-switching ב-style.css) -
-                // מוסיפים את המחלקה (דועך החוצה), מחליפים את תוכן הטבלה כשהיא כבר שקופה, ואז
-                // מסירים אותה כדי שתדעך חזרה פנימה עם התוכן החדש. משך ההמתנה תואם בדיוק את
-                // משך ה-transition בפועל (0.15s תחת low-perf, בלי opacity בלבד; 0.25s במצב רגיל)
-                const switchDelayMs = window.isLowPerfDevice ? 150 : 250;
-                donatorsTableWraps.forEach(function (wrap) {
-                    wrap.classList.add("donators-switching");
-                });
-                setTimeout(function () {
-                    renderDonators();
-                    donatorsTableWraps.forEach(function (wrap) {
-                        wrap.classList.remove("donators-switching");
-                    });
-                }, switchDelayMs);
-            }
-
-            // === רוטציה אוטומטית + קו טיימר חזותי - מחליפה בין Gifted Subs ל-Top Kicks כל
-            // 8 שניות, ורק כשטאב ה-DONATORS בפועל פעיל/גלוי. אין יותר כפתורי בחירה ידניים -
-            // זו הדרך היחידה להחליף תצוגה כרגע. hover על תוכן הטאב עוצר ומאפס את הטיימר
-            // לגמרי (clearTimeout, לא רק דגל), כך שקו ההתקדמות תמיד משקף באמת כמה זמן נשאר.
-            //
-            // המחזור עצמו (setTimeout פשוט, לא אנימציית CSS) רץ תמיד, גם תחת body.low-perf -
-            // זה אירוע חד-פעמי כל 8 שניות, זול מספיק שאין סיבה לבטל אותו. רק קו ההתקדמות
-            // החזותי (לולאת keyframe רציפה) מבוטל תחת low-perf - startDonatorsProgressBar
-            // בודקת window.isLowPerfDevice ולא עושה כלום אם כן, בלי להשפיע על תזמון המעבר
-            // עצמו ===
-            const DONATORS_AUTO_ROTATE_MS = 8000;
-            let donatorsAutoRotateTimerId = null;
-            const donatorsProgressFillEl = document.querySelector(".donators-toggle-progress-fill");
-
-            function startDonatorsProgressBar() {
-                if (!donatorsProgressFillEl || window.isLowPerfDevice) return;
-                // הסרה+הוספה מחדש עם שני rAF עוקבים (לא void offsetWidth) כדי להפעיל את
-                // האנימציה מההתחלה בלי לכפות reflow סינכרוני על כל הדף - אותו דפוס בדיוק
-                // כמו .timer-box.tick ב-updateCountdown()
-                donatorsProgressFillEl.classList.remove("filling");
-                requestAnimationFrame(function () {
-                    requestAnimationFrame(function () {
-                        donatorsProgressFillEl.classList.add("filling");
-                    });
-                });
-            }
-
-            function stopDonatorsProgressBar() {
-                if (!donatorsProgressFillEl) return;
-                donatorsProgressFillEl.classList.remove("filling");
-            }
-
-            function startDonatorsAutoRotateCycle() {
-                clearTimeout(donatorsAutoRotateTimerId);
-                startDonatorsProgressBar();
-
-                donatorsAutoRotateTimerId = setTimeout(function () {
-                    const panel = document.getElementById("tab-donators");
-                    const isVisible = !!(panel && panel.classList.contains("active"));
-                    if (isVisible) {
-                        setDonatorsMode(donatorsMode === "gifts" ? "kicks" : "gifts");
-                    }
-                    startDonatorsAutoRotateCycle();
-                }, DONATORS_AUTO_ROTATE_MS);
-            }
-
-            function pauseDonatorsAutoRotateCycle() {
-                clearTimeout(donatorsAutoRotateTimerId);
-                stopDonatorsProgressBar();
-            }
-
-            if (donatorsPanelEl) {
-                donatorsPanelEl.addEventListener("mouseenter", pauseDonatorsAutoRotateCycle);
-                donatorsPanelEl.addEventListener("mouseleave", startDonatorsAutoRotateCycle);
-            }
-
-            // לחיצה/מקלדת (Enter/Space, תואם ARIA role="button") על אזור התווית/קו ההתקדמות
-            // מחליפה מצב באופן מיידי ומאפסת את מחזור ה-8 שניות מההתחלה - כך שהמעבר הידני
-            // לא "יבוטל" כמעט מיד ע"י המחזור האוטומטי שכבר היה בעיצומו
-            const donatorsToggleEl = document.getElementById("donatorsToggle");
-            function triggerDonatorsManualSwitch() {
-                setDonatorsMode(donatorsMode === "gifts" ? "kicks" : "gifts");
-                startDonatorsAutoRotateCycle();
-            }
-            if (donatorsToggleEl) {
-                donatorsToggleEl.addEventListener("click", triggerDonatorsManualSwitch);
-                donatorsToggleEl.addEventListener("keydown", function (e) {
-                    if (e.key === "Enter" || e.key === " " || e.key === "Spacebar") {
-                        e.preventDefault();
-                        triggerDonatorsManualSwitch();
-                    }
-                });
             }
 
             // === רענון תקופתי של הלידרבורד (כל שעה) ===
