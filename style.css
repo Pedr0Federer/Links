@@ -1602,82 +1602,79 @@ footer {
     .leaderboard-table tbody td:nth-child(2) { text-align: right; }
 }
 
-/* === DONATORS - תצוגת סבב אוטומטי מינימלית בין "Gifted Subs" ל-"Top Kicks"
-   (תווית טקסט דועכת + קו התקדמות זהוב דק, ר' index.html) - Kicks נטענים מ-data/kicks.json
-   סטטי (מעודכן ע"י GitHub Action מתוזמן), לא מ-fetch חי/פרוקסי, אז אין כאן שום צורך
-   בלוגיקת retry/pagination - קריאה אחת פשוטה, מקור נתונים, לא רשת === */
+/* === DONATORS - מתג פילס מפולג בין "Gifted Subs" ל-"Top Kicks" - Kicks נטענים מ-
+   data/kicks.json סטטי (מעודכן ע"י GitHub Action מתוזמן), לא מ-fetch חי/פרוקסי, אז אין
+   כאן שום צורך בלוגיקת retry/pagination - קריאה אחת פשוטה, מקור נתונים, לא רשת ===
+   שני פלחים לחיצים בתוך מיכל זכוכית כהה אחד - הפלח הפעיל מודגש, וקו התקדמות זהוב-לכתום
+   משובץ בקצה התחתון שלו עצמו (לא מסלול משותף חיצוני), וממלא ברצף על פני 8 שניות עד
+   למעבר האוטומטי הבא - ר' script.js: hover לא עוצר את זה בכוונה, רק לחיצה/Enter/Space */
 .donators-toggle {
     display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 12px;
-    margin-bottom: 24px;
-    cursor: pointer;
-}
-
-.donators-toggle-label {
-    display: flex;
-    justify-content: center;
-    min-height: 1.6em;
     width: 100%;
-}
-
-/* מיכל זכוכית כהה מאחורי הטקסט - ערובה שהתווית קריאה ב-100% מעל כל רקע אפשרי
-   (תמונה בהירה, וידאו, כל דבר) בלי להסתמך רק על text-shadow. transition על
-   opacity בלבד - קל וזול גם ברינדור תוכנה, ולכן לא זקוק לחריגת low-perf נפרדת
-   (עקבי עם ההחלטה הקודמת שאינטראקציה/מעבר בודד ומוגבל בזמן, לא לולאה מתמדת,
-   נשאר מלא גם ב-low-perf) */
-.donators-toggle-label-text {
-    display: inline-block;
-    padding: 6px 18px;
+    max-width: 420px;
+    margin: 0 auto 24px;
+    gap: 4px;
+    padding: 4px;
     border-radius: 999px;
     background: rgba(10, 12, 8, 0.55);
+    border: 1px solid rgba(255, 204, 51, 0.25);
     -webkit-backdrop-filter: blur(6px);
     backdrop-filter: blur(6px);
+}
+
+.donators-toggle-segment {
+    position: relative;
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 11px 10px 13px;
+    border: none;
+    border-radius: 999px;
+    background: transparent;
+    color: rgba(255, 255, 255, 0.55);
+    font-family: inherit;
+    cursor: pointer;
+    overflow: hidden;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.donators-toggle-segment-text {
+    position: relative;
+    z-index: 1;
     font-weight: 900;
-    font-size: 1.4rem;
-    letter-spacing: 2px;
+    font-size: 0.9rem;
+    letter-spacing: 1.5px;
     text-transform: uppercase;
+    text-shadow: 0 2px 6px rgba(0, 0, 0, 0.75);
+    white-space: nowrap;
+}
+
+.donators-toggle-segment:hover:not(.active) {
+    color: rgba(255, 255, 255, 0.85);
+}
+
+.donators-toggle-segment.active {
+    background: rgba(255, 204, 51, 0.16);
     color: #ffcc33;
-    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.9);
-    opacity: 1;
-    transition: opacity 0.3s ease;
 }
 
-.donators-toggle-label-text.donators-label-fading {
-    opacity: 0;
-}
-
-/* רמז חזותי עדין לכך שהאזור לחיץ - הגברת הזוהר בלבד, אין תזוזה/שינוי גודל */
-.donators-toggle:hover .donators-toggle-label-text,
-.donators-toggle:focus-visible .donators-toggle-label-text {
-    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.9), 0 0 16px rgba(255, 204, 51, 0.6);
-}
-
-/* מסלול קו ההתקדמות - עבה, ממורכז, קצוות מעוגלים, ריפוד נקי מתחת לכותרת (ר' gap
-   על .donators-toggle) */
-.donators-toggle-progress-track {
-    width: 180px;
-    max-width: 50vw;
+/* קו ההתקדמות משובץ בתוך הפלח עצמו - ממורכז אופקית לרוחב מלא, 5px עבה, קצוות מעוגלים,
+   זוהר גבוה-ניגודיות שנראה בבירור מעל כל רקע. .filling מופעל/מתאפס ע"י script.js עם
+   double-rAF כדי לא לכפות reflow סינכרוני - אותו דפוס בדיוק כמו .timer-box.tick.
+   מבוטל לגמרי תחת body.low-perf (ר' למטה) */
+.donators-toggle-segment-progress {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 0;
     height: 5px;
     border-radius: 999px;
-    background: rgba(255, 204, 51, 0.15);
-    overflow: hidden;
-}
-
-.donators-toggle-progress-fill {
-    display: block;
-    height: 100%;
-    width: 0;
-    border-radius: 999px;
     background: linear-gradient(90deg, #ffcc33, #ff8c00);
-    box-shadow: 0 0 12px rgba(255, 204, 51, 0.75), 0 0 4px rgba(255, 204, 51, 0.9);
+    box-shadow: 0 0 12px rgba(255, 204, 51, 0.8), 0 0 4px rgba(255, 204, 51, 0.95);
 }
 
-/* קו ההתקדמות ממלא לאורך 8 שניות (בדיוק כמחזור הרוטציה האוטומטית) - מבוטל לגמרי תחת
-   body.low-perf (ר' למטה); .filling מופעל/מתאפס ע"י script.js עם double-rAF כדי לא
-   לכפות reflow סינכרוני - אותו דפוס בדיוק כמו .timer-box.tick */
-.donators-toggle-progress-fill.filling {
+.donators-toggle-segment-progress.filling {
     animation: donatorsProgressFill 8s linear forwards;
 }
 
@@ -1765,10 +1762,16 @@ footer {
     margin-bottom: 14px;
 }
 
-/* אייקון כתר/גביע מונפש - ריחוף עדין (אותו דפוס תנועה כמו .csgoroll-hero-logo/-roll
-   בטאב הלידרבורד), עם זוהר drop-shadow. מבוטל לגמרי תחת body.low-perf */
+/* אייקון SVG כתר/גביע מוטבע (לא אמוג'י) - ריחוף עדין (אותו דפוס תנועה כמו .csgoroll-hero-logo/
+   -roll בטאב הלידרבורד), עם זוהר drop-shadow. נשאר זהב קבוע בשתי הערכות בכוונה (משותף לשתי
+   הפלטות הצבע), כדי לא "להתחרות" עם צבע ה-fill המשתנה של תגי הכמות בטבלה. מבוטל לגמרי תחת
+   body.low-perf */
 .donator-icon {
     display: inline-block;
+    width: 20px;
+    height: 20px;
+    vertical-align: -5px;
+    color: #ffcc33;
     filter: drop-shadow(0 0 6px rgba(255, 204, 51, 0.5));
     animation: donatorIconFloat 3.4s ease-in-out infinite;
 }
@@ -1871,6 +1874,99 @@ footer {
 .donator-table .gift-count-cell {
     color: #ffcc33;
     font-weight: 800;
+}
+
+.donator-quantity-icon {
+    display: inline-block;
+    width: 15px;
+    height: 15px;
+    vertical-align: -2px;
+    margin-inline-end: 2px;
+}
+
+/* === ערכות צבע דינמיות לפי המצב הפעיל (Gifted Subs / Top Kicks) - מוטבעות כ-.theme-subs/
+   .theme-kicks על #tab-donators כולו (ר' setDonatorsMode ב-script.js). זהב (#ffcc33) נשאר
+   הגוון המשותף/הקבוע (כותרת הכרטיס, אייקון הכתר/גביע), רק גוון ההדגשה המשני (גבולות הכרטיס,
+   כותרות הטבלה, ותגי הכמות) מתחלף - סגול מלכותי ל-Gifted Subs, ירוק ניאון ל-Top Kicks */
+#tab-donators.theme-kicks .donator-card {
+    border-color: rgba(0, 230, 118, 0.5);
+}
+
+#tab-donators.theme-subs .donator-card {
+    border-color: rgba(156, 39, 176, 0.5);
+}
+
+/* אותה לולאת "נשימה" אמביינטית שכבר קיימת (donatorAura) - רק מתחלף שם ה-keyframe לפי
+   הערכה, כדי לצבוע אותה בהתאם. body.low-perf ממשיך לבטל את זה לגמרי ללא קשר לשם
+   ה-keyframe (ר' body.low-perf .donator-card::after למטה) */
+#tab-donators.theme-kicks .donator-card::after {
+    animation-name: donatorAuraKicks;
+}
+
+#tab-donators.theme-subs .donator-card::after {
+    animation-name: donatorAuraSubs;
+}
+
+@keyframes donatorAuraKicks {
+    0%, 100% { box-shadow: inset 0 0 18px rgba(0, 230, 118, 0.05); }
+    50% { box-shadow: inset 0 0 32px rgba(0, 230, 118, 0.2); }
+}
+
+@keyframes donatorAuraSubs {
+    0%, 100% { box-shadow: inset 0 0 18px rgba(156, 39, 176, 0.05); }
+    50% { box-shadow: inset 0 0 32px rgba(156, 39, 176, 0.2); }
+}
+
+#tab-donators.theme-kicks .donator-table thead th {
+    color: #00e676;
+    border-bottom-color: rgba(0, 230, 118, 0.55);
+    box-shadow: 0 1px 8px -2px rgba(0, 230, 118, 0.55);
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8), 0 0 8px rgba(0, 230, 118, 0.45);
+}
+
+#tab-donators.theme-subs .donator-table thead th {
+    color: #9c27b0;
+    border-bottom-color: rgba(156, 39, 176, 0.6);
+    box-shadow: 0 1px 8px -2px rgba(156, 39, 176, 0.6);
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8), 0 0 10px rgba(156, 39, 176, 0.6);
+}
+
+#tab-donators.theme-kicks .donator-table .gift-count-cell {
+    color: #00e676;
+}
+
+#tab-donators.theme-subs .donator-table .gift-count-cell {
+    color: #9c27b0;
+}
+
+#tab-donators.theme-kicks .donator-quantity-icon {
+    filter: drop-shadow(0 0 4px rgba(0, 230, 118, 0.8));
+}
+
+#tab-donators.theme-subs .donator-quantity-icon {
+    filter: drop-shadow(0 0 4px rgba(156, 39, 176, 0.8));
+}
+
+/* הפלח הפעיל במתג עצמו גם מקבל את גוון הערכה (לא רק הטבלאות למטה) - כולל פס ההתקדמות
+   המשובץ בתוכו, שעובר להדרגה דו-גונית שתואמת */
+#tab-donators.theme-kicks .donators-toggle-segment.active {
+    background: rgba(0, 230, 118, 0.18);
+    color: #00e676;
+}
+
+#tab-donators.theme-kicks .donators-toggle-segment.active .donators-toggle-segment-progress {
+    background: linear-gradient(90deg, #00e676, #ffcc33);
+    box-shadow: 0 0 12px rgba(0, 230, 118, 0.8), 0 0 4px rgba(0, 230, 118, 0.95);
+}
+
+#tab-donators.theme-subs .donators-toggle-segment.active {
+    background: rgba(156, 39, 176, 0.2);
+    color: #9c27b0;
+}
+
+#tab-donators.theme-subs .donators-toggle-segment.active .donators-toggle-segment-progress {
+    background: linear-gradient(90deg, #9c27b0, #ffcc33);
+    box-shadow: 0 0 12px rgba(156, 39, 176, 0.8), 0 0 4px rgba(156, 39, 176, 0.95);
 }
 
 @media (max-width: 480px) {
@@ -2012,13 +2108,13 @@ body.low-perf .tabs-nav {
    מחלקת .filling תתווסף בטעות ע"י script.js. המעבר בין Gifted Subs ל-Top Kicks עצמו
    ממשיך לקרות כרגיל דרך טיימר JS פשוט (setTimeout חד-פעמי, לא אנימציית CSS) - זה זול
    מספיק שאין צורך לבטל אותו, רק את הציור הרציף של הקו החזותי */
-body.low-perf .donators-toggle-progress-track {
+body.low-perf .donators-toggle-segment-progress {
     display: none;
 }
 
-/* מיכל הזכוכית מאחורי התווית - מבטלים את ה-blur (יקר ברינדור תוכנה) ומחליפים ברקע אטום
+/* מיכל הזכוכית מאחורי המתג - מבטלים את ה-blur (יקר ברינדור תוכנה) ומחליפים ברקע אטום
    יותר, שנותן ניגודיות זהה מול כל רקע בלי שום עלות טשטוש בזמן ריצה */
-body.low-perf .donators-toggle-label-text {
+body.low-perf .donators-toggle {
     backdrop-filter: none;
     -webkit-backdrop-filter: none;
     background: rgba(8, 10, 6, 0.82);

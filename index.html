@@ -12,18 +12,18 @@
 
     <!-- Preload/preconnect - מתחילים להוריד את הנכסים הקריטיים (וידאו האינטרו, תמונת הפרופיל, גופן חיצוני)
          מוקדם ככל האפשר, במקביל לפרסור ה-HTML, במקום לחכות שהדפדפן יגיע אליהם בהמשך המסמך -->
-    <link rel="preload" as="video" href="intro.mp4?v=10.0-automated-kicks-snapshot" type="video/mp4">
+    <link rel="preload" as="video" href="intro.mp4?v=10.1-ui-theme-overhaul" type="video/mp4">
     <link rel="preload" as="image" href="profile.jpg">
     <link rel="preload" as="image" href="bg-jungle.webp">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-    <link rel="stylesheet" href="style.css?v=10.0-automated-kicks-snapshot">
+    <link rel="stylesheet" href="style.css?v=10.1-ui-theme-overhaul">
     <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;700;900&display=swap" rel="stylesheet">
 
     <!-- script.js נטען מוקדם עם defer - מתחיל להוריד אותו מיד (במקביל לפרסור ה-HTML) במקום להמתין
          שהפרסר יגיע לתחתית הגוף, בלי לחסום את הרינדור (defer מריץ אותו רק אחרי שה-DOM מוכן) -->
-    <script src="script.js?v=10.0-automated-kicks-snapshot" defer></script>
+    <script src="script.js?v=10.1-ui-theme-overhaul" defer></script>
 </head>
 <body>
 
@@ -31,7 +31,7 @@
         <video
             class="intro-video"
             id="introVideo"
-            src="intro.mp4?v=10.0-automated-kicks-snapshot"
+            src="intro.mp4?v=10.1-ui-theme-overhaul"
             muted
             playsinline
             webkit-playsinline="true"
@@ -169,17 +169,19 @@
 
                 <section class="tab-panel" id="tab-donators">
 
-                    <!-- סבב אוטומטי בין נתוני "Gifted Subs" ו-"Top Kicks" (Kicks נטענים מ-data/kicks.json
-                         סטטי, מעודכן ע"י GitHub Action מתוזמן - ר' script.js) - לחיצה/Enter/Space על האזור
-                         עצמו מחליפה מצב מיידית ומאפסת את הטיימר; מעבר ה-hover על תוכן הטאב עוצר/מאפס את
-                         קו ההתקדמות (ר' #tab-donators ב-JS/CSS) -->
-                    <div class="donators-toggle" id="donatorsToggle" role="button" tabindex="0" aria-label="החלף בין תצוגת Gifted Subs לתצוגת Top Kicks">
-                        <div class="donators-toggle-label" aria-live="polite">
-                            <span class="donators-toggle-label-text" id="donatorsModeLabel">GIFTED SUBS</span>
-                        </div>
-                        <div class="donators-toggle-progress-track" aria-hidden="true">
-                            <span class="donators-toggle-progress-fill"></span>
-                        </div>
+                    <!-- מתג פילס מפולג בין "Gifted Subs" ו-"Top Kicks" (Kicks נטענים מ-data/kicks.json
+                         סטטי, מעודכן ע"י GitHub Action מתוזמן - ר' script.js). לחיצה על כל פלח עוברת
+                         ישירות לתצוגה שלו; קו ההתקדמות בתחתית הפלח הפעיל ממלא ברצף על פני 8 שניות
+                         עד למעבר אוטומטי הבא - ללא עצירה ב-hover בכוונה (ר' #tab-donators ב-JS/CSS) -->
+                    <div class="donators-toggle" id="donatorsToggle" role="tablist" aria-label="בחירת תצוגת גיפטרים">
+                        <button type="button" class="donators-toggle-segment active" data-mode="gifts" role="tab" aria-selected="true">
+                            <span class="donators-toggle-segment-text">GIFTED SUBS</span>
+                            <span class="donators-toggle-segment-progress" aria-hidden="true"></span>
+                        </button>
+                        <button type="button" class="donators-toggle-segment" data-mode="kicks" role="tab" aria-selected="false">
+                            <span class="donators-toggle-segment-text">TOP KICKS</span>
+                            <span class="donators-toggle-segment-progress" aria-hidden="true"></span>
+                        </button>
                     </div>
 
                     <!-- בלור אחד משותף מאחורי שני כרטיסי הגיפטרים (ר' .donators-grid ב-CSS) - עקבי
@@ -188,7 +190,13 @@
                     <div class="donators-grid">
 
                         <div class="donator-card">
-                            <h2 class="donator-card-title"><span class="donator-icon" aria-hidden="true">👑</span> All-Time Top Gifters</h2>
+                            <h2 class="donator-card-title">
+                                <svg class="donator-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false">
+                                    <path d="M3 18L5 7l3.5 5L12 6l3.5 6L19 7l2 11H3z"/>
+                                    <rect x="4" y="19" width="16" height="2" rx="1"/>
+                                </svg>
+                                All-Time Top Gifters
+                            </h2>
                             <div class="donator-table-wrap">
                                 <table class="donator-table" dir="ltr">
                                     <thead>
@@ -206,7 +214,15 @@
                         </div>
 
                         <div class="donator-card">
-                            <h2 class="donator-card-title"><span class="donator-icon" aria-hidden="true">🏆</span> Weekly Top Gifters</h2>
+                            <h2 class="donator-card-title">
+                                <svg class="donator-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false">
+                                    <path d="M7 4h10v6c0 2.8-2.2 5-5 5s-5-2.2-5-5V4z"/>
+                                    <path d="M11 15h2v3h3v2H8v-2h3v-3z"/>
+                                    <path d="M5 5H3v2c0 1.7 1.3 3 3 3V8c-.6 0-1-.4-1-1V5z"/>
+                                    <path d="M19 5h2v2c0 1.7-1.3 3-3 3V8c.6 0 1-.4 1-1V5z"/>
+                                </svg>
+                                Weekly Top Gifters
+                            </h2>
                             <div class="donator-table-wrap">
                                 <table class="donator-table" dir="ltr">
                                     <thead>
@@ -745,7 +761,14 @@
                 });
             }
 
-            function renderDonatorTable(tbodyId, gifters, emptyMessage, icon) {
+            // תגי SVG מוטבעים (לא אמוג'י) לכמות המתנות/Kicks בכל שורה - fill="currentColor" כדי
+            // שהצבע ינבע מ-color שנקבע ב-CSS לפי הערכה הפעילה (theme-subs/theme-kicks)
+            const DONATORS_ICONS = {
+                gifts: '<svg class="donator-quantity-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false"><rect x="4" y="9" width="16" height="11" rx="1"/><rect x="4" y="6" width="16" height="4" rx="1"/><rect x="10.5" y="6" width="3" height="14" opacity="0.4"/><circle cx="9" cy="5" r="2"/><circle cx="15" cy="5" r="2"/></svg>',
+                kicks: '<svg class="donator-quantity-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false"><path d="M13 2 4 14h6l-1 8 9-12h-6l1-8z"/></svg>'
+            };
+
+            function renderDonatorTable(tbodyId, gifters, emptyMessage, iconSvg) {
                 const tbody = document.getElementById(tbodyId);
                 if (!tbody) return;
 
@@ -759,7 +782,7 @@
                         <tr>
                             <td><span class="rank-badge">${idx + 1}</span></td>
                             <td>${escapeHtml(g.username)}</td>
-                            <td class="gift-count-cell">${icon} ${Number(g.quantity || 0).toLocaleString("en-US")}</td>
+                            <td class="gift-count-cell">${iconSvg} ${Number(g.quantity || 0).toLocaleString("en-US")}</td>
                         </tr>`;
                 }).join("");
             }
@@ -784,11 +807,11 @@
 
             function renderDonators() {
                 if (donatorsMode === "kicks") {
-                    renderDonatorTable("donatorsAllTimeRows", lastKicksAllTime, "אין נתוני Kicks זמינים", "⚡");
-                    renderDonatorTable("donatorsWeeklyRows", lastKicksWeekly, "אין נתוני Kicks לשבוע האחרון", "⚡");
+                    renderDonatorTable("donatorsAllTimeRows", lastKicksAllTime, "אין נתוני Kicks זמינים", DONATORS_ICONS.kicks);
+                    renderDonatorTable("donatorsWeeklyRows", lastKicksWeekly, "אין נתוני Kicks לשבוע האחרון", DONATORS_ICONS.kicks);
                 } else {
-                    renderDonatorTable("donatorsAllTimeRows", lastGiftsAllTime, "אין נתוני מתנות עדיין", "🎁");
-                    renderDonatorTable("donatorsWeeklyRows", lastGiftsWeekly, "אין נתוני מתנות עדיין", "🎁");
+                    renderDonatorTable("donatorsAllTimeRows", lastGiftsAllTime, "אין נתוני מתנות עדיין", DONATORS_ICONS.gifts);
+                    renderDonatorTable("donatorsWeeklyRows", lastGiftsWeekly, "אין נתוני מתנות עדיין", DONATORS_ICONS.gifts);
                 }
             }
 
@@ -828,26 +851,33 @@
             }
 
             const DONATORS_COLUMN_LABELS = { gifts: "Gifted Subs", kicks: "Kicks" };
-            const DONATORS_MODE_LABELS = { gifts: "GIFTED SUBS", kicks: "TOP KICKS" };
+            // מחלקת ה"ערכה" (צבעוניות) שמוטבעת על הפאנל כולו לפי המצב הפעיל - לא קשורה לשם
+            // הפנימי "gifts"/"kicks" של donatorsMode, רק המיפוי הוויזואלי החוצה
+            const DONATORS_THEME_CLASSES = { gifts: "theme-subs", kicks: "theme-kicks" };
             let donatorsMode = "gifts"; // "gifts" | "kicks"
             const donatorsUnitHeaders = document.querySelectorAll(".donators-unit-header");
             const donatorsTableWraps = document.querySelectorAll(".donator-table-wrap");
-            const donatorsModeLabelEl = document.getElementById("donatorsModeLabel");
+            const donatorsToggleEl = document.getElementById("donatorsToggle");
+            const donatorsSegments = donatorsToggleEl ? donatorsToggleEl.querySelectorAll(".donators-toggle-segment") : [];
             const donatorsPanelEl = document.getElementById("tab-donators");
+
+            if (donatorsPanelEl) {
+                donatorsPanelEl.classList.add(DONATORS_THEME_CLASSES[donatorsMode]);
+            }
 
             function setDonatorsMode(mode) {
                 if (mode === donatorsMode) return;
                 donatorsMode = mode;
 
-                // תווית הטקסט דועכת החוצה, מתחלפת, ודועכת חזרה פנימה - transition על opacity
-                // בלבד (ר' .donators-toggle-label-text ב-style.css), נשאר בעלות זולה גם
-                // ב-low-perf כי זו אנימציה חד-פעמית ומוגבלת בזמן, לא לולאה מתמדת
-                if (donatorsModeLabelEl) {
-                    donatorsModeLabelEl.classList.add("donators-label-fading");
-                    setTimeout(function () {
-                        donatorsModeLabelEl.textContent = DONATORS_MODE_LABELS[mode];
-                        donatorsModeLabelEl.classList.remove("donators-label-fading");
-                    }, 300);
+                donatorsSegments.forEach(function (segment) {
+                    const isActive = segment.dataset.mode === mode;
+                    segment.classList.toggle("active", isActive);
+                    segment.setAttribute("aria-selected", isActive ? "true" : "false");
+                });
+
+                if (donatorsPanelEl) {
+                    donatorsPanelEl.classList.remove("theme-subs", "theme-kicks");
+                    donatorsPanelEl.classList.add(DONATORS_THEME_CLASSES[mode]);
                 }
 
                 donatorsUnitHeaders.forEach(function (th) {
@@ -869,9 +899,9 @@
             }
 
             // === רוטציה אוטומטית + קו טיימר חזותי - מחליפה בין Gifted Subs ל-Top Kicks כל
-            // 8 שניות, ורק כשטאב ה-DONATORS בפועל פעיל/גלוי. hover על תוכן הטאב עוצר ומאפס את
-            // הטיימר לגמרי (clearTimeout, לא רק דגל), כך שקו ההתקדמות תמיד משקף באמת כמה זמן
-            // נשאר. לחיצה/מקלדת על האזור מחליפה מצב מיידית ומאפסת את המחזור.
+            // 8 שניות, ורק כשטאב ה-DONATORS בפועל פעיל/גלוי. בכוונה *אין* כאן עצירה ב-hover -
+            // קו ההתקדמות ממלא ברצף בלי הפרעה עד למעבר האוטומטי הבא; לחיצה על פלח (או Enter/
+            // Space, מובנה בתגי <button>) היא הדרך היחידה לעצור/לאפס את המחזור באמצע.
             //
             // המחזור עצמו (setTimeout פשוט, לא אנימציית CSS) רץ תמיד, גם תחת body.low-perf -
             // זה אירוע חד-פעמי כל 8 שניות, זול מספיק שאין סיבה לבטל אותו. רק קו ההתקדמות
@@ -880,24 +910,33 @@
             // עצמו ===
             const DONATORS_AUTO_ROTATE_MS = 8000;
             let donatorsAutoRotateTimerId = null;
-            const donatorsProgressFillEl = document.querySelector(".donators-toggle-progress-fill");
+
+            // קו ההתקדמות משובץ בתוך הפלח הפעיל עצמו (לא מסלול נפרד משותף) - יש שניים, אחד
+            // לכל פלח, ורק זה שבפלח הפעיל אי פעם מקבל את מחלקת .filling
+            function getActiveSegmentProgressEl() {
+                return donatorsToggleEl
+                    ? donatorsToggleEl.querySelector(".donators-toggle-segment.active .donators-toggle-segment-progress")
+                    : null;
+            }
 
             function startDonatorsProgressBar() {
-                if (!donatorsProgressFillEl || window.isLowPerfDevice) return;
+                // מאפסים את שני הפלחים תמיד (לא רק את הפעיל) - מבטיח שלפלח שהפך לא-פעיל לא
+                // יישאר קו מלא "תקוע" מהמחזור הקודם
+                donatorsToggleEl && donatorsToggleEl.querySelectorAll(".donators-toggle-segment-progress").forEach(function (el) {
+                    el.classList.remove("filling");
+                });
+                if (window.isLowPerfDevice) return;
+
+                const activeProgressEl = getActiveSegmentProgressEl();
+                if (!activeProgressEl) return;
                 // הסרה+הוספה מחדש עם שני rAF עוקבים (לא void offsetWidth) כדי להפעיל את
                 // האנימציה מההתחלה בלי לכפות reflow סינכרוני על כל הדף - אותו דפוס בדיוק
                 // כמו .timer-box.tick ב-updateCountdown()
-                donatorsProgressFillEl.classList.remove("filling");
                 requestAnimationFrame(function () {
                     requestAnimationFrame(function () {
-                        donatorsProgressFillEl.classList.add("filling");
+                        activeProgressEl.classList.add("filling");
                     });
                 });
-            }
-
-            function stopDonatorsProgressBar() {
-                if (!donatorsProgressFillEl) return;
-                donatorsProgressFillEl.classList.remove("filling");
             }
 
             function startDonatorsAutoRotateCycle() {
@@ -914,33 +953,16 @@
                 }, DONATORS_AUTO_ROTATE_MS);
             }
 
-            function pauseDonatorsAutoRotateCycle() {
-                clearTimeout(donatorsAutoRotateTimerId);
-                stopDonatorsProgressBar();
-            }
-
-            if (donatorsPanelEl) {
-                donatorsPanelEl.addEventListener("mouseenter", pauseDonatorsAutoRotateCycle);
-                donatorsPanelEl.addEventListener("mouseleave", startDonatorsAutoRotateCycle);
-            }
-
-            // לחיצה/מקלדת (Enter/Space, תואם ARIA role="button") על אזור התווית/קו ההתקדמות
-            // מחליפה מצב באופן מיידי ומאפסת את מחזור ה-8 שניות מההתחלה - כך שהמעבר הידני
-            // לא "יבוטל" כמעט מיד ע"י המחזור האוטומטי שכבר היה בעיצומו
-            const donatorsToggleEl = document.getElementById("donatorsToggle");
-            function triggerDonatorsManualSwitch() {
-                setDonatorsMode(donatorsMode === "gifts" ? "kicks" : "gifts");
-                startDonatorsAutoRotateCycle();
-            }
-            if (donatorsToggleEl) {
-                donatorsToggleEl.addEventListener("click", triggerDonatorsManualSwitch);
-                donatorsToggleEl.addEventListener("keydown", function (e) {
-                    if (e.key === "Enter" || e.key === " " || e.key === "Spacebar") {
-                        e.preventDefault();
-                        triggerDonatorsManualSwitch();
-                    }
+            // לחיצה (או Enter/Space, מובנה בתגי <button>) על פלח בוחרת אותו ישירות ומאפסת
+            // את מחזור ה-8 שניות מההתחלה - כך שהבחירה הידנית לא "מתבטלת" כמעט מיד ע"י
+            // המחזור האוטומטי שכבר היה בעיצומו
+            donatorsSegments.forEach(function (segment) {
+                segment.addEventListener("click", function () {
+                    if (segment.dataset.mode === donatorsMode) return;
+                    setDonatorsMode(segment.dataset.mode);
+                    startDonatorsAutoRotateCycle();
                 });
-            }
+            });
 
             // === רענון תקופתי של הלידרבורד (כל שעה) ===
             const LEADERBOARD_POLL_INTERVAL_MS = 3600000; // שעה - איזון בין נתונים עדכניים לעומס מינימלי על השרת
