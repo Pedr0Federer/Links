@@ -113,6 +113,23 @@ body {
     background: linear-gradient(135deg, #ffcc33, #ff9900);
 }
 
+/* === רקע וידאו (מותנה חומרה) - מוזרק ל-DOM ע"י script.js רק אחרי שנקבע במלואו שהאצת
+   חומרה פעילה ו-low-perf כבוי (ר' initVideoBackground). z-index:-1 שם אותו מעל הרקע
+   הסטטי (body::before, z-index:-10) - "מחליף" אותו ויזואלית בלי להסיר אותו מה-DOM - אבל
+   עדיין מתחת לכל תוכן האתר האמיתי ולשכבות #particles-bg/.glow-orb שמצוירות מעליו (אותה
+   שכבת z-index בדיוק, אבל אחריו בסדר ה-DOM). object-fit:cover מבטיח כיסוי מלא של המסך
+   בלי עיוות יחס-גובה-רוחב, בדיוק כמו background-size:cover של הרקע הסטטי */
+.bg-video {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    object-fit: cover;
+    z-index: -1;
+    pointer-events: none;
+}
+
 /* === רקע חלקיקים מונפש === */
 /* הקנבס לא מזיז transform משלו אף פעם - הסרנו will-change/translate3d מיותר שרק אילץ
    שכבת קומפוזיציה נוספת חסרת תועלת בזיכרון ה-GPU בלי לשפר את ביצועי הציור בפועל */
@@ -2159,6 +2176,13 @@ body.low-perf .leaderboard-podium {
    כי filter:blur(120px) על אלמנט מונפש הוא בעצמו עבודה יקרה מאוד ללא האצת GPU */
 body.low-perf #particles-bg,
 body.low-perf .glow-orb {
+    display: none;
+}
+
+/* STRICTLY DISABLE: הגנת-יתר ברמת ה-CSS בנוסף לחסימה ב-JS עצמו (initVideoBackground
+   ב-script.js לעולם לא מוסיף את .bg-video ל-DOM תחת low-perf מלכתחילה) - display:none
+   כאן הוא הבטחה כפולה שהוא לעולם לא יצויר/יפוענח גם אם איכשהו כן הוזרק */
+body.low-perf .bg-video {
     display: none;
 }
 

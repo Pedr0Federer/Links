@@ -210,7 +210,76 @@
         if (window.isLowPerfDevice && document.body) {
             document.body.classList.add("low-perf");
         }
+
+        // ההחלטה על רקע הווידאו מחכה בכוונה לרגע הזה (סוף מדידת ה-FPS), לא רק לבדיקת
+        // ה-WebGL הסינכרונית שלמעלה - ר' initVideoBackground להסבר המלא
+        if (typeof window.initVideoBackground === "function") {
+            window.initVideoBackground();
+        }
     }
 
     requestAnimationFrame(samplePerformance);
+})();
+
+// === רקע וידאו - מותנה לגמרי בהאצת חומרה פעילה + low-perf כבוי, ורק אחרי שהקביעה
+// הסופית ידועה (ר' הקריאה מלמעלה, בסוף מדידת ה-FPS הא-סינכרונית - לא רק הבדיקה
+// הסינכרונית המיידית) - כדי למנוע בדיוק את התרחיש שגרם לבעיות בגרסה קודמת של התכונה
+// הזו באתר הזה (ר' היסטוריית git: נוגן, התגלה כבד, הוסר תוך כדי ניגון - "הבזק" מיותר
+// וגם בזבוז של הורדה/פענוח שכבר קרו לשווא). הרקע הסטטי (bg-jungle.webp, ר' body::before
+// ב-style.css) הוא ברירת המחדל הבטוחה תמיד - זמין מהרגע הראשון בלי תלות בהחלטה הזו,
+// וממשיך לשמש כרשת ביטחון (מוסתר ויזואלית מתחת לווידאו רק כשהוא באמת מתחיל לנגן
+// בהצלחה, לעולם לא מוסר מה-DOM)
+(function () {
+    "use strict";
+
+    const VIDEO_BG_SRC = "assets/media/BackVid.mp4";
+    let alreadyDecided = false;
+
+    function removeVideoBackground(video) {
+        if (video && video.parentNode) video.parentNode.removeChild(video);
+    }
+
+    window.initVideoBackground = function () {
+        // נקרא פעם אחת בלבד לאורך חיי העמוד - מדידת ה-FPS עצמה כבר לא חוזרת על עצמה,
+        // אבל ההגנה כאן מפורשת ליתר ביטחון
+        if (alreadyDecided) return;
+        alreadyDecided = true;
+
+        if (window.isLowPerfDevice) return;
+        // עקבי עם ההעדפה שכבר מכובדת באתר עבור אנימציות CSS אחרות (ר' style.css) -
+        // וידאו רקע נגן-אוטומטית הוא בדיוק סוג התנועה שההעדפה הזו נועדה לצמצם
+        try {
+            if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+        } catch (e) {
+            // matchMedia לא זמין/נכשל - לא נחשב סיבה לחסום, ממשיכים כרגיל
+        }
+
+        const video = document.createElement("video");
+        video.id = "bgVideo";
+        video.className = "bg-video";
+        video.src = VIDEO_BG_SRC;
+        video.loop = true;
+        video.muted = true;
+        video.defaultMuted = true;
+        video.playsInline = true;
+        video.setAttribute("aria-hidden", "true");
+        video.setAttribute("tabindex", "-1");
+
+        // כשל טעינה (קובץ חסר/שבור/רשת) - מסירים לגמרי, הרקע הסטטי שכבר קיים ממשיך
+        // להיראות בדיוק כפי שנראה עד עכשיו, בלי שום מעבר/הבזק מורגש
+        video.addEventListener("error", function () {
+            removeVideoBackground(video);
+        });
+
+        // מוסיפים כילד ה-DOM הראשון של body (לפני #particles-bg/.glow-orb, שגם הם
+        // z-index:-1) כדי שהם ימשיכו לצייר מעליו באותה שכבת עומק בדיוק כמו שהיו
+        // מציירים מעל הרקע הסטטי
+        document.body.insertBefore(video, document.body.firstChild);
+
+        video.play().catch(function () {
+            // מדיניות autoplay חסמה ניגון (נדיר עבור מושתק, אבל קורה) - מסירים לגמרי
+            // במקום להשאיר <video> שחור/ריק תקוע במקום הרקע התקין
+            removeVideoBackground(video);
+        });
+    };
 })();
