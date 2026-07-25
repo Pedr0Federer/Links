@@ -297,6 +297,15 @@
         video.preload = "auto";
         video.setAttribute("aria-hidden", "true");
         video.setAttribute("tabindex", "-1");
+        // בנוסף לתכונות ה-JS למעלה (autoplay/loop/muted/playsInline) - מוסיפים גם את
+        // תגי ה-HTML המפורשים ישירות, בדיוק כמו וידאו האינטרו (ר' index.html, introVideo),
+        // כדי להבטיח שהן תמיד מופיעות ב-DOM המוצג בפועל בכל דפדפן/build, ללא תלות
+        // בפרטי ה-reflection הפנימיים של כל תכונת IDL
+        video.setAttribute("autoplay", "");
+        video.setAttribute("loop", "");
+        video.setAttribute("muted", "");
+        video.setAttribute("playsinline", "");
+        video.setAttribute("webkit-playsinline", "true");
 
         // כשל טעינה (קובץ חסר/שבור/רשת) - מסירים לגמרי, הרקע הסטטי שכבר קיים ממשיך
         // להיראות בדיוק כפי שנראה עד עכשיו, בלי שום מעבר/הבזק מורגש

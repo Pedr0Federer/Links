@@ -150,6 +150,16 @@ body::after {
     pointer-events: none;
     opacity: 0;
     transition: opacity 0.8s ease-in-out;
+    /* מקדם את הווידאו לשכבת קומפוזיציה עצמאית קבועה בכוח - עוקף באג ידוע ב-Brave (וכמה
+       בילדים מבוססי-Chromium אחרים) שבו וידאו רקע position:fixed/z-index:-1 "קופא" על
+       פריים סטטי ומתקדם רק כשאירוע repaint חיצוני (כמו גלילה) מכריח את הדפדפן לצייר
+       מחדש - נובע מכך שהאלמנט לא מקודם לשכבת GPU עצמאית, כך שעדכוני הטקסטורה שלו תלויים
+       באותו מחזור paint כמו שאר העמוד (כולל שכבות backdrop-filter כמו .modal-overlay
+       שמצוירת מעליו בטעינת הדף) במקום להתעדכן ישירות דרך ה-compositor thread בכל פריים,
+       ללא תלות בפעילות main-thread */
+    transform: translateZ(0);
+    will-change: transform, opacity;
+    backface-visibility: hidden;
 }
 
 .bg-video.loaded {
