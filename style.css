@@ -136,7 +136,7 @@ body::after {
    בלי עיוות יחס-גובה-רוחב, בדיוק כמו background-size:cover של הרקע הסטטי.
    opacity מתחיל מ-0 כדי שהתמונה הסטטית (bg-jungle.webp) תישאר גלויה חלק עד שה-JS
    מאשר (אירוע canplaythrough) שהדפדפן בטוח שהווידאו יכול להתנגן ברצף בלי עוד באפרינג -
-   רק אז האלמנט מוזרק ל-DOM ומקבל .loaded שמעלה ל-opacity:1 עם fade חלק (1 שנייה),
+   רק אז האלמנט מוזרק ל-DOM ומקבל .loaded שמעלה ל-opacity:1 עם fade חלק (1.2 שניות),
    ומונעת קפיצה/הבזק ברגע טעינת הווידאו */
 .bg-video {
     display: block !important;
@@ -150,7 +150,7 @@ body::after {
     z-index: -1;
     pointer-events: none;
     opacity: 0;
-    transition: opacity 1.0s ease-in-out;
+    transition: opacity 1.2s ease-in-out;
 }
 
 .bg-video.loaded {
@@ -463,6 +463,22 @@ h1 {
         inset 0 -3px 8px rgba(120, 50, 0, 0.25),
         0 8px 22px rgba(255, 140, 0, 0.45),
         0 0 30px rgba(255, 204, 51, 0.35);
+}
+
+/* "LEADERBOARD" (11 תווים) הוא המילה הארוכה מבין שלוש הכרטיסיות - ב-padding/font-size
+   הבסיסיים (28px/0.95rem, מיועדים לדסקטופ) היא גולשת מחוץ לגבול הכרטיסייה שלה במסכים
+   צרים. min-width:0 הוא התיקון המרכזי כאן - flex:1 לבדו (כבר קיים למעלה) לא מספיק כי
+   ברירת המחדל של פריט flex היא min-width:auto, שמונעת ממנו לכווץ מתחת לרוחב התוכן
+   הטבעי שלו (bit.ly/flexbox-min-width-auto) - בלי לבטל את זה, שלוש הכרטיסיות ביחד
+   פשוט דוחסות את ה-.tabs-nav ההורה לגלוש. קיים כבר override נפרד וחזק יותר תחת
+   @media max-width:420px למטה (0.72rem) שממשיך לחול/לנצח כאן במסכים הצרים עוד יותר */
+@media (max-width: 480px) {
+    .tab-btn {
+        flex: 1 1 0px;
+        min-width: 0;
+        padding: 8px 4px;
+        font-size: 0.78rem;
+    }
 }
 
 /* === רשימת הקישורים === */
