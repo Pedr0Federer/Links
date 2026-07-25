@@ -1602,6 +1602,90 @@ footer {
     .leaderboard-table tbody td:nth-child(2) { text-align: right; }
 }
 
+/* === DONATORS - תצוגת סבב אוטומטי מינימלית בין "Gifted Subs" ל-"Top Kicks"
+   (תווית טקסט דועכת + קו התקדמות זהוב דק, ר' index.html) - Kicks נטענים מ-data/kicks.json
+   סטטי (מעודכן ע"י GitHub Action מתוזמן), לא מ-fetch חי/פרוקסי, אז אין כאן שום צורך
+   בלוגיקת retry/pagination - קריאה אחת פשוטה, מקור נתונים, לא רשת === */
+.donators-toggle {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 24px;
+    cursor: pointer;
+}
+
+.donators-toggle-label {
+    display: flex;
+    justify-content: center;
+    min-height: 1.6em;
+    width: 100%;
+}
+
+/* מיכל זכוכית כהה מאחורי הטקסט - ערובה שהתווית קריאה ב-100% מעל כל רקע אפשרי
+   (תמונה בהירה, וידאו, כל דבר) בלי להסתמך רק על text-shadow. transition על
+   opacity בלבד - קל וזול גם ברינדור תוכנה, ולכן לא זקוק לחריגת low-perf נפרדת
+   (עקבי עם ההחלטה הקודמת שאינטראקציה/מעבר בודד ומוגבל בזמן, לא לולאה מתמדת,
+   נשאר מלא גם ב-low-perf) */
+.donators-toggle-label-text {
+    display: inline-block;
+    padding: 6px 18px;
+    border-radius: 999px;
+    background: rgba(10, 12, 8, 0.55);
+    -webkit-backdrop-filter: blur(6px);
+    backdrop-filter: blur(6px);
+    font-weight: 900;
+    font-size: 1.4rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #ffcc33;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.9);
+    opacity: 1;
+    transition: opacity 0.3s ease;
+}
+
+.donators-toggle-label-text.donators-label-fading {
+    opacity: 0;
+}
+
+/* רמז חזותי עדין לכך שהאזור לחיץ - הגברת הזוהר בלבד, אין תזוזה/שינוי גודל */
+.donators-toggle:hover .donators-toggle-label-text,
+.donators-toggle:focus-visible .donators-toggle-label-text {
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.9), 0 0 16px rgba(255, 204, 51, 0.6);
+}
+
+/* מסלול קו ההתקדמות - עבה, ממורכז, קצוות מעוגלים, ריפוד נקי מתחת לכותרת (ר' gap
+   על .donators-toggle) */
+.donators-toggle-progress-track {
+    width: 180px;
+    max-width: 50vw;
+    height: 5px;
+    border-radius: 999px;
+    background: rgba(255, 204, 51, 0.15);
+    overflow: hidden;
+}
+
+.donators-toggle-progress-fill {
+    display: block;
+    height: 100%;
+    width: 0;
+    border-radius: 999px;
+    background: linear-gradient(90deg, #ffcc33, #ff8c00);
+    box-shadow: 0 0 12px rgba(255, 204, 51, 0.75), 0 0 4px rgba(255, 204, 51, 0.9);
+}
+
+/* קו ההתקדמות ממלא לאורך 8 שניות (בדיוק כמחזור הרוטציה האוטומטית) - מבוטל לגמרי תחת
+   body.low-perf (ר' למטה); .filling מופעל/מתאפס ע"י script.js עם double-rAF כדי לא
+   לכפות reflow סינכרוני - אותו דפוס בדיוק כמו .timer-box.tick */
+.donators-toggle-progress-fill.filling {
+    animation: donatorsProgressFill 8s linear forwards;
+}
+
+@keyframes donatorsProgressFill {
+    from { width: 0%; }
+    to { width: 100%; }
+}
+
 /* === DONATORS - שני לוחות "טופ גיפטרים" (Kick) - All-Time ו-Weekly === */
 .donators-grid {
     display: grid;
@@ -1698,10 +1782,21 @@ footer {
     50% { transform: translateY(-4px); }
 }
 
+/* מעבר עומק/דעיכה עדין כשמחליפים מצב (Gifted Subs <-> Top Kicks) - script.js מוסיף/מסיר
+   את .donators-switching סביב עדכון תוכן הטבלה. תחת body.low-perf (למטה) מוגבל אך ורק
+   ל-opacity - transform מבוטל לגמרי */
 .donator-table-wrap {
     border-radius: 12px;
     overflow: hidden;
     background: rgba(255, 255, 255, 0.02);
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+.donator-table-wrap.donators-switching {
+    opacity: 0;
+    transform: translateY(10px) scale(0.98);
 }
 
 .donator-table {
@@ -1912,6 +2007,23 @@ body.low-perf .tabs-nav {
     background: rgba(15, 20, 10, 0.88);
 }
 
+/* STRICTLY DISABLE: קו ההתקדמות המתמלא (לולאת keyframe רציפה, לא אירוע חד-פעמי) מבוטל
+   לגמרי תחת low-perf - display:none כאן הוא הבטחה כפולה שלא ייצרך שום ציור אפילו אם
+   מחלקת .filling תתווסף בטעות ע"י script.js. המעבר בין Gifted Subs ל-Top Kicks עצמו
+   ממשיך לקרות כרגיל דרך טיימר JS פשוט (setTimeout חד-פעמי, לא אנימציית CSS) - זה זול
+   מספיק שאין צורך לבטל אותו, רק את הציור הרציף של הקו החזותי */
+body.low-perf .donators-toggle-progress-track {
+    display: none;
+}
+
+/* מיכל הזכוכית מאחורי התווית - מבטלים את ה-blur (יקר ברינדור תוכנה) ומחליפים ברקע אטום
+   יותר, שנותן ניגודיות זהה מול כל רקע בלי שום עלות טשטוש בזמן ריצה */
+body.low-perf .donators-toggle-label-text {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    background: rgba(8, 10, 6, 0.82);
+}
+
 body.low-perf .modal-overlay {
     backdrop-filter: none;
     -webkit-backdrop-filter: none;
@@ -1968,6 +2080,17 @@ body.low-perf .donator-card::after {
 /* אייקון הכתר/גביע מרחף - מבוטל לגמרי תחת low-perf, נשאר סטטי */
 body.low-perf .donator-icon {
     animation: none;
+}
+
+/* STRICTLY DISABLE: מעבר החלפת המצב (Gifted Subs <-> Top Kicks) מוגבל אך ורק ל-opacity
+   מהיר - transform:translateY/scale מבוטל לגמרי, בלי שום עומק/הזזה מונפשים */
+body.low-perf .donator-table-wrap {
+    transform: none;
+    transition: opacity 0.15s ease;
+}
+
+body.low-perf .donator-table-wrap.donators-switching {
+    transform: none;
 }
 
 body.low-perf .leaderboard-podium::before,

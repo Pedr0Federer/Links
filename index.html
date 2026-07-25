@@ -12,18 +12,18 @@
 
     <!-- Preload/preconnect - מתחילים להוריד את הנכסים הקריטיים (וידאו האינטרו, תמונת הפרופיל, גופן חיצוני)
          מוקדם ככל האפשר, במקביל לפרסור ה-HTML, במקום לחכות שהדפדפן יגיע אליהם בהמשך המסמך -->
-    <link rel="preload" as="video" href="intro.mp4?v=9.0-donators-final" type="video/mp4">
+    <link rel="preload" as="video" href="intro.mp4?v=10.0-automated-kicks-snapshot" type="video/mp4">
     <link rel="preload" as="image" href="profile.jpg">
     <link rel="preload" as="image" href="bg-jungle.webp">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-    <link rel="stylesheet" href="style.css?v=9.0-donators-final">
+    <link rel="stylesheet" href="style.css?v=10.0-automated-kicks-snapshot">
     <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;700;900&display=swap" rel="stylesheet">
 
     <!-- script.js נטען מוקדם עם defer - מתחיל להוריד אותו מיד (במקביל לפרסור ה-HTML) במקום להמתין
          שהפרסר יגיע לתחתית הגוף, בלי לחסום את הרינדור (defer מריץ אותו רק אחרי שה-DOM מוכן) -->
-    <script src="script.js?v=9.0-donators-final" defer></script>
+    <script src="script.js?v=10.0-automated-kicks-snapshot" defer></script>
 </head>
 <body>
 
@@ -31,7 +31,7 @@
         <video
             class="intro-video"
             id="introVideo"
-            src="intro.mp4?v=9.0-donators-final"
+            src="intro.mp4?v=10.0-automated-kicks-snapshot"
             muted
             playsinline
             webkit-playsinline="true"
@@ -169,6 +169,19 @@
 
                 <section class="tab-panel" id="tab-donators">
 
+                    <!-- סבב אוטומטי בין נתוני "Gifted Subs" ו-"Top Kicks" (Kicks נטענים מ-data/kicks.json
+                         סטטי, מעודכן ע"י GitHub Action מתוזמן - ר' script.js) - לחיצה/Enter/Space על האזור
+                         עצמו מחליפה מצב מיידית ומאפסת את הטיימר; מעבר ה-hover על תוכן הטאב עוצר/מאפס את
+                         קו ההתקדמות (ר' #tab-donators ב-JS/CSS) -->
+                    <div class="donators-toggle" id="donatorsToggle" role="button" tabindex="0" aria-label="החלף בין תצוגת Gifted Subs לתצוגת Top Kicks">
+                        <div class="donators-toggle-label" aria-live="polite">
+                            <span class="donators-toggle-label-text" id="donatorsModeLabel">GIFTED SUBS</span>
+                        </div>
+                        <div class="donators-toggle-progress-track" aria-hidden="true">
+                            <span class="donators-toggle-progress-fill"></span>
+                        </div>
+                    </div>
+
                     <!-- בלור אחד משותף מאחורי שני כרטיסי הגיפטרים (ר' .donators-grid ב-CSS) - עקבי
                          עם הדפוס שכבר קיים ב-#tab-home/.leaderboard-glass-group, במקום backdrop-filter
                          נפרד לכל כרטיס -->
@@ -182,7 +195,7 @@
                                         <tr>
                                             <th>RANK</th>
                                             <th>Username</th>
-                                            <th>Gifted Subs</th>
+                                            <th class="donators-unit-header">Gifted Subs</th>
                                         </tr>
                                     </thead>
                                     <tbody id="donatorsAllTimeRows">
@@ -200,7 +213,7 @@
                                         <tr>
                                             <th>RANK</th>
                                             <th>Username</th>
-                                            <th>Gifted Subs</th>
+                                            <th class="donators-unit-header">Gifted Subs</th>
                                         </tr>
                                     </thead>
                                     <tbody id="donatorsWeeklyRows">
@@ -358,6 +371,16 @@
 
                     btn.classList.add("active");
                     document.getElementById("tab-" + btn.dataset.tab).classList.add("active");
+
+                    // מחזור הרוטציה האוטומטית/קו הטיימר מתחיל כאן - לא ב-load הדף - כי הוא
+                    // תלוי במידות/צביעה אמיתיות של אלמנטים בתוך הטאב, שמחזירות 0/לא-נכון כל
+                    // עוד הטאב display:none (זו התנהגות דפדפן תקנית לכל אלמנט בתוך הורה מוסתר).
+                    // ככה אנימציית קו ההתקדמות תמיד מתחילה נקייה בדיוק כשהטאב נהיה גלוי בפועל
+                    if (btn.dataset.tab === "donators") {
+                        if (typeof startDonatorsAutoRotateCycle === "function") {
+                            startDonatorsAutoRotateCycle();
+                        }
+                    }
                 });
             });
 
@@ -741,21 +764,32 @@
                 }).join("");
             }
 
-            // === "Gifted Subs" - טבלאות טופ-גיפטרים (Kick) בלבד ===
-            // הוסר לגמרי מסלול "Top Kicks": נבדק ואומת (כולל ניתוח Pusher WebSocket חי מול
-            // kick.com ומול ה-REST API הרשמי) ש-Kick לא חושף שום מקור רשמי/ציבורי לנתוני Kicks
-            // (מטבע הפלטפורמה) בלי אימות משתמש. ה-endpoint הרשמי היחיד שכן קיים,
-            // /public/v1/kicks/leaderboard, דורש UserAccessToken עם scope kicks:read - כלומר
-            // OAuth מלא מול בעל הערוץ + client secret ורענון טוקן מתמשך, מה שדורש שרת/backend
-            // ותחזוקה מתמשכת. מקור שלישי (KickLogz.com) כן החזיר נתוני Kicks אמיתיים, אבל רק
-            // דרך שרשרת CORS-proxy חיצונית לא יציבה - הוחלט במפורש שלא לתחזק את זה. הטבלאות
-            // כאן חוזרות למקור היחיד היציב, הרשמי, וללא תלות בפרוקסי: kick.com/leaderboards
+            // === סבב אוטומטי "Gifted Subs" / "Top Kicks" ===
+            // Gifted Subs: קריאה חיה ישירה ל-kick.com (עם גיבוי פרוקסי, ר' fetchJsonWithProxyFallback
+            // למעלה) - זה מקור רשמי, יציב, מהיר, ולא זקוק לשום דבר מעבר לזה.
+            //
+            // Top Kicks: kick.com לא חושף נתוני Kicks (מטבע הפלטפורמה) בשום endpoint ציבורי-רשמי
+            // בלי OAuth מול בעל הערוץ (נבדק ואומת בעבר). הפתרון: web.kick.com/api/v1/kicks/{id}/leaderboard
+            // הוא endpoint פנימי לא-מתועד של Kick עצמו (לא צד שלישי) שמחזיר נתונים אמיתיים בלי
+            // OAuth - התגלה בבדיקת קוד פתוח (ציבורי) של אתר דומה של סטרימר אחר שמשתמש באותו
+            // endpoint. מכיוון שאין לו CORS headers והוא לא בהכרח יציב מספיק לקריאה חיה בכל טעינת
+            // עמוד (ולפי הנחיה מפורשת של המשתמש), הוא *לא* נקרא ישירות מהדפדפן - GitHub Action
+            // מתוזמן (ר' .github/workflows/update-kicks.yml) קורא לו כל 15-30 דקות בצד השרת וכותב
+            // תמונת מצב סטטית ל-data/kicks.json, שהעמוד קורא בקריאת fetch רגילה, מקומית (same-origin,
+            // בלי CORS/פרוקסי/latency רשת חיצונית בכלל) - זהה בעלות ל-fetch של קובץ JS/CSS רגיל
             let lastGiftsAllTime = [];
             let lastGiftsWeekly = [];
+            let lastKicksAllTime = [];
+            let lastKicksWeekly = [];
 
             function renderDonators() {
-                renderDonatorTable("donatorsAllTimeRows", lastGiftsAllTime, "אין נתוני מתנות עדיין", "🎁");
-                renderDonatorTable("donatorsWeeklyRows", lastGiftsWeekly, "אין נתוני מתנות עדיין", "🎁");
+                if (donatorsMode === "kicks") {
+                    renderDonatorTable("donatorsAllTimeRows", lastKicksAllTime, "אין נתוני Kicks זמינים", "⚡");
+                    renderDonatorTable("donatorsWeeklyRows", lastKicksWeekly, "אין נתוני Kicks לשבוע האחרון", "⚡");
+                } else {
+                    renderDonatorTable("donatorsAllTimeRows", lastGiftsAllTime, "אין נתוני מתנות עדיין", "🎁");
+                    renderDonatorTable("donatorsWeeklyRows", lastGiftsWeekly, "אין נתוני מתנות עדיין", "🎁");
+                }
             }
 
             // אין לזה "נתוני גיבוי" אמיתיים כמו ל-CSGORoll (אין תמונת מצב ישנה ידועה ואמיתית
@@ -768,7 +802,144 @@
                     lastGiftsWeekly = Array.isArray(data.gifts_week) ? data.gifts_week : [];
                 }
 
+                const kicks = await loadKicksSnapshot();
+                lastKicksAllTime = kicks.lifetime;
+                lastKicksWeekly = kicks.weekly;
+
                 renderDonators();
+            }
+
+            // קריאה מקומית פשוטה, בלי proxy/retry/timeout ארוך - data/kicks.json הוא קובץ סטטי
+            // באותו origin בדיוק כמו index.html/style.css עצמם, לא endpoint רשת חיצוני. הקובץ
+            // עשוי לא להתקיים עדיין (ריצה ראשונה של ה-GitHub Action טרם קרתה) - זה לא נחשב שגיאה,
+            // פשוט חוזרים עם רשימות ריקות ו-renderDonatorTable מציג הודעת "אין נתונים" רגילה
+            async function loadKicksSnapshot() {
+                try {
+                    const res = await fetch(`data/kicks.json?t=${Date.now()}`, { headers: { "Accept": "application/json" } });
+                    if (!res.ok) return { lifetime: [], weekly: [] };
+                    const data = await res.json();
+                    return {
+                        lifetime: Array.isArray(data.lifetime) ? data.lifetime : [],
+                        weekly: Array.isArray(data.weekly) ? data.weekly : []
+                    };
+                } catch (err) {
+                    return { lifetime: [], weekly: [] };
+                }
+            }
+
+            const DONATORS_COLUMN_LABELS = { gifts: "Gifted Subs", kicks: "Kicks" };
+            const DONATORS_MODE_LABELS = { gifts: "GIFTED SUBS", kicks: "TOP KICKS" };
+            let donatorsMode = "gifts"; // "gifts" | "kicks"
+            const donatorsUnitHeaders = document.querySelectorAll(".donators-unit-header");
+            const donatorsTableWraps = document.querySelectorAll(".donator-table-wrap");
+            const donatorsModeLabelEl = document.getElementById("donatorsModeLabel");
+            const donatorsPanelEl = document.getElementById("tab-donators");
+
+            function setDonatorsMode(mode) {
+                if (mode === donatorsMode) return;
+                donatorsMode = mode;
+
+                // תווית הטקסט דועכת החוצה, מתחלפת, ודועכת חזרה פנימה - transition על opacity
+                // בלבד (ר' .donators-toggle-label-text ב-style.css), נשאר בעלות זולה גם
+                // ב-low-perf כי זו אנימציה חד-פעמית ומוגבלת בזמן, לא לולאה מתמדת
+                if (donatorsModeLabelEl) {
+                    donatorsModeLabelEl.classList.add("donators-label-fading");
+                    setTimeout(function () {
+                        donatorsModeLabelEl.textContent = DONATORS_MODE_LABELS[mode];
+                        donatorsModeLabelEl.classList.remove("donators-label-fading");
+                    }, 300);
+                }
+
+                donatorsUnitHeaders.forEach(function (th) {
+                    th.textContent = DONATORS_COLUMN_LABELS[mode];
+                });
+
+                // מעבר עומק/דעיכה עדין - מוסיפים את המחלקה (דועך החוצה), מחליפים את תוכן הטבלה
+                // כשהיא כבר שקופה, ואז מסירים אותה כדי שתדעך חזרה פנימה עם התוכן החדש
+                const switchDelayMs = window.isLowPerfDevice ? 150 : 250;
+                donatorsTableWraps.forEach(function (wrap) {
+                    wrap.classList.add("donators-switching");
+                });
+                setTimeout(function () {
+                    renderDonators();
+                    donatorsTableWraps.forEach(function (wrap) {
+                        wrap.classList.remove("donators-switching");
+                    });
+                }, switchDelayMs);
+            }
+
+            // === רוטציה אוטומטית + קו טיימר חזותי - מחליפה בין Gifted Subs ל-Top Kicks כל
+            // 8 שניות, ורק כשטאב ה-DONATORS בפועל פעיל/גלוי. hover על תוכן הטאב עוצר ומאפס את
+            // הטיימר לגמרי (clearTimeout, לא רק דגל), כך שקו ההתקדמות תמיד משקף באמת כמה זמן
+            // נשאר. לחיצה/מקלדת על האזור מחליפה מצב מיידית ומאפסת את המחזור.
+            //
+            // המחזור עצמו (setTimeout פשוט, לא אנימציית CSS) רץ תמיד, גם תחת body.low-perf -
+            // זה אירוע חד-פעמי כל 8 שניות, זול מספיק שאין סיבה לבטל אותו. רק קו ההתקדמות
+            // החזותי (לולאת keyframe רציפה) מבוטל תחת low-perf - startDonatorsProgressBar
+            // בודקת window.isLowPerfDevice ולא עושה כלום אם כן, בלי להשפיע על תזמון המעבר
+            // עצמו ===
+            const DONATORS_AUTO_ROTATE_MS = 8000;
+            let donatorsAutoRotateTimerId = null;
+            const donatorsProgressFillEl = document.querySelector(".donators-toggle-progress-fill");
+
+            function startDonatorsProgressBar() {
+                if (!donatorsProgressFillEl || window.isLowPerfDevice) return;
+                // הסרה+הוספה מחדש עם שני rAF עוקבים (לא void offsetWidth) כדי להפעיל את
+                // האנימציה מההתחלה בלי לכפות reflow סינכרוני על כל הדף - אותו דפוס בדיוק
+                // כמו .timer-box.tick ב-updateCountdown()
+                donatorsProgressFillEl.classList.remove("filling");
+                requestAnimationFrame(function () {
+                    requestAnimationFrame(function () {
+                        donatorsProgressFillEl.classList.add("filling");
+                    });
+                });
+            }
+
+            function stopDonatorsProgressBar() {
+                if (!donatorsProgressFillEl) return;
+                donatorsProgressFillEl.classList.remove("filling");
+            }
+
+            function startDonatorsAutoRotateCycle() {
+                clearTimeout(donatorsAutoRotateTimerId);
+                startDonatorsProgressBar();
+
+                donatorsAutoRotateTimerId = setTimeout(function () {
+                    const panel = document.getElementById("tab-donators");
+                    const isVisible = !!(panel && panel.classList.contains("active"));
+                    if (isVisible) {
+                        setDonatorsMode(donatorsMode === "gifts" ? "kicks" : "gifts");
+                    }
+                    startDonatorsAutoRotateCycle();
+                }, DONATORS_AUTO_ROTATE_MS);
+            }
+
+            function pauseDonatorsAutoRotateCycle() {
+                clearTimeout(donatorsAutoRotateTimerId);
+                stopDonatorsProgressBar();
+            }
+
+            if (donatorsPanelEl) {
+                donatorsPanelEl.addEventListener("mouseenter", pauseDonatorsAutoRotateCycle);
+                donatorsPanelEl.addEventListener("mouseleave", startDonatorsAutoRotateCycle);
+            }
+
+            // לחיצה/מקלדת (Enter/Space, תואם ARIA role="button") על אזור התווית/קו ההתקדמות
+            // מחליפה מצב באופן מיידי ומאפסת את מחזור ה-8 שניות מההתחלה - כך שהמעבר הידני
+            // לא "יבוטל" כמעט מיד ע"י המחזור האוטומטי שכבר היה בעיצומו
+            const donatorsToggleEl = document.getElementById("donatorsToggle");
+            function triggerDonatorsManualSwitch() {
+                setDonatorsMode(donatorsMode === "gifts" ? "kicks" : "gifts");
+                startDonatorsAutoRotateCycle();
+            }
+            if (donatorsToggleEl) {
+                donatorsToggleEl.addEventListener("click", triggerDonatorsManualSwitch);
+                donatorsToggleEl.addEventListener("keydown", function (e) {
+                    if (e.key === "Enter" || e.key === " " || e.key === "Spacebar") {
+                        e.preventDefault();
+                        triggerDonatorsManualSwitch();
+                    }
+                });
             }
 
             // === רענון תקופתי של הלידרבורד (כל שעה) ===
