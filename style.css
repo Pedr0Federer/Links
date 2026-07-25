@@ -135,9 +135,8 @@ body::after {
    שכבת z-index בדיוק, אבל אחריו בסדר ה-DOM). object-fit:cover מבטיח כיסוי מלא של המסך
    בלי עיוות יחס-גובה-רוחב, בדיוק כמו background-size:cover של הרקע הסטטי.
    opacity מתחיל מ-0 כדי שהתמונה הסטטית (bg-jungle.webp) תישאר גלויה חלק עד שה-JS
-   מאשר (אירוע canplaythrough) שהדפדפן בטוח שהווידאו יכול להתנגן ברצף בלי עוד באפרינג -
-   רק אז האלמנט מוזרק ל-DOM ומקבל .loaded שמעלה ל-opacity:1 עם fade חלק (1.2 שניות),
-   ומונעת קפיצה/הבזק ברגע טעינת הווידאו */
+   מאשר (אירוע playing/timeupdate) שהפריים הראשון באמת מוצג על המסך - רק אז נוספת
+   .loaded שמעלה ל-opacity:1 עם fade חלק, ומונעת קפיצה/הבזק ברגע טעינת הווידאו */
 .bg-video {
     display: block !important;
     visibility: visible !important;
@@ -150,7 +149,7 @@ body::after {
     z-index: -1;
     pointer-events: none;
     opacity: 0;
-    transition: opacity 1.2s ease-in-out;
+    transition: opacity 0.8s ease-in-out;
 }
 
 .bg-video.loaded {

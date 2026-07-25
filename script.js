@@ -285,17 +285,11 @@
             return;
         }
 
-        // רשת ביטחון - אם הדפדפן לעולם לא מאשר מוכנות מלאה לניגון רציף (רשת תקועה/איטית
-        // מאוד), לא נשארים עם <video> תלוי בזיכרון בלי החלטה - נופלים חזרה לרקע הסטטי
-        // בבירור, בדיוק כמו כל שאר נתיבי הכישלון כאן
-        const CANPLAYTHROUGH_TIMEOUT_MS = 8000;
-        let settled = false;
-        let readyTimer = null;
-
         const video = document.createElement("video");
         video.id = "bgVideo";
         video.className = "bg-video";
         video.src = VIDEO_BG_SRC;
+        video.autoplay = true;
         video.loop = true;
         video.muted = true;
         video.defaultMuted = true;
@@ -304,22 +298,34 @@
         video.setAttribute("aria-hidden", "true");
         video.setAttribute("tabindex", "-1");
 
-        // כשל טעינה (קובץ חסר/שבור/רשת) - הרקע הסטטי שכבר קיים ממשיך להיראות בדיוק כפי
-        // שנראה עד עכשיו, בלי שום מעבר/הבזק מורגש (הווידאו לרוב עוד לא הוזרק ל-DOM בכלל
-        // בשלב הזה - ר' removeVideoBackground, שכבר מטפל בבטחה גם במקרה הזה)
+        // כשל טעינה (קובץ חסר/שבור/רשת) - מסירים לגמרי, הרקע הסטטי שכבר קיים ממשיך
+        // להיראות בדיוק כפי שנראה עד עכשיו, בלי שום מעבר/הבזק מורגש
         video.addEventListener("error", function () {
-            if (settled) return;
-            settled = true;
-            clearTimeout(readyTimer);
             logDecision(false, "video failed to load (network error or missing/corrupt file)");
             removeVideoBackground(video);
         });
 
+        // מוסיפים .loaded רק אחרי אישור אמיתי שהפריים הראשון כבר מוצג על המסך (אירוע
+        // "playing", עם timeupdate כגיבוי למקרה שהדפדפן לא יורה אותו באופן עקבי) - כך
+        // ה-opacity:0->1 ב-CSS (fade חלק) מתחיל בדיוק כשיש כבר תוכן וידאו אמיתי מתחתיו,
+        // במקום לקפוץ/להבהב מעל bg-jungle.webp ברגע ההזרקה ל-DOM לפני שיש פריים לצייר
+        let markLoaded = function () {
+            video.classList.add("loaded");
+            markLoaded = function () {}; // חד-פעמי - אין צורך לרוץ שוב בכל timeupdate
+        };
+        video.addEventListener("playing", function () { markLoaded(); });
+        video.addEventListener("timeupdate", function () {
+            if (video.currentTime > 0) markLoaded();
+        });
+
+        // מוסיפים כילד ה-DOM הראשון של body (לפני #particles-bg/.glow-orb, שגם הם
+        // z-index:-1) כדי שהם ימשיכו לצייר מעליו באותה שכבת עומק בדיוק כמו שהיו
+        // מציירים מעל הרקע הסטטי
+        document.body.insertBefore(video, document.body.firstChild);
+
         // עוצרים את פענוח/ניגון הווידאו לגמרי כשהטאב לא גלוי (למשל המשתמש עבר לטאב אחר) -
         // דפדפנים ממשיכים לפענח פריימים לווידאו מושתק ברקע גם כשאין שום תועלת חזותית בכך,
-        // מה שצורך CPU/סוללה לחינם. חוזרים לנגן אוטומטית ברגע שהטאב גלוי שוב. נרשם כבר כאן
-        // (לפני שהאלמנט בכלל הוזרק ל-DOM) - isConnected מגן בבטחה על המקרה שהאירוע יורה
-        // לפני שההזרקה קרתה
+        // מה שצורך CPU/סוללה לחינם. חוזרים לנגן אוטומטית ברגע שהטאב גלוי שוב
         document.addEventListener("visibilitychange", function () {
             if (!video.isConnected) return;
             if (document.hidden) {
@@ -329,43 +335,17 @@
             }
         });
 
-        // רק אחרי canplaythrough (הדפדפן בטוח שהוא יכול לנגן ברצף בלי עוד באפרינג) מזריקים
-        // בפועל ל-DOM ומתחילים לנגן - לא לפני. כך לעולם אין רגע שבו <video> כבר תופס את
-        // מלוא שטח המסך (position:fixed) בלי שיש לו עדיין תוכן אמיתי - התמונה הסטטית
-        // (bg-jungle.webp, ר' body::before ב-style.css) ממשיכה להיראות רציפה וחלקה בדיוק
-        // כפי שהיא כבר עד לרגע הזה, ורק אז מתחיל מעבר ה-opacity 0->1 (1 שנייה, ר' .loaded
-        // ב-style.css) של הווידאו מעליה
-        function onCanPlayThrough() {
-            if (settled) return;
-            settled = true;
-            clearTimeout(readyTimer);
-
-            // מוסיפים כילד ה-DOM הראשון של body (לפני #particles-bg/.glow-orb, שגם הם
-            // z-index:-1) כדי שהם ימשיכו לצייר מעליו באותה שכבת עומק בדיוק כמו שהיו
-            // מציירים מעל הרקע הסטטי
-            document.body.insertBefore(video, document.body.firstChild);
-
-            // אכיפה מפורשת של muted לפני play() (כמו ב-playIntroSplash), כדי לעמוד
-            // במדיניות ה-autoplay של הדפדפנים
-            video.muted = true;
-            video.play().then(function () {
-                video.classList.add("loaded");
-                logDecision(true);
-            }).catch(function (err) {
-                // מדיניות autoplay חסמה ניגון (נדיר עבור מושתק, אבל קורה) - מסירים לגמרי
-                // במקום להשאיר <video> שחור/ריק תקוע במקום הרקע התקין
-                logDecision(false, "autoplay blocked by browser (" + (err && err.name ? err.name : err) + ")");
-                removeVideoBackground(video);
-            });
-        }
-
-        video.addEventListener("canplaythrough", onCanPlayThrough, { once: true });
-
-        readyTimer = setTimeout(function () {
-            if (settled) return;
-            settled = true;
-            video.removeEventListener("canplaythrough", onCanPlayThrough);
-            logDecision(false, "canplaythrough did not fire within " + CANPLAYTHROUGH_TIMEOUT_MS + "ms (slow/stalled network)");
-        }, CANPLAYTHROUGH_TIMEOUT_MS);
+        // אכיפה מפורשת של muted לפני play() (כמו ב-playIntroSplash), כדי לעמוד
+        // במדיניות ה-autoplay של הדפדפנים גם כשמסתמכים גם על התכונה autoplay וגם על
+        // קריאת play() יזומה
+        video.muted = true;
+        video.play().then(function () {
+            logDecision(true);
+        }).catch(function (err) {
+            // מדיניות autoplay חסמה ניגון (נדיר עבור מושתק, אבל קורה) - מסירים לגמרי
+            // במקום להשאיר <video> שחור/ריק תקוע במקום הרקע התקין
+            logDecision(false, "autoplay blocked by browser (" + (err && err.name ? err.name : err) + ")");
+            removeVideoBackground(video);
+        });
     };
 })();
