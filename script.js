@@ -274,19 +274,15 @@
         if (alreadyDecided) return;
         alreadyDecided = true;
 
+        // ה-*יחיד* שחוסם את וידאו הרקע הוא ביצועים בפועל (isLowPerfDevice - נקבע ע"י
+        // בדיקת ה-WebGL הסינכרונית ו/או מד ה-FPS הא-סינכרוני למעלה, וגם מתעדכן ידנית ע"י
+        // body.low-perf) - לא prefers-reduced-motion. ההעדפה הזו עדיין מכובדת במלואה
+        // עבור אנימציות CSS לא-חיוניות (פעימת מקום #1, stagger כניסת שורות וכו', ר'
+        // style.css), אבל וידאו הרקע המושתק מותר לפעול כל עוד המערכת מסוגלת לזה בפועל -
+        // החלטה מפורשת של בעל האתר
         if (window.isLowPerfDevice) {
             logDecision(false, "isLowPerfDevice=true (WebGL renderer check or measured FPS below threshold)");
             return;
-        }
-        // עקבי עם ההעדפה שכבר מכובדת באתר עבור אנימציות CSS אחרות (ר' style.css) -
-        // וידאו רקע נגן-אוטומטית הוא בדיוק סוג התנועה שההעדפה הזו נועדה לצמצם
-        try {
-            if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-                logDecision(false, "prefers-reduced-motion is set");
-                return;
-            }
-        } catch (e) {
-            // matchMedia לא זמין/נכשל - לא נחשב סיבה לחסום, ממשיכים כרגיל
         }
 
         const video = document.createElement("video");
