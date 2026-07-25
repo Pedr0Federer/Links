@@ -176,13 +176,24 @@
 // === ניטור ביצועים (FPS) + נפילה חיננית ל-CPU rendering ===
 // כשהאצת חומרה (Hardware Acceleration) כבויה בכרום, הדפדפן עובר לרינדור תוכנה מלא -
 // backdrop-filter וקנבס החלקיקים הופכים ליקרים באופן קיצוני ללא קשר לכמה שהם מאופטמים
-// במבנה ה-CSS/JS עצמו. במקום לנחש/להניח, מודדים בפועל את קצב הפריימים בזמן אמת מיד
-// עם טעינת הדף, ואם הוא נמוך מדי - מוסיפים מחלקה שמפעילה נפילה חיננית ב-CSS (ר' style.css)
-// ועוצרים את לולאת הקנבס (ר' index.html) כדי להוריד את העומס למינימום האפשרי
+// במבנה ה-CSS/JS עצמו. במקום לנחש/להניח, מודדים בפועל את קצב הפריימים בזמן אמת, ואם
+// הוא נמוך מדי - מוסיפים מחלקה שמפעילה נפילה חיננית ב-CSS (ר' style.css) ועוצרים את
+// לולאת הקנבס (ר' index.html) כדי להוריד את העומס למינימום האפשרי.
+//
+// BUGFIX: המדידה לא מתחילה מיד עם טעינת הסקריפט יותר - נמצא בבדיקה ישירה (ffprobe על
+// assets/media/intro.mp4: 2.23 שניות, ~1.79 שניות בפועל אחרי playbackRate=1.25) שחלון
+// המדידה המקורי (0-1.5 שניות מטעינת הדף) חופף כמעט לחלוטין לזמן שבו וידאו האינטרו עצמו
+// מפוענח ומתנגן - פענוח וידאו הוא בדיוק אחד הדברים היקרים ביותר לחישוב, כך שקצב
+// הפריימים הנמדד באותו חלון היה מוטה כלפי מטה באופן מלאכותי גם על חומרה חזקה לגמרי,
+// וגרם לזיהוי-שווא של low-perf (התוצאה המורגשת: רקע הווידאו וכו' לא הופיעו אפילו כשהאצת
+// החומרה בפועל דלוקה). כעת ממתינים SAMPLE_START_DELAY_MS (חופף את משך האינטרו + מרווח
+// ביטחון) לפני שמתחילים לספור פריימים בכלל, כך שהמדידה משקפת ביצועים אמיתיים במצב יציב,
+// לא עומס חד-פעמי של טעינת הדף
 (function () {
     "use strict";
 
-    const PERF_SAMPLE_MS = 1500; // חלון המדידה - 1.5 שניות ראשונות
+    const SAMPLE_START_DELAY_MS = 2000; // עולה על משך ניגון האינטרו בפועל (~1.79 שניות)
+    const PERF_SAMPLE_MS = 1500; // חלון המדידה עצמו - 1.5 שניות, אחרי ההשהיה למעלה
     const LOW_FPS_THRESHOLD = 35; // מתחת לזה - נחשב רינדור תוכנה/חומרה חלשה
 
     let frameCount = 0;
@@ -211,14 +222,22 @@
             document.body.classList.add("low-perf");
         }
 
-        // ההחלטה על רקע הווידאו מחכה בכוונה לרגע הזה (סוף מדידת ה-FPS), לא רק לבדיקת
-        // ה-WebGL הסינכרונית שלמעלה - ר' initVideoBackground להסבר המלא
+        console.log(
+            "[VideoBG] FPS sample: " + fps.toFixed(1) +
+            " (threshold " + LOW_FPS_THRESHOLD + ") -> isLowPerfDevice=" + window.isLowPerfDevice
+        );
+
+        // ההחלטה על רקע הווידאו מחכה בכוונה לרגע הזה (סוף מדידת ה-FPS, אחרי ההשהיה
+        // למעלה), לא רק לבדיקת ה-WebGL הסינכרונית שלמעלה - ר' initVideoBackground
+        // להסבר המלא
         if (typeof window.initVideoBackground === "function") {
             window.initVideoBackground();
         }
     }
 
-    requestAnimationFrame(samplePerformance);
+    setTimeout(function () {
+        requestAnimationFrame(samplePerformance);
+    }, SAMPLE_START_DELAY_MS);
 })();
 
 // === רקע וידאו - מותנה לגמרי בהאצת חומרה פעילה + low-perf כבוי, ורק אחרי שהקביעה
@@ -239,17 +258,33 @@
         if (video && video.parentNode) video.parentNode.removeChild(video);
     }
 
+    // לוג אבחון יחיד וברור - כך שב-DevTools (F12) אפשר לראות מיידית למה הווידאו כן/לא
+    // פעיל, בלי לנחש. נקרא בכל נקודת החלטה (הצלחה או כל סיבת נפילה)
+    function logDecision(active, reason) {
+        if (active) {
+            console.log("[VideoBG] Active (HW accelerated)");
+        } else {
+            console.log("[VideoBG] Fallback to static image: " + reason);
+        }
+    }
+
     window.initVideoBackground = function () {
         // נקרא פעם אחת בלבד לאורך חיי העמוד - מדידת ה-FPS עצמה כבר לא חוזרת על עצמה,
         // אבל ההגנה כאן מפורשת ליתר ביטחון
         if (alreadyDecided) return;
         alreadyDecided = true;
 
-        if (window.isLowPerfDevice) return;
+        if (window.isLowPerfDevice) {
+            logDecision(false, "isLowPerfDevice=true (WebGL renderer check or measured FPS below threshold)");
+            return;
+        }
         // עקבי עם ההעדפה שכבר מכובדת באתר עבור אנימציות CSS אחרות (ר' style.css) -
         // וידאו רקע נגן-אוטומטית הוא בדיוק סוג התנועה שההעדפה הזו נועדה לצמצם
         try {
-            if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+            if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+                logDecision(false, "prefers-reduced-motion is set");
+                return;
+            }
         } catch (e) {
             // matchMedia לא זמין/נכשל - לא נחשב סיבה לחסום, ממשיכים כרגיל
         }
@@ -258,16 +293,19 @@
         video.id = "bgVideo";
         video.className = "bg-video";
         video.src = VIDEO_BG_SRC;
+        video.autoplay = true;
         video.loop = true;
         video.muted = true;
         video.defaultMuted = true;
         video.playsInline = true;
+        video.preload = "auto";
         video.setAttribute("aria-hidden", "true");
         video.setAttribute("tabindex", "-1");
 
         // כשל טעינה (קובץ חסר/שבור/רשת) - מסירים לגמרי, הרקע הסטטי שכבר קיים ממשיך
         // להיראות בדיוק כפי שנראה עד עכשיו, בלי שום מעבר/הבזק מורגש
         video.addEventListener("error", function () {
+            logDecision(false, "video failed to load (network error or missing/corrupt file)");
             removeVideoBackground(video);
         });
 
@@ -276,9 +314,16 @@
         // מציירים מעל הרקע הסטטי
         document.body.insertBefore(video, document.body.firstChild);
 
-        video.play().catch(function () {
+        // אכיפה מפורשת של muted לפני play() (כמו ב-playIntroSplash), כדי לעמוד
+        // במדיניות ה-autoplay של הדפדפנים גם כשמסתמכים גם על התכונה autoplay וגם על
+        // קריאת play() יזומה
+        video.muted = true;
+        video.play().then(function () {
+            logDecision(true);
+        }).catch(function (err) {
             // מדיניות autoplay חסמה ניגון (נדיר עבור מושתק, אבל קורה) - מסירים לגמרי
             // במקום להשאיר <video> שחור/ריק תקוע במקום הרקע התקין
+            logDecision(false, "autoplay blocked by browser (" + (err && err.name ? err.name : err) + ")");
             removeVideoBackground(video);
         });
     };

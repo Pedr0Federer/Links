@@ -120,6 +120,9 @@ body {
    שכבת z-index בדיוק, אבל אחריו בסדר ה-DOM). object-fit:cover מבטיח כיסוי מלא של המסך
    בלי עיוות יחס-גובה-רוחב, בדיוק כמו background-size:cover של הרקע הסטטי */
 .bg-video {
+    display: block !important;
+    opacity: 1 !important;
+    visibility: visible !important;
     position: fixed;
     top: 0;
     left: 0;
