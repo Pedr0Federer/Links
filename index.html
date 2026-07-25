@@ -12,18 +12,18 @@
 
     <!-- Preload/preconnect - מתחילים להוריד את הנכסים הקריטיים (וידאו האינטרו, תמונת הפרופיל, גופן חיצוני)
          מוקדם ככל האפשר, במקביל לפרסור ה-HTML, במקום לחכות שהדפדפן יגיע אליהם בהמשך המסמך -->
-    <link rel="preload" as="video" href="intro.mp4?v=10.3-header-ui-refinement" type="video/mp4">
+    <link rel="preload" as="video" href="intro.mp4?v=10.4-rank1-animations" type="video/mp4">
     <link rel="preload" as="image" href="profile.jpg">
     <link rel="preload" as="image" href="bg-jungle.webp">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-    <link rel="stylesheet" href="style.css?v=10.3-header-ui-refinement">
+    <link rel="stylesheet" href="style.css?v=10.4-rank1-animations">
     <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;700;900&display=swap" rel="stylesheet">
 
     <!-- script.js נטען מוקדם עם defer - מתחיל להוריד אותו מיד (במקביל לפרסור ה-HTML) במקום להמתין
          שהפרסר יגיע לתחתית הגוף, בלי לחסום את הרינדור (defer מריץ אותו רק אחרי שה-DOM מוכן) -->
-    <script src="script.js?v=10.3-header-ui-refinement" defer></script>
+    <script src="script.js?v=10.4-rank1-animations" defer></script>
 </head>
 <body>
 
@@ -31,7 +31,7 @@
         <video
             class="intro-video"
             id="introVideo"
-            src="intro.mp4?v=10.3-header-ui-refinement"
+            src="intro.mp4?v=10.4-rank1-animations"
             muted
             playsinline
             webkit-playsinline="true"
@@ -205,9 +205,9 @@
                                     <table class="donator-table" dir="ltr">
                                         <thead>
                                             <tr>
-                                                <th>RANK</th>
-                                                <th>Username</th>
-                                                <th class="donators-unit-header">Gifted Subs</th>
+                                                <th><span class="donators-header-label">RANK</span></th>
+                                                <th><span class="donators-header-label">Username</span></th>
+                                                <th class="donators-unit-header"><span class="donators-header-label">Gifted Subs</span></th>
                                             </tr>
                                         </thead>
                                         <tbody id="donatorsAllTimeRows">
@@ -231,9 +231,9 @@
                                     <table class="donator-table" dir="ltr">
                                         <thead>
                                             <tr>
-                                                <th>RANK</th>
-                                                <th>Username</th>
-                                                <th class="donators-unit-header">Gifted Subs</th>
+                                                <th><span class="donators-header-label">RANK</span></th>
+                                                <th><span class="donators-header-label">Username</span></th>
+                                                <th class="donators-unit-header"><span class="donators-header-label">Gifted Subs</span></th>
                                             </tr>
                                         </thead>
                                         <tbody id="donatorsWeeklyRows">
@@ -774,6 +774,16 @@
                 kicks: '<img class="donator-quantity-icon" src="cash.png" alt="" aria-hidden="true">'
             };
 
+            // כתר קטן ליד תג הדירוג של מקום #1 בלבד - אותו path בדיוק כמו אייקון הכתר בכותרת
+            // כרטיס "All-Time Top Gifters" (עקביות עיצובית, ולא path חדש/לא-מאומת)
+            const DONATORS_CROWN_BADGE = '<svg class="rank-crown-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false"><path d="M3 18L5 7l3.5 5L12 6l3.5 6L19 7l2 11H3z"/><rect x="4" y="19" width="16" height="2" rx="1"/></svg>';
+
+            // true רק בזמן ה-render היחיד שמקורו במעבר מצב ידני/אוטומטי (ר' setDonatorsMode
+            // למטה) - קובע אם השורות החדשות מקבלות את מחלקת stagger-הכניסה (donators-row-stagger,
+            // ר' CSS). רענון תקופתי רגיל של אותו מצב (loadDonators שרץ כל שעה) לא מדליק את זה,
+            // כך שהאפקט מופיע רק ב"מעבר" בפועל בין הטאבים, לא בכל עדכון נתונים שקט ברקע
+            let donatorsIsModeSwitchRender = false;
+
             function renderDonatorTable(tbodyId, gifters, emptyMessage, iconHtml) {
                 const tbody = document.getElementById(tbodyId);
                 if (!tbody) return;
@@ -783,10 +793,12 @@
                     return;
                 }
 
+                const staggerClass = donatorsIsModeSwitchRender ? " donators-row-stagger" : "";
                 tbody.innerHTML = gifters.slice(0, 10).map(function (g, idx) {
+                    const isFirst = idx === 0;
                     return `
-                        <tr>
-                            <td><span class="rank-badge">${idx + 1}</span></td>
+                        <tr class="${isFirst ? "rank-first" : ""}${staggerClass}">
+                            <td><span class="rank-badge${isFirst ? " rank-badge-first" : ""}">${idx + 1}</span>${isFirst ? DONATORS_CROWN_BADGE : ""}</td>
                             <td>${escapeHtml(g.username)}</td>
                             <td class="gift-count-cell">${iconHtml} ${Number(g.quantity || 0).toLocaleString("en-US")}</td>
                         </tr>`;
@@ -868,7 +880,7 @@
             // וגם בטעינת הדף (למטה), לא רק במעבר מצב, כדי שהתמונה תופיע כבר בתצוגה הראשונית
             function updateDonatorsUnitHeaders(mode) {
                 donatorsUnitHeaders.forEach(function (th) {
-                    th.innerHTML = DONATORS_ICONS[mode] + " " + DONATORS_COLUMN_LABELS[mode];
+                    th.innerHTML = `<span class="donators-header-label">${DONATORS_ICONS[mode]} ${DONATORS_COLUMN_LABELS[mode]}</span>`;
                 });
             }
             updateDonatorsUnitHeaders(donatorsMode);
@@ -892,7 +904,9 @@
                     wrap.classList.add("donators-switching");
                 });
                 setTimeout(function () {
+                    donatorsIsModeSwitchRender = true;
                     renderDonators();
+                    donatorsIsModeSwitchRender = false;
                     donatorsTableWraps.forEach(function (wrap) {
                         wrap.classList.remove("donators-switching");
                     });
