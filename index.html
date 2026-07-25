@@ -12,18 +12,18 @@
 
     <!-- Preload/preconnect - מתחילים להוריד את הנכסים הקריטיים (וידאו האינטרו, תמונת הפרופיל, גופן חיצוני)
          מוקדם ככל האפשר, במקביל לפרסור ה-HTML, במקום לחכות שהדפדפן יגיע אליהם בהמשך המסמך -->
-    <link rel="preload" as="video" href="assets/media/intro.mp4?v=10.13-raw-video-smooth-fade" type="video/mp4">
+    <link rel="preload" as="video" href="assets/media/intro.mp4?v=10.14-leaderboards-and-code-audit-passed" type="video/mp4">
     <link rel="preload" as="image" href="assets/images/profile.jpg">
     <link rel="preload" as="image" href="assets/images/bg-jungle.webp">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-    <link rel="stylesheet" href="style.css?v=10.13-raw-video-smooth-fade">
+    <link rel="stylesheet" href="style.css?v=10.14-leaderboards-and-code-audit-passed">
     <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;700;900&display=swap" rel="stylesheet">
 
     <!-- script.js נטען מוקדם עם defer - מתחיל להוריד אותו מיד (במקביל לפרסור ה-HTML) במקום להמתין
          שהפרסר יגיע לתחתית הגוף, בלי לחסום את הרינדור (defer מריץ אותו רק אחרי שה-DOM מוכן) -->
-    <script src="script.js?v=10.13-raw-video-smooth-fade" defer></script>
+    <script src="script.js?v=10.14-leaderboards-and-code-audit-passed" defer></script>
 </head>
 <body>
 
@@ -31,7 +31,7 @@
         <video
             class="intro-video"
             id="introVideo"
-            src="assets/media/intro.mp4?v=10.13-raw-video-smooth-fade"
+            src="assets/media/intro.mp4?v=10.14-leaderboards-and-code-audit-passed"
             muted
             playsinline
             webkit-playsinline="true"
@@ -66,7 +66,7 @@
 
                 <section class="tab-panel active" id="tab-home">
 
-                    <a href="https://discord.com/invite/E6NmAAdjzJ" class="link-btn" target="_blank">
+                    <a href="https://discord.com/invite/E6NmAAdjzJ" class="link-btn" target="_blank" rel="noopener">
                         <span class="icon">
                             <img src="assets/images/Discord_logo.png" alt="Discord" class="original-logo">
                         </span>
@@ -76,7 +76,7 @@
                         <div class="badge-slot"></div>
                     </a>
 
-                    <a href="https://kick.com/pedrofederer" class="link-btn" target="_blank">
+                    <a href="https://kick.com/pedrofederer" class="link-btn" target="_blank" rel="noopener">
                         <span class="icon">
                             <img src="assets/images/Kick_logo.png" alt="Kick" class="original-logo">
                         </span>
@@ -91,7 +91,7 @@
                         </div>
                     </a>
 
-                    <a href="https://www.youtube.com/@PedroFederer" class="link-btn" target="_blank">
+                    <a href="https://www.youtube.com/@PedroFederer" class="link-btn" target="_blank" rel="noopener">
                         <span class="icon">
                             <img src="assets/images/Youtube_logo.png" alt="YouTube" class="original-logo">
                         </span>
@@ -101,7 +101,7 @@
                         <div class="badge-slot"></div>
                     </a>
 
-                    <a href="https://www.instagram.com/nick.seff/" class="link-btn" target="_blank">
+                    <a href="https://www.instagram.com/nick.seff/" class="link-btn" target="_blank" rel="noopener">
                         <span class="icon">
                             <img src="assets/images/instagram_logo.png" alt="Instagram" class="original-logo">
                         </span>
@@ -111,7 +111,7 @@
                         <div class="badge-slot"></div>
                     </a>
 
-                    <a href="https://www.tiktok.com/@nick.seff" class="link-btn" target="_blank">
+                    <a href="https://www.tiktok.com/@nick.seff" class="link-btn" target="_blank" rel="noopener">
                         <span class="icon">
                             <img src="assets/images/tiktok_logo.png" alt="TikTok" class="original-logo">
                         </span>
@@ -121,7 +121,7 @@
                         <div class="badge-slot"></div>
                     </a>
 
-                    <a href="https://www.reddit.com/r/theshordybacks/" class="link-btn reddit" target="_blank">
+                    <a href="https://www.reddit.com/r/theshordybacks/" class="link-btn reddit" target="_blank" rel="noopener">
                         <span class="icon">
                             <img src="assets/images/Reddit_logo.png" alt="Reddit" class="original-logo">
                         </span>
@@ -131,7 +131,7 @@
                         <div class="badge-slot"></div>
                     </a>
 
-                    <a href="https://www.kaycollectorz.com/he" class="link-btn kai" target="_blank">
+                    <a href="https://www.kaycollectorz.com/he" class="link-btn kai" target="_blank" rel="noopener">
                         <span class="icon">
                             <img src="assets/images/PFKAY.png" alt="קאי קולקטורס" class="original-logo">
                         </span>
@@ -143,7 +143,7 @@
                         </div>
                     </a>
 
-                    <a href="https://kolboyehuda.co.il/" class="link-btn shop-black" target="_blank">
+                    <a href="https://kolboyehuda.co.il/" class="link-btn shop-black" target="_blank" rel="noopener">
                         <span class="icon">
                             <img src="assets/images/ky_logo.png" alt="כלבו יהודה" class="original-logo">
                         </span>
@@ -155,7 +155,7 @@
                         </div>
                     </a>
 
-                    <a href="https://discord.com/invite/g49uJY7Mem" class="link-btn discord-frag" target="_blank">
+                    <a href="https://discord.com/invite/g49uJY7Mem" class="link-btn discord-frag" target="_blank" rel="noopener">
                         <span class="icon">
                             <img src="assets/images/Discord_logo.png" alt="Discord" class="original-logo">
                         </span>

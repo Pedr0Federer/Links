@@ -323,6 +323,18 @@
         // מציירים מעל הרקע הסטטי
         document.body.insertBefore(video, document.body.firstChild);
 
+        // עוצרים את פענוח/ניגון הווידאו לגמרי כשהטאב לא גלוי (למשל המשתמש עבר לטאב אחר) -
+        // דפדפנים ממשיכים לפענח פריימים לווידאו מושתק ברקע גם כשאין שום תועלת חזותית בכך,
+        // מה שצורך CPU/סוללה לחינם. חוזרים לנגן אוטומטית ברגע שהטאב גלוי שוב
+        document.addEventListener("visibilitychange", function () {
+            if (!video.isConnected) return;
+            if (document.hidden) {
+                video.pause();
+            } else {
+                video.play().catch(function () {});
+            }
+        });
+
         // אכיפה מפורשת של muted לפני play() (כמו ב-playIntroSplash), כדי לעמוד
         // במדיניות ה-autoplay של הדפדפנים גם כשמסתמכים גם על התכונה autoplay וגם על
         // קריאת play() יזומה
