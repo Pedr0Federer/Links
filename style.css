@@ -33,7 +33,7 @@ body {
         position: fixed;
         inset: 0;
         z-index: -10;
-        background-image: linear-gradient(rgba(5, 7, 10, 0.1), rgba(5, 7, 10, 0.15)), url("bg-jungle.webp");
+        background-image: linear-gradient(rgba(5, 7, 10, 0.1), rgba(5, 7, 10, 0.15)), url("assets/images/bg-jungle.webp");
         background-size: cover;
         background-position: center;
         background-repeat: no-repeat;
@@ -43,7 +43,7 @@ body {
 
 @media (max-width: 768px) {
     body {
-        background-image: linear-gradient(rgba(5, 7, 10, 0.1), rgba(5, 7, 10, 0.15)), url("bg-jungle.webp");
+        background-image: linear-gradient(rgba(5, 7, 10, 0.1), rgba(5, 7, 10, 0.15)), url("assets/images/bg-jungle.webp");
         background-size: cover;
         background-position: center;
         background-repeat: no-repeat;
@@ -203,7 +203,7 @@ body {
     left: 50%;
     width: 900px;
     height: 900px;
-    background-image: url("profile.jpg");
+    background-image: url("assets/images/profile.jpg");
     background-size: cover;
     background-position: center;
     border-radius: 50%;
@@ -228,7 +228,7 @@ body {
         /* z-index נמוך יותר מהחלקיקים וכתמי הזוהר (שנשארים ב--1) - כדי שהם יישארו גלויים
            מעליו ולא יוסתרו ע"י הרקע המלא-מסך החדש (זה לא קרה לפני כן כי המעגל היה קטן מדי) */
         z-index: -2;
-        background-image: linear-gradient(rgba(10, 10, 12, 0.88), rgba(10, 10, 12, 0.88)), url("profile.jpg");
+        background-image: linear-gradient(rgba(10, 10, 12, 0.88), rgba(10, 10, 12, 0.88)), url("assets/images/profile.jpg");
         background-size: cover;
         background-position: center top;
         background-repeat: no-repeat;

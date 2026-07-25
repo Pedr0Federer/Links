@@ -5,25 +5,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PedroFederer | Official Links</title>
 
-    <link rel="icon" type="image/png" href="favicon-circle-64.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="favicon-circle-32.png">
-    <link rel="icon" type="image/png" sizes="64x64" href="favicon-circle-64.png">
-    <link rel="apple-touch-icon" sizes="180x180" href="favicon-circle-180.png">
+    <link rel="icon" type="image/png" href="assets/images/favicon-circle-64.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="assets/images/favicon-circle-32.png">
+    <link rel="icon" type="image/png" sizes="64x64" href="assets/images/favicon-circle-64.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="assets/images/favicon-circle-180.png">
 
     <!-- Preload/preconnect - מתחילים להוריד את הנכסים הקריטיים (וידאו האינטרו, תמונת הפרופיל, גופן חיצוני)
          מוקדם ככל האפשר, במקביל לפרסור ה-HTML, במקום לחכות שהדפדפן יגיע אליהם בהמשך המסמך -->
-    <link rel="preload" as="video" href="intro.mp4?v=10.5-leaderboard-pills-refactor" type="video/mp4">
-    <link rel="preload" as="image" href="profile.jpg">
-    <link rel="preload" as="image" href="bg-jungle.webp">
+    <link rel="preload" as="video" href="assets/media/intro.mp4?v=10.6-clean-folder-structure" type="video/mp4">
+    <link rel="preload" as="image" href="assets/images/profile.jpg">
+    <link rel="preload" as="image" href="assets/images/bg-jungle.webp">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-    <link rel="stylesheet" href="style.css?v=10.5-leaderboard-pills-refactor">
+    <link rel="stylesheet" href="style.css?v=10.6-clean-folder-structure">
     <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;700;900&display=swap" rel="stylesheet">
 
     <!-- script.js נטען מוקדם עם defer - מתחיל להוריד אותו מיד (במקביל לפרסור ה-HTML) במקום להמתין
          שהפרסר יגיע לתחתית הגוף, בלי לחסום את הרינדור (defer מריץ אותו רק אחרי שה-DOM מוכן) -->
-    <script src="script.js?v=10.5-leaderboard-pills-refactor" defer></script>
+    <script src="script.js?v=10.6-clean-folder-structure" defer></script>
 </head>
 <body>
 
@@ -31,7 +31,7 @@
         <video
             class="intro-video"
             id="introVideo"
-            src="intro.mp4?v=10.5-leaderboard-pills-refactor"
+            src="assets/media/intro.mp4?v=10.6-clean-folder-structure"
             muted
             playsinline
             webkit-playsinline="true"
@@ -50,7 +50,7 @@
         <div class="container">
             <header>
                 <a href="https://kick.com/pedrofederer" target="_blank" rel="noopener" class="profile-link" aria-label="צפו ב-PedroFederer בשידור חי ב-Kick">
-                    <img src="profile.jpg" alt="PedroFederer" class="profile-img">
+                    <img src="assets/images/profile.jpg" alt="PedroFederer" class="profile-img">
                 </a>
                 <h1>PedroFederer</h1>
                 <p class="subtitle">OFFICIAL HUB</p>
@@ -68,7 +68,7 @@
 
                     <a href="https://discord.com/invite/E6NmAAdjzJ" class="link-btn" target="_blank">
                         <span class="icon">
-                            <img src="Discord_logo.png" alt="Discord" class="original-logo">
+                            <img src="assets/images/Discord_logo.png" alt="Discord" class="original-logo">
                         </span>
                         <div class="btn-text">
                             <span class="main-text">שרת הדיסקורד</span>
@@ -78,7 +78,7 @@
 
                     <a href="https://kick.com/pedrofederer" class="link-btn" target="_blank">
                         <span class="icon">
-                            <img src="Kick_logo.png" alt="Kick" class="original-logo">
+                            <img src="assets/images/Kick_logo.png" alt="Kick" class="original-logo">
                         </span>
                         <div class="btn-text">
                             <span class="main-text">לשידורים ב-Kick</span>
@@ -93,7 +93,7 @@
 
                     <a href="https://www.youtube.com/@PedroFederer" class="link-btn" target="_blank">
                         <span class="icon">
-                            <img src="Youtube_logo.png" alt="YouTube" class="original-logo">
+                            <img src="assets/images/Youtube_logo.png" alt="YouTube" class="original-logo">
                         </span>
                         <div class="btn-text">
                             <span class="main-text">לשידורים ב-YouTube</span>
@@ -103,7 +103,7 @@
 
                     <a href="https://www.instagram.com/nick.seff/" class="link-btn" target="_blank">
                         <span class="icon">
-                            <img src="instagram_logo.png" alt="Instagram" class="original-logo">
+                            <img src="assets/images/instagram_logo.png" alt="Instagram" class="original-logo">
                         </span>
                         <div class="btn-text">
                             <span class="main-text">Instagram</span>
@@ -113,7 +113,7 @@
 
                     <a href="https://www.tiktok.com/@nick.seff" class="link-btn" target="_blank">
                         <span class="icon">
-                            <img src="tiktok_logo.png" alt="TikTok" class="original-logo">
+                            <img src="assets/images/tiktok_logo.png" alt="TikTok" class="original-logo">
                         </span>
                         <div class="btn-text">
                             <span class="main-text">Tiktok</span>
@@ -123,7 +123,7 @@
 
                     <a href="https://www.reddit.com/r/theshordybacks/" class="link-btn reddit" target="_blank">
                         <span class="icon">
-                            <img src="Reddit_logo.png" alt="Reddit" class="original-logo">
+                            <img src="assets/images/Reddit_logo.png" alt="Reddit" class="original-logo">
                         </span>
                         <div class="btn-text">
                             <span class="main-text">Reddit</span>
@@ -133,7 +133,7 @@
 
                     <a href="https://www.kaycollectorz.com/he" class="link-btn kai" target="_blank">
                         <span class="icon">
-                            <img src="PFKAY.png" alt="קאי קולקטורס" class="original-logo">
+                            <img src="assets/images/PFKAY.png" alt="קאי קולקטורס" class="original-logo">
                         </span>
                         <div class="btn-text">
                             <span class="main-text">קאי קולקטורז</span>
@@ -145,7 +145,7 @@
 
                     <a href="https://kolboyehuda.co.il/" class="link-btn shop-black" target="_blank">
                         <span class="icon">
-                            <img src="ky_logo.png" alt="כלבו יהודה" class="original-logo">
+                            <img src="assets/images/ky_logo.png" alt="כלבו יהודה" class="original-logo">
                         </span>
                         <div class="btn-text">
                             <span class="main-text">כלבו יהודה</span>
@@ -157,7 +157,7 @@
 
                     <a href="https://discord.com/invite/g49uJY7Mem" class="link-btn discord-frag" target="_blank">
                         <span class="icon">
-                            <img src="Discord_logo.png" alt="Discord" class="original-logo">
+                            <img src="assets/images/Discord_logo.png" alt="Discord" class="original-logo">
                         </span>
                         <div class="btn-text">
                             <span class="main-text">דיסקורד בשמים</span>
@@ -261,9 +261,9 @@
                         <div class="leaderboard-glass-group">
 
                             <div class="csgoroll-hero" dir="ltr">
-                                <img src="PF5.png" alt="" aria-hidden="true" class="csgoroll-hero-logo">
+                                <img src="assets/images/PF5.png" alt="" aria-hidden="true" class="csgoroll-hero-logo">
                                 <span class="csgoroll-hero-title"><span class="hero-amount">🪙 7,500</span> CODE <span class="hero-code">PF5</span> LEADERBOARD</span>
-                                <img src="Roll.png" alt="" aria-hidden="true" class="csgoroll-hero-roll">
+                                <img src="assets/images/Roll.png" alt="" aria-hidden="true" class="csgoroll-hero-roll">
                             </div>
 
                             <div class="leaderboard-podium" id="leaderboardPodium" dir="ltr">
@@ -326,7 +326,7 @@
     <div id="promoModal" class="modal-overlay">
         <div class="modal-content">
             <span class="close-modal" id="closeModalBtn">&times;</span>
-            <img src="promo.png" alt="מבצע מיוחד" class="promo-image">
+            <img src="assets/images/promo.png" alt="מבצע מיוחד" class="promo-image">
         </div>
     </div>
 
@@ -658,7 +658,7 @@
                             ${sparkles}
                             <span class="podium-medal">${medalIcon(rank)}</span>
                             <span class="podium-label">${label}</span>
-                            <img class="podium-avatar" src="${player.avatar}" alt="${player.name}" onerror="this.onerror=null;this.src='profile.jpg';">
+                            <img class="podium-avatar" src="${player.avatar}" alt="${player.name}" onerror="this.onerror=null;this.src='assets/images/profile.jpg';">
                             <span class="podium-name">${player.name}</span>
                             <div class="podium-stats">
                                 <div class="stat-pill">
@@ -683,7 +683,7 @@
                             <tr>
                                 <td><span class="rank-badge">${rank}</span></td>
                                 <td class="user-cell">
-                                    <img class="row-avatar" src="${player.avatar}" alt="${player.name}" onerror="this.onerror=null;this.src='profile.jpg';">
+                                    <img class="row-avatar" src="${player.avatar}" alt="${player.name}" onerror="this.onerror=null;this.src='assets/images/profile.jpg';">
                                     <span>${player.name}</span>
                                 </td>
                                 <td>🪙 ${player.wagered.toLocaleString("en-US")}</td>
@@ -770,8 +770,8 @@
             // תגי תמונה (PNG שהמשתמש סיפק, לא SVG/אמוג'י) לכמות המתנות/Kicks בכל שורה ובכותרות
             // העמודות - cash.png ל-Kicks, gift.png ל-Gifted Subs
             const DONATORS_ICONS = {
-                gifts: '<img class="donator-quantity-icon" src="gift.png" alt="" aria-hidden="true">',
-                kicks: '<img class="donator-quantity-icon" src="cash.png" alt="" aria-hidden="true">'
+                gifts: '<img class="donator-quantity-icon" src="assets/images/gift.png" alt="" aria-hidden="true">',
+                kicks: '<img class="donator-quantity-icon" src="assets/images/cash.png" alt="" aria-hidden="true">'
             };
 
             // כתר קטן ליד תג הדירוג של מקום #1 בלבד - אותו path בדיוק כמו אייקון הכתר בכותרת

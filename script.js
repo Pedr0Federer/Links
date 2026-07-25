@@ -153,17 +153,17 @@
         // טעינה מפורשת של הנכסים הקריטיים (רקע ראשי, כל לוגואי הכרטיסים, תמונת הפופ-אפ) -
         // כדי שהפופ-אפ והאתר הראשי לעולם לא ייחשפו לפני שהם באמת זמינים
         const criticalImages = Promise.all([
-            "profile.jpg",
-            "bg-jungle.webp",
-            "promo.png",
-            "Discord_logo.png",
-            "Kick_logo.png",
-            "Youtube_logo.png",
-            "instagram_logo.png",
-            "tiktok_logo.png",
-            "Reddit_logo.png",
-            "PFKAY.png",
-            "ky_logo.png"
+            "assets/images/profile.jpg",
+            "assets/images/bg-jungle.webp",
+            "assets/images/promo.png",
+            "assets/images/Discord_logo.png",
+            "assets/images/Kick_logo.png",
+            "assets/images/Youtube_logo.png",
+            "assets/images/instagram_logo.png",
+            "assets/images/tiktok_logo.png",
+            "assets/images/Reddit_logo.png",
+            "assets/images/PFKAY.png",
+            "assets/images/ky_logo.png"
         ].map(preloadImage));
 
         return Promise.all([windowLoad, criticalImages]);
