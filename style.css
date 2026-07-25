@@ -1425,16 +1425,11 @@ footer {
     z-index: 5;
     overflow: visible;
     background: rgba(255, 255, 255, 0.04);
-    /* טיפוגרפיית כותרת זהה בדיוק ל-.donator-table thead th - זהב בוהק, מודגש, עם קו זוהר
-       תחתון - איחוד מלא של אסתטיקת הכותרות בין שני הטאבים */
-    color: #ffcc33;
-    font-size: 0.7rem;
-    font-weight: 900;
-    letter-spacing: 1.2px;
-    text-transform: uppercase;
     padding: 12px 10px;
     text-align: center;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8), 0 0 8px rgba(255, 204, 51, 0.4);
+    /* קו זוהר נקי מתחת לכותרות - זהה בדיוק ל-.donator-table thead th. הטיפוגרפיה עצמה
+       (צבע/משקל/letter-spacing/צל) עברה ל-.donators-header-label המשותף (ר' שם) - אותו
+       "כדור" רקע עדין בדיוק כמו בטאב ה-DONATORS, לאיחוד חזותי מלא בין שני הטאבים */
     border-bottom: 1px solid rgba(255, 204, 51, 0.45);
     box-shadow: 0 1px 8px -2px rgba(255, 204, 51, 0.5);
 }
@@ -1838,7 +1833,9 @@ footer {
 
 /* "כדור" רקע עדין סביב תווית הכותרת עצמה - מבדיל אותה בבירור מתוכן הנתונים שמתחתיה.
    flex (לא רק text-align) כדי שהאייקון (cash.png/gift.png) והטקסט תמיד ייושרו בול
-   למרכז אחד לצד השני, ללא קשר לקו הבסיס (baseline) השונה של תמונה מול טקסט */
+   למרכז אחד לצד השני, ללא קשר לקו הבסיס (baseline) השונה של תמונה מול טקסט.
+   משותף לשתי הטבלאות - גם .donator-table (טאב DONATORS) וגם .leaderboard-table (טאב
+   LEADERBOARD) - לאיחוד חזותי מלא של כותרות הטבלאות בכל האתר */
 .donators-header-label {
     display: inline-flex;
     align-items: center;

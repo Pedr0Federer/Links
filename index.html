@@ -12,18 +12,18 @@
 
     <!-- Preload/preconnect - מתחילים להוריד את הנכסים הקריטיים (וידאו האינטרו, תמונת הפרופיל, גופן חיצוני)
          מוקדם ככל האפשר, במקביל לפרסור ה-HTML, במקום לחכות שהדפדפן יגיע אליהם בהמשך המסמך -->
-    <link rel="preload" as="video" href="intro.mp4?v=10.4-rank1-animations" type="video/mp4">
+    <link rel="preload" as="video" href="intro.mp4?v=10.5-leaderboard-pills-refactor" type="video/mp4">
     <link rel="preload" as="image" href="profile.jpg">
     <link rel="preload" as="image" href="bg-jungle.webp">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-    <link rel="stylesheet" href="style.css?v=10.4-rank1-animations">
+    <link rel="stylesheet" href="style.css?v=10.5-leaderboard-pills-refactor">
     <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;700;900&display=swap" rel="stylesheet">
 
     <!-- script.js נטען מוקדם עם defer - מתחיל להוריד אותו מיד (במקביל לפרסור ה-HTML) במקום להמתין
          שהפרסר יגיע לתחתית הגוף, בלי לחסום את הרינדור (defer מריץ אותו רק אחרי שה-DOM מוכן) -->
-    <script src="script.js?v=10.4-rank1-animations" defer></script>
+    <script src="script.js?v=10.5-leaderboard-pills-refactor" defer></script>
 </head>
 <body>
 
@@ -31,7 +31,7 @@
         <video
             class="intro-video"
             id="introVideo"
-            src="intro.mp4?v=10.4-rank1-animations"
+            src="intro.mp4?v=10.5-leaderboard-pills-refactor"
             muted
             playsinline
             webkit-playsinline="true"
@@ -292,10 +292,10 @@
                                 <table class="leaderboard-table" dir="ltr">
                                     <thead>
                                         <tr>
-                                            <th>RANK</th>
-                                            <th>USER</th>
-                                            <th>WAGERED</th>
-                                            <th>PRIZE</th>
+                                            <th><span class="donators-header-label">RANK</span></th>
+                                            <th><span class="donators-header-label">USER</span></th>
+                                            <th><span class="donators-header-label">WAGERED</span></th>
+                                            <th><span class="donators-header-label">PRIZE</span></th>
                                         </tr>
                                     </thead>
                                     <tbody id="leaderboardRows">
@@ -959,8 +959,9 @@
                 startDonatorsProgressBar();
 
                 donatorsAutoRotateTimerId = setTimeout(function () {
-                    const panel = document.getElementById("tab-donators");
-                    const isVisible = !!(panel && panel.classList.contains("active"));
+                    // donatorsPanelEl כבר קאשור למעלה - אין צורך לשלוף מחדש מה-DOM כל 8
+                    // שניות בלולאה הזו
+                    const isVisible = !!(donatorsPanelEl && donatorsPanelEl.classList.contains("active"));
                     if (isVisible) {
                         setDonatorsMode(donatorsMode === "gifts" ? "kicks" : "gifts");
                     }
