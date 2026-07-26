@@ -823,6 +823,13 @@
             let lastKicksAllTime = [];
             let lastKicksWeekly = [];
 
+            // הערה (נבדק ואומת ישירות מול שני ה-endpoints של Kick ב-2026-07-26, יום ראשון/
+            // תחילת שבוע): ייתכן פער בין "Weekly Kicks" ל-"Weekly Gifted Subs" בתחילת השבוע -
+            // gifts_week (ה-endpoint הציבורי) התאפס ל-[] בדיוק בגבול השבוע, בעוד kicks_gifts_week
+            // (ה-endpoint הפנימי) עדיין הציג נתונים באותו רגע בדיוק. זה פער אמיתי בצד קיק עצמו
+            // בין האופן שבו הם מאפסים/מחשבים "שבועי" לכל אחד מהמדדים - לא קאש תקוע ולא באג כאן.
+            // שני הצדדים מציגים בדיוק את מה שקיק מחזיר; אין מה "לתקן" בלי לזייף/להסתיר נתונים
+            // אמיתיים
             function renderDonators() {
                 if (donatorsMode === "kicks") {
                     renderDonatorTable("donatorsAllTimeRows", lastKicksAllTime, "אין נתוני Kicks זמינים", DONATORS_ICONS.kicks);
