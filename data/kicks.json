@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-26T23:34:33.063Z",
+  "generatedAt": "2026-07-27T01:13:20.540Z",
   "lifetime": [
     {
       "username": "liorbond",
@@ -42,46 +42,5 @@
       "quantity": 5000
     }
   ],
-  "weekly": [
-    {
-      "username": "2PAC_3D",
-      "quantity": 1500
-    },
-    {
-      "username": "TheRoaringKing",
-      "quantity": 1000
-    },
-    {
-      "username": "AVIathol",
-      "quantity": 1000
-    },
-    {
-      "username": "Storm_q0",
-      "quantity": 500
-    },
-    {
-      "username": "Shpachtel",
-      "quantity": 500
-    },
-    {
-      "username": "Itotem",
-      "quantity": 500
-    },
-    {
-      "username": "ilay20091987",
-      "quantity": 500
-    },
-    {
-      "username": "HotK477",
-      "quantity": 500
-    },
-    {
-      "username": "K4libro",
-      "quantity": 500
-    },
-    {
-      "username": "nohelet_shakranit",
-      "quantity": 500
-    }
-  ]
+  "weekly": []
 }
