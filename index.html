@@ -12,18 +12,18 @@
 
     <!-- Preload/preconnect - מתחילים להוריד את הנכסים הקריטיים (וידאו האינטרו, תמונת הפרופיל, גופן חיצוני)
          מוקדם ככל האפשר, במקביל לפרסור ה-HTML, במקום לחכות שהדפדפן יגיע אליהם בהמשך המסמך -->
-    <link rel="preload" as="video" href="assets/media/intro.mp4?v=10.20-brave-gpu-compositor-fix" type="video/mp4">
+    <link rel="preload" as="video" href="assets/media/intro.mp4?v=10.21-leaderboard-pixel-perfect" type="video/mp4">
     <link rel="preload" as="image" href="assets/images/profile.jpg">
     <link rel="preload" as="image" href="assets/images/bg-jungle.webp">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-    <link rel="stylesheet" href="style.css?v=10.20-brave-gpu-compositor-fix">
+    <link rel="stylesheet" href="style.css?v=10.21-leaderboard-pixel-perfect">
     <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;700;900&display=swap" rel="stylesheet">
 
     <!-- script.js נטען מוקדם עם defer - מתחיל להוריד אותו מיד (במקביל לפרסור ה-HTML) במקום להמתין
          שהפרסר יגיע לתחתית הגוף, בלי לחסום את הרינדור (defer מריץ אותו רק אחרי שה-DOM מוכן) -->
-    <script src="script.js?v=10.20-brave-gpu-compositor-fix" defer></script>
+    <script src="script.js?v=10.21-leaderboard-pixel-perfect" defer></script>
 </head>
 <body>
 
@@ -31,7 +31,7 @@
         <video
             class="intro-video"
             id="introVideo"
-            src="assets/media/intro.mp4?v=10.20-brave-gpu-compositor-fix"
+            src="assets/media/intro.mp4?v=10.21-leaderboard-pixel-perfect"
             muted
             playsinline
             webkit-playsinline="true"
@@ -66,17 +66,17 @@
 
                 <section class="tab-panel active" id="tab-home">
 
-                    <a href="https://discord.com/invite/E6NmAAdjzJ" class="link-btn" target="_blank" rel="noopener">
+                    <a href="https://www.youtube.com/@PedroFederer" class="link-btn" target="_blank" rel="noopener">
                         <span class="icon">
-                            <img src="assets/images/Discord_logo.png" alt="Discord" class="original-logo">
+                            <img src="assets/images/Youtube_logo.png" alt="YouTube" class="original-logo">
                         </span>
                         <div class="btn-text">
-                            <span class="main-text">שרת הדיסקורד</span>
+                            <span class="main-text">לשידורים ב-YouTube</span>
                         </div>
                         <div class="badge-slot"></div>
                     </a>
 
-                    <a href="https://kick.com/pedrofederer" class="link-btn" target="_blank" rel="noopener">
+                    <a href="https://kick.com/pedrofederer" class="link-btn kick" target="_blank" rel="noopener">
                         <span class="icon">
                             <img src="assets/images/Kick_logo.png" alt="Kick" class="original-logo">
                         </span>
@@ -91,32 +91,12 @@
                         </div>
                     </a>
 
-                    <a href="https://www.youtube.com/@PedroFederer" class="link-btn" target="_blank" rel="noopener">
+                    <a href="https://discord.com/invite/E6NmAAdjzJ" class="link-btn" target="_blank" rel="noopener">
                         <span class="icon">
-                            <img src="assets/images/Youtube_logo.png" alt="YouTube" class="original-logo">
+                            <img src="assets/images/Discord_logo.png" alt="Discord" class="original-logo">
                         </span>
                         <div class="btn-text">
-                            <span class="main-text">לשידורים ב-YouTube</span>
-                        </div>
-                        <div class="badge-slot"></div>
-                    </a>
-
-                    <a href="https://www.instagram.com/nick.seff/" class="link-btn" target="_blank" rel="noopener">
-                        <span class="icon">
-                            <img src="assets/images/instagram_logo.png" alt="Instagram" class="original-logo">
-                        </span>
-                        <div class="btn-text">
-                            <span class="main-text">Instagram</span>
-                        </div>
-                        <div class="badge-slot"></div>
-                    </a>
-
-                    <a href="https://www.tiktok.com/@nick.seff" class="link-btn" target="_blank" rel="noopener">
-                        <span class="icon">
-                            <img src="assets/images/tiktok_logo.png" alt="TikTok" class="original-logo">
-                        </span>
-                        <div class="btn-text">
-                            <span class="main-text">Tiktok</span>
+                            <span class="main-text">שרת הדיסקורד</span>
                         </div>
                         <div class="badge-slot"></div>
                     </a>
@@ -131,16 +111,34 @@
                         <div class="badge-slot"></div>
                     </a>
 
-                    <a href="https://www.kaycollectorz.com/he" class="link-btn kai" target="_blank" rel="noopener">
+                    <a href="https://www.tiktok.com/@nick.seff" class="link-btn" target="_blank" rel="noopener">
                         <span class="icon">
-                            <img src="assets/images/PFKAY.png" alt="קאי קולקטורס" class="original-logo">
+                            <img src="assets/images/tiktok_logo.png" alt="TikTok" class="original-logo">
                         </span>
                         <div class="btn-text">
-                            <span class="main-text">קאי קולקטורז</span>
+                            <span class="main-text">Tiktok</span>
                         </div>
-                        <div class="badge-slot">
-                            <span class="sub-text">קוד PFKAY ל5% הנחה</span>
+                        <div class="badge-slot"></div>
+                    </a>
+
+                    <a href="https://www.instagram.com/nick.seff/" class="link-btn" target="_blank" rel="noopener">
+                        <span class="icon">
+                            <img src="assets/images/instagram_logo.png" alt="Instagram" class="original-logo">
+                        </span>
+                        <div class="btn-text">
+                            <span class="main-text">Instagram</span>
                         </div>
+                        <div class="badge-slot"></div>
+                    </a>
+
+                    <a href="https://discord.com/invite/g49uJY7Mem" class="link-btn discord-frag" target="_blank" rel="noopener">
+                        <span class="icon">
+                            <img src="assets/images/Discord_logo.png" alt="Discord" class="original-logo">
+                        </span>
+                        <div class="btn-text">
+                            <span class="main-text">דיסקורד בשמים</span>
+                        </div>
+                        <div class="badge-slot"></div>
                     </a>
 
                     <a href="https://kolboyehuda.co.il/" class="link-btn shop-black" target="_blank" rel="noopener">
@@ -155,14 +153,16 @@
                         </div>
                     </a>
 
-                    <a href="https://discord.com/invite/g49uJY7Mem" class="link-btn discord-frag" target="_blank" rel="noopener">
+                    <a href="https://www.kaycollectorz.com/he" class="link-btn kai" target="_blank" rel="noopener">
                         <span class="icon">
-                            <img src="assets/images/Discord_logo.png" alt="Discord" class="original-logo">
+                            <img src="assets/images/PFKAY.png" alt="קאי קולקטורס" class="original-logo">
                         </span>
                         <div class="btn-text">
-                            <span class="main-text">דיסקורד בשמים</span>
+                            <span class="main-text">קאי קולקטורז</span>
                         </div>
-                        <div class="badge-slot"></div>
+                        <div class="badge-slot">
+                            <span class="sub-text">קוד PFKAY ל5% הנחה</span>
+                        </div>
                     </a>
 
                 </section>
@@ -178,6 +178,9 @@
                              ישירות לתצוגה שלו; קו ההתקדמות בתחתית הפלח הפעיל ממלא ברצף על פני 8 שניות
                              עד למעבר אוטומטי הבא - ללא עצירה ב-hover בכוונה (ר' #tab-donators ב-JS/CSS) -->
                         <div class="donators-toggle" id="donatorsToggle" role="tablist" aria-label="בחירת תצוגת גיפטרים">
+                            <span class="donators-toggle-badge donators-toggle-badge-gift" aria-hidden="true">
+                                <img src="assets/images/gift.png" alt="">
+                            </span>
                             <button type="button" class="donators-toggle-segment active" data-mode="gifts" role="tab" aria-selected="true">
                                 <span class="donators-toggle-segment-text">GIFTED SUBS</span>
                                 <span class="donators-toggle-segment-progress" aria-hidden="true"></span>
@@ -186,6 +189,9 @@
                                 <span class="donators-toggle-segment-text">TOP KICKS</span>
                                 <span class="donators-toggle-segment-progress" aria-hidden="true"></span>
                             </button>
+                            <span class="donators-toggle-badge donators-toggle-badge-boot" aria-hidden="true">
+                                <img src="assets/images/cash.png" alt="">
+                            </span>
                         </div>
 
                         <!-- בלור אחד משותף מאחורי שני כרטיסי הגיפטרים (ר' .donators-grid ב-CSS) - עקבי
@@ -194,20 +200,20 @@
                         <div class="donators-grid">
 
                             <div class="donator-card">
-                                <h2 class="donator-card-title">
+                                <h2 class="donator-card-title visually-hidden">
                                     <svg class="donator-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false">
                                         <path d="M3 18L5 7l3.5 5L12 6l3.5 6L19 7l2 11H3z"/>
                                         <rect x="4" y="19" width="16" height="2" rx="1"/>
                                     </svg>
                                     All-Time Top Gifters
                                 </h2>
-                                <div class="donator-table-wrap">
+                                <div class="donator-table-wrap donator-table-wrap-alltime">
                                     <table class="donator-table" dir="ltr">
                                         <thead>
                                             <tr>
                                                 <th><span class="donators-header-label">RANK</span></th>
-                                                <th><span class="donators-header-label">Username</span></th>
-                                                <th class="donators-unit-header"><span class="donators-header-label">Gifted Subs</span></th>
+                                                <th><span class="donators-header-label">USERNAME</span></th>
+                                                <th class="donators-unit-header"><span class="donators-header-label">SUBS</span></th>
                                             </tr>
                                         </thead>
                                         <tbody id="donatorsAllTimeRows">
@@ -218,7 +224,7 @@
                             </div>
 
                             <div class="donator-card">
-                                <h2 class="donator-card-title">
+                                <h2 class="donator-card-title visually-hidden">
                                     <svg class="donator-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false">
                                         <path d="M7 4h10v6c0 2.8-2.2 5-5 5s-5-2.2-5-5V4z"/>
                                         <path d="M11 15h2v3h3v2H8v-2h3v-3z"/>
@@ -227,13 +233,13 @@
                                     </svg>
                                     Weekly Top Gifters
                                 </h2>
-                                <div class="donator-table-wrap">
+                                <div class="donator-table-wrap donator-table-wrap-weekly">
                                     <table class="donator-table" dir="ltr">
                                         <thead>
                                             <tr>
                                                 <th><span class="donators-header-label">RANK</span></th>
-                                                <th><span class="donators-header-label">Username</span></th>
-                                                <th class="donators-unit-header"><span class="donators-header-label">Gifted Subs</span></th>
+                                                <th><span class="donators-header-label">USERNAME</span></th>
+                                                <th class="donators-unit-header"><span class="donators-header-label">SUBS</span></th>
                                             </tr>
                                         </thead>
                                         <tbody id="donatorsWeeklyRows">
@@ -253,23 +259,24 @@
 
                     <div class="leaderboard">
 
-                        <!-- עוטף את 4 פאנלי הזכוכית (היה 4 backdrop-filter:blur נפרדים) בשכבת בלור אחת
-                             משותפת (ר' .leaderboard-glass-group ב-CSS) - מפחית את מספר משטחי הבלור
-                             הבו-זמניים שכרום צריך לחשב כל פריים, בלי לגעת בגבול/רקע/צורה של כל פאנל.
-                             ה-disclaimer נשאר מחוץ לעטיפה בכוונה - הוא לא היה פאנל זכוכית מטושטש
-                             מלכתחילה ולא אמור להיראות שונה עכשיו -->
+                        <!-- עוטף את פאנלי הזכוכית (backdrop-filter:blur משותף - ר' .leaderboard-glass-group
+                             ב-CSS) בשתי קבוצות נפרדות (hero, ואז timer+table) במקום קבוצה רציפה אחת -
+                             כדי שהפודיום שביניהן יישאר לגמרי מחוץ לשכבת הטשטוש (ללא רקע כהה/blur מאחוריו,
+                             שוכב ישירות על רקע העמוד, בהתאם למוקאפ). ה-disclaimer נשאר מחוץ לעטיפה בכוונה -
+                             הוא לא היה פאנל זכוכית מטושטש מלכתחילה ולא אמור להיראות שונה עכשיו -->
                         <div class="leaderboard-glass-group">
-
                             <div class="csgoroll-hero" dir="ltr">
                                 <img src="assets/images/PF5.png" alt="" aria-hidden="true" class="csgoroll-hero-logo">
                                 <span class="csgoroll-hero-title"><span class="hero-amount">🪙 7,500</span> CODE <span class="hero-code">PF5</span> LEADERBOARD</span>
                                 <img src="assets/images/Roll.png" alt="" aria-hidden="true" class="csgoroll-hero-roll">
                             </div>
+                        </div>
 
-                            <div class="leaderboard-podium" id="leaderboardPodium" dir="ltr">
-                                <div class="podium-skeleton">טוען לידרבורד...</div>
-                            </div>
+                        <div class="leaderboard-podium" id="leaderboardPodium" dir="ltr">
+                            <div class="podium-skeleton">טוען לידרבורד...</div>
+                        </div>
 
+                        <div class="leaderboard-glass-group">
                             <div class="leaderboard-timer">
                                 <div class="timer-badge" dir="ltr">
                                     <span class="timer-badge-text">Leaderboard Ends In</span>
@@ -303,11 +310,11 @@
                                     </tbody>
                                 </table>
                             </div>
-
                         </div>
 
                         <p class="leaderboard-disclaimer">
-                            Disclaimer: Please gamble responsibly (18+). We assume no responsibility for any financial losses or outcomes incurred on external gambling or promotional platforms linked on this site.
+                            <span class="disclaimer-badge" aria-hidden="true"><span class="disclaimer-star">⭐</span></span>
+                            <span>Disclaimer: Please gamble responsibly (18+). We assume no responsibility for any financial losses or outcomes incurred on external gambling or promotional platforms linked on this site.</span>
                         </p>
 
                     </div>
@@ -450,13 +457,15 @@
                     return {
                         x: Math.random() * canvas.width,
                         y: Math.random() * canvas.height,
-                        // רדיוס גדול משמעותית (היה 0.4-2.0px) - כל גחלת בודדת בולטת וניכרת יותר
-                        r: Math.random() * 2.5 + 1.5,
-                        // תנועה משוטטת דו-ממדית - vx/vy סימטריים סביב 0 בשני הצירים, כל חלקיק
-                        // נודד במסלול האקראי-עצמאי שלו על פני כל המסך, בלי הטיה קבועה לכיוון
-                        // מסוים (לא "עולה" יותר, לא "שוקעת" - נודדת)
-                        vx: (Math.random() - 0.5) * 0.2,
-                        vy: (Math.random() - 0.5) * 0.2,
+                        // רדיוס גדול משמעותית יותר (היה 1.5-4.0px, כלומר קוטר 3-8px) - קוטר
+                        // 6-16px עכשיו, בערך כפול, כל גחלת בודדת בולטת וניכרת משמעותית יותר
+                        r: Math.random() * 5 + 3,
+                        // תנועה משוטטת דו-ממדית, מהירה משמעותית יותר (פי 3, היה *0.2) - vx/vy
+                        // סימטריים סביב 0 בשני הצירים, כל חלקיק נודד במסלול האקראי-עצמאי שלו
+                        // על פני כל המסך, בלי הטיה קבועה לכיוון מסוים (לא "עולה" יותר, לא
+                        // "שוקעת" - נודדת, רק מהר יותר)
+                        vx: (Math.random() - 0.5) * 0.6,
+                        vy: (Math.random() - 0.5) * 0.6,
                         o,
                         // מחרוזת ה-rgba מחושבת פעם אחת בזמן היצירה במקום להיבנות מחדש
                         // בכל פריים לכל חלקיק (עד 480 הקצאות מחרוזת מיותרות בשנייה, שהיו
@@ -506,8 +515,8 @@
                             p.y < EDGE_MARGIN || p.y > canvas.height - EDGE_MARGIN) {
                             p.x = canvas.width * (0.1 + Math.random() * 0.8);
                             p.y = canvas.height * (0.1 + Math.random() * 0.8);
-                            p.vx = (Math.random() - 0.5) * 0.2;
-                            p.vy = (Math.random() - 0.5) * 0.2;
+                            p.vx = (Math.random() - 0.5) * 0.6;
+                            p.vy = (Math.random() - 0.5) * 0.6;
                         }
 
                         ctx.beginPath();
@@ -632,13 +641,6 @@
                 return prizes;
             }
 
-            function medalIcon(rank) {
-                if (rank === 1) return "👑";
-                if (rank === 2) return "🥈";
-                if (rank === 3) return "🥉";
-                return "";
-            }
-
             function renderLeaderboard(players, monthlyReward) {
                 const prizes = computePrizes(monthlyReward);
                 const top3 = players.slice(0, 3);
@@ -646,30 +648,20 @@
 
                 const podiumEl = document.getElementById("leaderboardPodium");
                 const order = [2, 1, 3];
+                /* התג המשושה, הכתר, המסגרת התלת-ממדית וכותרות "WAGERED"/"PRIZE" כולם
+                   מצוירים כבר בתוך קובצי ה-PNG החדשים (card-gold/silver/bronze.png) -
+                   ה-markup כאן נשאר רק לתוכן הדינמי עצמו (אווטר/שם/סכומים), ממוקם
+                   באמצעות position:absolute (ר' style.css) בתוך האזורים הריקים המיועדים
+                   שכבר מצוירים על גבי הפריים */
                 podiumEl.innerHTML = order.map(rank => {
                     const player = top3[rank - 1];
                     if (!player) return "";
-                    const label = rank === 1 ? "1st" : rank === 2 ? "2nd" : "3rd";
-                    const sparkles = rank === 1
-                        ? `<span class="podium-sparkle sparkle-a" aria-hidden="true">✨</span><span class="podium-sparkle sparkle-b" aria-hidden="true">✨</span>`
-                        : "";
                     return `
                         <div class="podium-card rank-${rank}">
-                            ${sparkles}
-                            <span class="podium-medal">${medalIcon(rank)}</span>
-                            <span class="podium-label">${label}</span>
                             <img class="podium-avatar" src="${player.avatar}" alt="${player.name}" onerror="this.onerror=null;this.src='assets/images/profile.jpg';">
                             <span class="podium-name">${player.name}</span>
-                            <div class="podium-stats">
-                                <div class="stat-pill">
-                                    <span class="stat-label">Wagered</span>
-                                    <span class="stat-value">🪙 ${player.wagered.toLocaleString("en-US")}</span>
-                                </div>
-                                <div class="stat-pill prize-pill">
-                                    <span class="stat-label">Prize</span>
-                                    <span class="stat-value">🪙 ${prizes[rank].toLocaleString("en-US")}</span>
-                                </div>
-                            </div>
+                            <span class="podium-wagered-value">🪙 ${player.wagered.toLocaleString("en-US")}</span>
+                            <span class="podium-prize-value">🪙 ${prizes[rank].toLocaleString("en-US")}</span>
                         </div>`;
                 }).join("");
 
@@ -774,10 +766,6 @@
                 kicks: '<img class="donator-quantity-icon" src="assets/images/cash.png" alt="" aria-hidden="true">'
             };
 
-            // כתר קטן ליד תג הדירוג של מקום #1 בלבד - אותו path בדיוק כמו אייקון הכתר בכותרת
-            // כרטיס "All-Time Top Gifters" (עקביות עיצובית, ולא path חדש/לא-מאומת)
-            const DONATORS_CROWN_BADGE = '<svg class="rank-crown-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false"><path d="M3 18L5 7l3.5 5L12 6l3.5 6L19 7l2 11H3z"/><rect x="4" y="19" width="16" height="2" rx="1"/></svg>';
-
             // true רק בזמן ה-render היחיד שמקורו במעבר מצב ידני/אוטומטי (ר' setDonatorsMode
             // למטה) - קובע אם השורות החדשות מקבלות את מחלקת stagger-הכניסה (donators-row-stagger,
             // ר' CSS). רענון תקופתי רגיל של אותו מצב (loadDonators שרץ כל שעה) לא מדליק את זה,
@@ -798,8 +786,8 @@
                     const isFirst = idx === 0;
                     return `
                         <tr class="${isFirst ? "rank-first" : ""}${staggerClass}">
-                            <td><span class="rank-badge${isFirst ? " rank-badge-first" : ""}">${idx + 1}</span>${isFirst ? DONATORS_CROWN_BADGE : ""}</td>
-                            <td>${escapeHtml(g.username)}</td>
+                            <td><span class="rank-badge${isFirst ? " rank-badge-first" : ""}">${idx + 1}</span></td>
+                            <td class="donator-user-cell"><span>${escapeHtml(g.username)}</span></td>
                             <td class="gift-count-cell">${iconHtml} ${Number(g.quantity || 0).toLocaleString("en-US")}</td>
                         </tr>`;
                 }).join("");
@@ -875,7 +863,7 @@
                 }
             }
 
-            const DONATORS_COLUMN_LABELS = { gifts: "Gifted Subs", kicks: "Kicks" };
+            const DONATORS_COLUMN_LABELS = { gifts: "SUBS", kicks: "KICKS" };
             let donatorsMode = "gifts"; // "gifts" | "kicks"
             const donatorsUnitHeaders = document.querySelectorAll(".donators-unit-header");
             const donatorsTableWraps = document.querySelectorAll(".donator-table-wrap");

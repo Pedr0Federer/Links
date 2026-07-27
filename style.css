@@ -16,14 +16,14 @@ body {
     scrollbar-color: #ff9900 #0a0a0a;
 }
 
-/* רקע ג'ונגל בהיר וחי (ניסוי עיצובי) - שכבת האפלה כמעט הוסרה כדי שהתמונה תישאר תוססת,
-   ללא "עמעום" כהה על אזור המרכז.
-   בדסקטופ הרקע עובר מ-background-attachment:fixed על ה-body לפסאודו-אלמנט position:fixed
-   נפרד: background-attachment:fixed גורם לכרום להתייחס לרקע כחלק מהשכבה הגוללת של המסמך
-   שצריך לצייר מחדש על ה-main thread (לא מואץ-GPU) בכל אינווליוד - כולל כל פריים של קנבס
-   החלקיקים/הזוהרים שרצים מתחתיו - בניגוד ל-position:fixed אמיתי שכרום כן יכול לקדם
-   לשכבת קומפוזיציה עצמאית וזולה לשמור כמות שהיא. התוצאה הוויזואלית זהה לחלוטין בדסקטופ -
-   אותה תמונה קבועה שלא זזה עם הגלילה.
+/* רקע ג'ונגל קבוע (bg-jungle.webp) - זהו כל הרקע כעת (וידאו הרקע הוסר לגמרי). שכבת
+   האפלה כמעט הוסרה כדי שהתמונה תישאר תוססת, ללא "עמעום" כהה על אזור המרכז.
+   בדסקטופ: במקום background-attachment:fixed ישירות על ה-body, משתמשים בפסאודו-אלמנט
+   position:fixed נפרד - התוצאה הוויזואלית זהה לגמרי (אותה תמונה קבועה שלא זזה עם הגלילה),
+   אבל attachment:fixed גורם לכרום להתייחס לרקע כחלק מהשכבה הגוללת של המסמך שצריך לצייר
+   מחדש על ה-main thread (לא מואץ-GPU) בכל אינווליוד - כולל כל פריים של קנבס החלקיקים/
+   הזוהרים שרצים מתחתיו - בעוד ש-position:fixed אמיתי כרום כן יכול לקדם לשכבת קומפוזיציה
+   עצמאית וזולה לשמור כמות שהיא.
    בנייד ממשיכים עם המנגנון המקורי (background-image רגיל על ה-body, ר' המדיה-קוורי למטה) כדי
    לשמר בדיוק את אותה חשיבת cover/מיקום שהייתה קיימת קודם, בלי לסכן שינוי ויזואלי בעמודים
    גבוהים מגלילה אחת - שם ממילא attachment:fixed לא היה בשימוש (הבאג ב-iOS Safari) */
@@ -50,12 +50,9 @@ body {
     }
 }
 
-/* שכבת האפלה עדינה ומשותפת מעל הרקע - בין אם זה רקע הווידאו (.bg-video) או התמונה
-   הסטטית (body::before/רקע ה-body בנייד) - משפרת ניגודיות וקריאות של הטקסט/ה-UI מעליה,
-   ללא קשר לאיזה מהשניים פעיל כרגע. ::after על body תמיד מצויר אחרון מבין צאצאי body
-   באותה שכבת z-index (-1, כמו #particles-bg/.glow-orb/.bg-video עצמם) - ללא תלות בכך
-   שהווידאו מוזרק דינמית ע"י script.js (ר' initVideoBackground), כך שהעמעום הזה תמיד
-   "יושב" נכון מעל מה שכבר קיים בלי שום שינוי נדרש ב-JS/HTML */
+/* שכבת האפלה עדינה מעל הרקע הסטטי (body::before/רקע ה-body בנייד) - משפרת ניגודיות
+   וקריאות של הטקסט/ה-UI מעליו. ::after על body תמיד מצויר אחרון מבין צאצאי body באותה
+   שכבת z-index (-1, כמו #particles-bg/.glow-orb) */
 body::after {
     content: "";
     position: fixed;
@@ -126,44 +123,6 @@ body::after {
 
 ::-webkit-scrollbar-thumb:hover {
     background: linear-gradient(135deg, #ffcc33, #ff9900);
-}
-
-/* === רקע וידאו (מותנה חומרה) - מוזרק ל-DOM ע"י script.js רק אחרי שנקבע במלואו שהאצת
-   חומרה פעילה ו-low-perf כבוי (ר' initVideoBackground). z-index:-1 שם אותו מעל הרקע
-   הסטטי (body::before, z-index:-10) - "מחליף" אותו ויזואלית בלי להסיר אותו מה-DOM - אבל
-   עדיין מתחת לכל תוכן האתר האמיתי ולשכבות #particles-bg/.glow-orb שמצוירות מעליו (אותה
-   שכבת z-index בדיוק, אבל אחריו בסדר ה-DOM). object-fit:cover מבטיח כיסוי מלא של המסך
-   בלי עיוות יחס-גובה-רוחב, בדיוק כמו background-size:cover של הרקע הסטטי.
-   opacity מתחיל מ-0 כדי שהתמונה הסטטית (bg-jungle.webp) תישאר גלויה חלק עד שה-JS
-   מאשר (אירוע playing/timeupdate) שהפריים הראשון באמת מוצג על המסך - רק אז נוספת
-   .loaded שמעלה ל-opacity:1 עם fade חלק, ומונעת קפיצה/הבזק ברגע טעינת הווידאו */
-.bg-video {
-    display: block !important;
-    visibility: visible !important;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    object-fit: cover;
-    z-index: -1;
-    pointer-events: none;
-    opacity: 0;
-    transition: opacity 0.8s ease-in-out;
-    /* מקדם את הווידאו לשכבת קומפוזיציה עצמאית קבועה בכוח - עוקף באג ידוע ב-Brave (וכמה
-       בילדים מבוססי-Chromium אחרים) שבו וידאו רקע position:fixed/z-index:-1 "קופא" על
-       פריים סטטי ומתקדם רק כשאירוע repaint חיצוני (כמו גלילה) מכריח את הדפדפן לצייר
-       מחדש - נובע מכך שהאלמנט לא מקודם לשכבת GPU עצמאית, כך שעדכוני הטקסטורה שלו תלויים
-       באותו מחזור paint כמו שאר העמוד (כולל שכבות backdrop-filter כמו .modal-overlay
-       שמצוירת מעליו בטעינת הדף) במקום להתעדכן ישירות דרך ה-compositor thread בכל פריים,
-       ללא תלות בפעילות main-thread */
-    transform: translateZ(0);
-    will-change: transform, opacity;
-    backface-visibility: hidden;
-}
-
-.bg-video.loaded {
-    opacity: 1;
 }
 
 /* === רקע חלקיקים מונפש === */
@@ -505,26 +464,27 @@ h1 {
     display: flex;
 }
 
-/* === רשת קישורים לטאב הבית - 3x3 אחיד וסימטרי, כל 9 הכרטיסים באותו גודל/צורה === */
+/* === רשת קישורים לטאב הבית - 3x3 גלאסמורפי אחיד, כל 9 הכרטיסים באותו גודל/צורה === */
 #tab-home.tab-panel.active {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 14px;
+    gap: 20px;
+    max-width: 1100px;
+    margin: 0 auto;
     position: relative;
 }
 
 /* בלור אחד משותף מאחורי כל רשת 9 הכרטיסים, במקום backdrop-filter נפרד על כל .link-btn -
-   שקוף לגמרי חוץ מהטשטוש עצמו; כל כרטיס שומר על הרקע/גבול/clip-path/hover שלו בדיוק
-   כמו קודם. ה"מחיר" היחיד: מרווחי הרשת שבין הכרטיסים (שהיו קודם חדים/לא מטושטשים,
-   כי כל בלור נחתך בדיוק לצורת הכרטיס שלו) מטושטשים עכשיו גם הם, כי שכבה אחת מלבנית
-   מכסה את כל אזור הרשת */
+   נותן לכל כרטיס את אותו מראה "זכוכית מטושטשת" (glassmorphism) מול הרקע שמאחוריו, בלי
+   9 שכבות backdrop-filter נפרדות שיקרות משמעותית יותר לרינדור. שקוף לגמרי חוץ מהטשטוש
+   עצמו - הרקע/הגבול/הצל של כל כרטיס נשארים משלו לחלוטין (ר' .link-btn) */
 #tab-home.tab-panel.active::before {
     content: "";
     position: absolute;
     inset: 0;
     z-index: -1;
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
     pointer-events: none;
 }
 
@@ -550,28 +510,11 @@ h1 {
         padding: 18px 12px;
     }
 
+    /* התג העגול גדל מעט בדסקטופ, נשאר אחיד לכל 9 הכרטיסים (פיצוי הלוגואים הספציפיים
+       נשאר על .original-logo, לא תלוי ברוחב המסך) */
     .icon {
-        width: 70px;
-        height: 70px;
-    }
-
-    /* מקורות התמונה של Reddit ו-PFKAY כוללות שוליים שקופים/תוכן נוסף מובנה בקובץ,
-       כך שבאותה תיבת אייקון הן נראות קטנות יותר מהלוגואים האחרים - מגדילים את התיבה שלהן לאיזון ויזואלי */
-    .link-btn.reddit .icon {
-        width: 92px;
-        height: 92px;
-    }
-
-    /* לוגו קאי קולקטורס מוגדל (~25%) כדי לתאום למשקל הוויזואלי של שאר האייקונים */
-    .link-btn.kai .icon {
-        width: 80px;
-        height: 80px;
-    }
-
-    /* כלבו יהודה - נשאר בגודל המקורי (הכרטיס היחיד האחר עם תגית קופון) */
-    .link-btn.shop-black .icon {
-        width: 64px;
-        height: 64px;
+        width: 76px;
+        height: 76px;
     }
 
     .main-text {
@@ -583,51 +526,42 @@ h1 {
     }
 }
 
+/* כרטיס גלאסמורפי - רקע כהה שקוף, פינות מעוגלות, גבול זהב דק, צל פנימי+חיצוני.
+   ללא image background - הכל CSS טהור (rgba + backdrop-filter המשותף למעלה) */
 .link-btn {
-    /* אקורד זהב מטאלי אחיד לכל 9 הכרטיסים - לא עוד צבע קשת/מותג שונה לכל כרטיס */
-    --brand: 212 175 55;
-    /* זכוכית קפואה עם גוון כהה עדין - לשמור על ניגודיות טקסט מול הרקע הבהיר.
-       backdrop-filter הוסר מכאן בכוונה: 9 בלורים נפרדים (אחד לכל כרטיס) הוחלפו בבלור
-       אחד משותף שיושב מאחורי כל הרשת (ר' #tab-home::before) - הרקע/גבול/צורה של כל
-       כרטיס נשארו זהים לחלוטין */
-    background: rgba(15, 20, 10, 0.45);
+    /* בהיר יותר משקוף יותר (היה rgba(18,24,36,0.55) אחיד) - גרדיאנט עדין בהיר-למעלה/
+       כהה-למטה, כדי שרקע הג'ונגל הטרופי מאחורי הכרטיס יבצבץ קלות דרכו (glassmorphism
+       אמיתי), לא קופסה כהה כמעט אטומה */
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.12) 0%, rgba(10, 15, 25, 0.4) 100%);
     text-decoration: none;
     padding: 14px 8px;
-    /* צורת "שבבים חתוכים" (ניסוי עיצובי) - זווית ישרה חדה למעלה-שמאל/מטה-ימין, פינה מעוגלת למעלה-ימין/מטה-שמאל */
-    border-radius: 0 16px 0 16px;
-    clip-path: polygon(16px 0, 100% 0, 100% calc(100% - 16px), calc(100% - 16px) 100%, 0 100%, 0 16px);
-    border: 1px solid rgba(255, 220, 100, 0.45);
-    /* מעברים על תכונות ספציפיות בלבד (במקום "all") - עקבי עם .tab-btn */
-    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275),
-        background 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275),
-        filter 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275),
-        border-color 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    /* תוכן הכרטיס (אייקון / כותרת / תגית) ממורכז כקבוצה אנכית - לא נדחף לפינות עם רווח ריק */
+    border-radius: 18px;
+    border: 1.5px solid rgba(255, 215, 0, 0.65);
+    box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.5), 0 8px 24px rgba(0, 0, 0, 0.4);
+    transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+    /* flex-start (לא center) - קריטי לסימטריה בין הכרטיסים: ה-grid מותח כל כרטיס לגובה
+       השורה הגבוה ביותר בה (למשל Kick עם live-pill, או כלבו יהודה/קאי עם תגית קופון),
+       ואם התוכן היה ממורכז אנכית, כרטיסים "קצרים" יותר (badge-slot ריק) היו מקבלים את
+       הלוגו/הכותרת שלהם במיקום אנכי שונה משכניהם הגבוהים יותר באותה שורה. עיגון לראש
+       הכרטיס מבטיח שהלוגו העגול והכותרת תמיד יושבים באותו גובה בדיוק בכל השורה, ללא
+       קשר לתוכן ה-badge-slot שמתחת (ריק/LIVE/קוד קופון) */
     display: flex;
     flex-direction: column;
     align-items: center;
     align-content: center;
-    justify-content: center;
+    justify-content: flex-start;
     gap: 6px;
     position: relative;
     min-height: 108px;
-    overflow: hidden;
-    /* filter:drop-shadow במקום box-shadow - עוקב אחרי הצללית החתוכה בפועל (clip-path),
-       ולא משאיר "דליפה" מלבנית כהה בפינות החתוכות */
-    filter: drop-shadow(0 8px 18px rgba(0, 0, 0, 0.35));
     opacity: 0;
-    will-change: transform;
-    /* fadeInUp מטפל בכניסה (transform), cardFloat מקבל שליטה על transform רק אחרי שהכניסה מסתיימת לכל כרטיס (ראו עיכובים למטה) */
-    animation: fadeInUp 0.6s ease-out forwards, cardFloat 11s ease-in-out infinite;
-    /* contain:layout style (בלי paint/size) - מבודד כל כרטיס מבחינת layout/style recalculation
-       מהשאר, בלי להשפיע על ה-overflow:hidden/clip-path הקיימים */
+    animation: fadeInUp 0.6s ease-out forwards;
     contain: layout style;
 }
 
-/* ריחוף עדין ומתמשך - "נשימה" שקטה ואיטית של הכרטיס (הזזה מינימלית, GPU-friendly) */
-@keyframes cardFloat {
-    0%, 100% { transform: translate3d(0, 0, 0); }
-    50% { transform: translate3d(0, -2px, 0); }
+/* זוהר חם אמביינטי מיוחד לכרטיס Kick (באמצע-עליון) - radial-gradient, לא צבע אחיד.
+   הגוון החיצוני עודכן לתאום לבסיס הבהיר-יותר החדש של שאר הכרטיסים (ר' .link-btn) */
+.link-btn.kick {
+    background: radial-gradient(circle at center, rgba(255, 200, 50, 0.25) 0%, rgba(10, 15, 25, 0.4) 80%);
 }
 
 /* ריחוף כללי לשימוש חוזר - טיימר, טבלת הלידרבורד ומכולות נוספות */
@@ -636,105 +570,33 @@ h1 {
     50% { transform: translate3d(0, -2px, 0); }
 }
 
-/* זוהר אמביינטי נושם מאחורי התוכן, בגוון המותג של כל כרטיס - שכבה עצמאית שלא מתנגשת עם box-shadow של מעבר עכבר */
-.link-btn::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    z-index: -1;
-    border-radius: inherit;
-    box-shadow: inset 0 0 18px rgb(var(--brand) / 0.08);
-    animation: ambientPulse 4s ease-in-out infinite;
-    pointer-events: none;
-    /* will-change:box-shadow מבקש מכרום שכבת קומפוזיציה נפרדת לפסאודו-אלמנט הזה - כך
-       שהצביעה החוזרת שלו כל 4 שניות (בגלל אנימציית box-shadow, שאינה compositor-only)
-       מוגבלת לשכבה הקטנה הזו בלבד, במקום להסתכן בגרירת השכבה היקרה של .link-btn עצמו
-       (שכוללת את ה-backdrop-filter blur) לצביעה חוזרת מיותרת יחד איתה */
-    will-change: box-shadow;
-}
-
-@keyframes ambientPulse {
-    0%, 100% { box-shadow: inset 0 0 16px rgb(var(--brand) / 0.06); }
-    50% { box-shadow: inset 0 0 30px rgb(var(--brand) / 0.24); }
-}
-
-.link-btn:nth-child(3n+1)::before { animation-delay: 0s; }
-.link-btn:nth-child(3n+2)::before { animation-delay: 1.3s; }
-.link-btn:nth-child(3n)::before { animation-delay: 2.6s; }
-
-/* קרן אור אלכסונית שחולפת על פני הכרטיס במעבר עכבר */
-.link-btn::after {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: -60%;
-    width: 45%;
-    height: 100%;
-    background: linear-gradient(120deg, transparent, rgba(255, 255, 255, 0.16), rgb(var(--brand) / 0.45), transparent);
-    transform: skewX(-20deg);
-    transition: left 0.7s ease;
-    pointer-events: none;
-    z-index: 2;
-}
-
-.link-btn:hover::after {
-    left: 130%;
-}
-
 .link-btn:hover {
-    /* important כדי לנצח את אנימציית cardFloat הפעילה שמחזיקה ב-transform */
-    transform: translateY(-8px) scale(1.045) !important;
-    /* עלייה חלקה + זוהר זהב מעט עשיר יותר מהמצב הרגיל */
-    background: rgba(15, 20, 10, 0.6);
-    filter: drop-shadow(0 14px 28px rgba(0, 0, 0, 0.4)) drop-shadow(0 0 16px rgb(var(--brand) / 0.45));
-    border-color: rgba(255, 220, 100, 0.65);
+    transform: translateY(-5px);
+    border-color: rgba(255, 222, 106, 0.8);
+    box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.5), 0 10px 25px rgba(255, 215, 0, 0.25);
 }
 
-/* השהייה הדרגתית לכניסת הכפתורים, ואחריה תחילת הריחוף האיטי לכל כרטיס בעיכוב מפוזר וטבעי */
-.link-btn:nth-child(1) { animation-delay: 0.1s, 0.7s; }
-.link-btn:nth-child(2) { animation-delay: 0.2s, 1.1s; }
-.link-btn:nth-child(3) { animation-delay: 0.3s, 1.5s; }
-.link-btn:nth-child(4) { animation-delay: 0.4s, 1.9s; }
-.link-btn:nth-child(5) { animation-delay: 0.5s, 2.3s; }
-.link-btn:nth-child(6) { animation-delay: 0.6s, 2.7s; }
-.link-btn:nth-child(7) { animation-delay: 0.7s, 3.1s; }
-.link-btn:nth-child(8) { animation-delay: 0.8s, 3.5s; }
-.link-btn:nth-child(9) { animation-delay: 0.9s, 3.9s; }
-
+/* תג עגול "זכוכיתי" תלת-ממדי מאחורי כל לוגו - גרדיאנט רדיאלי + גבול זהב + צל פנימי/חיצוני.
+   גודל אחיד (65px) לכל 9 הכרטיסים - הפיצוי החזותי ללוגואים עם שוליים שקופים מובנים
+   (Reddit/קאי/כלבו יהודה) עבר ל-.original-logo למטה (גודל הלוגו *בתוך* התג, לא התג עצמו) */
 .icon {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 60px;
-    height: 60px;
-    /* צל קטן לאייקון */
-    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+    width: 65px;
+    height: 65px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.15) 0%, rgba(0, 0, 0, 0.4) 100%);
+    border: 2px solid rgba(255, 222, 106, 0.6);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5), inset 0 2px 4px rgba(255, 255, 255, 0.3);
+    margin-bottom: 10px;
     transition: transform 0.3s ease;
 }
 
-/* מקורות התמונה של Reddit ו-PFKAY כוללות שוליים שקופים/תוכן נוסף מובנה בקובץ,
-   כך שבאותה תיבת אייקון הן נראות קטנות יותר מהלוגואים האחרים - מגדילים את התיבה שלהן לאיזון ויזואלי */
-.link-btn.reddit .icon {
-    width: 80px;
-    height: 80px;
-}
-
-/* לוגו קאי קולקטורס מוגדל (~25%) כדי לתאום למשקל הוויזואלי של שאר האייקונים */
-.link-btn.kai .icon {
-    width: 65px;
-    height: 65px;
-}
-
-/* כלבו יהודה - נשאר בגודל המקורי (הכרטיס היחיד האחר עם תגית קופון) */
-.link-btn.shop-black .icon {
-    width: 52px;
-    height: 52px;
-}
-
 .link-btn:hover .icon {
-    /* קפיצה עדינה של האייקון + זוהר זהב אחיד ועדין (לא עוד גוון לפי מותג) */
+    /* קפיצה עדינה של האייקון + זוהר זהב אחיד ועדין */
     animation: iconBounce 0.55s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
-    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3)) drop-shadow(0 0 9px rgb(var(--brand)));
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3)) drop-shadow(0 0 9px rgba(255, 215, 0, 0.7));
 }
 
 @keyframes iconBounce {
@@ -745,10 +607,32 @@ h1 {
 }
 
 .original-logo {
-    max-width: 100%;
-    max-height: 100%;
+    /* קטן יותר מהתג העגול שסביבו (לא 100%) - כדי שהלוגו יישב ממורכז עם רווח נשימה מהמסגרת,
+       לא ייגע בקצה העגול */
+    max-width: 60%;
+    max-height: 60%;
     object-fit: contain;
     display: block;
+}
+
+/* מקורות התמונה של Reddit ו-PFKAY כוללות שוליים שקופים/תוכן נוסף מובנה בקובץ, כך שבאותו
+   תג עגול הן נראות קטנות יותר מהלוגואים האחרים - מגדילים את הלוגו *בתוך* התג (לא את התג
+   עצמו, שנשאר אחיד 65px לכל הכרטיסים) לאיזון ויזואלי */
+.link-btn.reddit .original-logo {
+    max-width: 80%;
+    max-height: 80%;
+}
+
+/* לוגו קאי קולקטורס מוגדל כדי לתאום למשקל הוויזואלי של שאר האייקונים */
+.link-btn.kai .original-logo {
+    max-width: 87%;
+    max-height: 87%;
+}
+
+/* כלבו יהודה - נשאר קרוב לגודל הבסיס (הכרטיס היחיד האחר עם תגית קופון) */
+.link-btn.shop-black .original-logo {
+    max-width: 70%;
+    max-height: 70%;
 }
 
 /* משבצת הכותרת (Middle Slot) - גובה קבוע שמספיק לשתי שורות, כדי שכותרות קצרות/ארוכות
@@ -785,20 +669,18 @@ h1 {
     margin: 0;
 }
 
-/* שורת קוד קופון - תגית זהב מאט ומעודן, לא עוד זוהר צהוב רווי */
+/* תגית פרומו זהובה (כלבו יהודה / קאי קולקטור) - פיל זהב עגול */
 .sub-text {
     display: inline-flex;
     align-items: center;
-    padding: 3px 12px;
-    border-radius: 999px;
-    background: rgba(212, 175, 55, 0.1);
-    border: 1px solid rgba(212, 175, 55, 0.35);
-    color: #d4af37;
-    font-size: 0.85rem;
+    background: rgba(255, 215, 0, 0.2);
+    border: 1px solid #ffde6a;
+    border-radius: 20px;
+    padding: 4px 14px;
+    color: #ffde6a;
     font-weight: 700;
-    letter-spacing: 0.3px;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8), 0 0 2px rgba(0, 0, 0, 0.9);
-    box-shadow: none;
+    font-size: 13px;
+    margin-top: 8px;
 }
 
 footer {
@@ -810,30 +692,25 @@ footer {
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.9);
 }
 
-/* כל 9 הכרטיסים חולקים כעת את אותו --brand (זהב מטאלי) שהוגדר ב-.link-btn - אין יותר
-   צבע ייחודי למותג לכל כרטיס. נשארה כאן רק ההתאמה שבאמת ייחודית ללוגו עצמו (לא לצבע הכרטיס). */
-
 /* Discord Fragrance - דיסקורד בשמים: הלוגו לבן אחיד, תואם לשאר האייקונים */
 .link-btn.discord-frag .original-logo {
     filter: brightness(0) invert(1);
 }
 
-/* === תגית סטטוס שידור חי (Kick) === */
+/* === תגית סטטוס שידור חי (Kick) - פיל אפור עגול, כמו .sub-text אך ניטרלי; יורק/מאדים
+   כשה-JS מזהה שידור חי בפועל (ר' .live-pill.live למטה) === */
 .live-pill {
     display: inline-flex;
     align-items: center;
     gap: 5px;
-    font-size: 0.7rem;
-    font-weight: 700;
-    letter-spacing: 0.3px;
-    padding: 2px 8px;
+    background: rgba(255, 255, 255, 0.1);
     border-radius: 20px;
-    background: rgba(255, 255, 255, 0.06);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    color: #cbd5e0;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8), 0 0 2px rgba(0, 0, 0, 0.9);
+    padding: 3px 12px;
+    color: #aaa;
+    font-size: 12px;
+    margin-top: 8px;
     /* מעברים על תכונות ספציפיות בלבד (במקום "all") */
-    transition: color 0.3s ease, border-color 0.3s ease, background 0.3s ease;
+    transition: color 0.3s ease, background 0.3s ease;
 }
 
 .live-pill .dot {
@@ -869,42 +746,35 @@ footer {
     text-align: center;
 }
 
-/* עוטף את 4 פאנלי הזכוכית (hero/podium/timer/table) בשכבת backdrop-filter אחת ומשותפת
-   במקום 4 בלורים נפרדים - אותו gap:20px כמו ב-.leaderboard כדי שהמרווחים בין הפאנלים
-   יישארו זהים לחלוטין, בין אם הם ישירות בתוך .leaderboard או בתוך העטיפה הזו */
+/* עוטף פאנלי זכוכית (hero; ובנפרד timer+table) - קיים פעמיים ב-index.html. אין backdrop-filter
+   כאן בכוונה (הוסר לגמרי) - כל פאנל שוכב ישירות על רקע העמוד עם הרקע/גבול האטום שלו בלבד
+   (ר' .csgoroll-hero / .leaderboard-timer / .leaderboard-table-wrap), בלי אזור מטושטש
+   "עכור" מאחוריו. הפודיום (ר' .leaderboard-podium למטה) יושב כילד ישיר של .leaderboard בין
+   שתי המופעים, מחוץ לשתיהן. אותו gap:20px כמו ב-.leaderboard כדי שהמרווחים בין הפאנלים
+   יישארו זהים לחלוטין */
 .leaderboard-glass-group {
     display: flex;
     flex-direction: column;
     gap: 20px;
-    position: relative;
 }
 
-/* שכבת הבלור המשותפת עצמה - שקופה לגמרי חוץ מהטשטוש; כל פאנל שומר על הרקע/גבול/צורה
-   שלו בדיוק כמו קודם, רק בלי backdrop-filter משלו. ה"מחיר" היחיד: פינות הריווח שבין
-   הפאנלים (שהיו קודם חדים/לא מטושטשים) מטושטשות עכשיו גם הן, כי שכבה אחת מלבנית
-   מכסה את כל האזור במקום טשטוש נפרד שנחתך בדיוק לצורת כל פאנל */
-.leaderboard-glass-group::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    z-index: -1;
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    pointer-events: none;
-}
-
-/* === אזהרת אחריות (הימורים) בתחתית הלידרבורד === */
+/* === אזהרת אחריות (הימורים) בתחתית הלידרבורד - פס זכוכית קרם/זהב בהיר (תואם לטיימר/טבלה)
+   עם תג כוכב משושה בצד === */
 .leaderboard-disclaimer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
     max-width: 90%;
     margin: 1.5rem auto 0;
-    padding: 0.75rem 1rem;
-    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    padding: 0.85rem 1.2rem;
+    border-radius: 14px;
+    background: linear-gradient(160deg, rgba(250, 240, 214, 0.94) 0%, rgba(238, 220, 176, 0.94) 100%);
+    border: 1px solid rgba(184, 134, 11, 0.55);
     font-size: 0.75rem;
     font-weight: 600;
     line-height: 1.5;
-    /* טקסט חד + צל כהה חזק (ניסוי עיצובי) - כדי שהאזהרה תישאר קריאה מול רקע החול הבהיר */
-    color: #e0e0e0;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.9);
+    color: #4a3620;
     text-align: center;
     /* הטקסט הוא משפט אנגלי - כופים כיוון LTR מפורש (העמוד עצמו RTL) כדי שהנקודה בסוף
        תישאר בקצה הימני הנכון של המשפט, במקום "לקפוץ" שמאלה בגלל הקשר ה-BiDi שסביבה */
@@ -912,22 +782,32 @@ footer {
     unicode-bidi: isolate;
 }
 
+/* תג כוכב משושה זהב-מתכתי - אותה שפה חזותית כמו תגי הדירוג (podium/table) */
+.disclaimer-badge {
+    position: relative;
+    flex-shrink: 0;
+    width: 30px;
+    height: 34px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    clip-path: polygon(50% 0%, 100% 20%, 100% 65%, 50% 100%, 0% 65%, 0% 20%);
+    background: linear-gradient(160deg, #fff6cf 0%, #ffd700 45%, #b8860b 100%);
+    border: 2px solid transparent;
+    border-image: linear-gradient(160deg, #fff6cf, #ffd700 50%, #b8860b) 1;
+    box-shadow: 0 0 8px rgba(255, 215, 0, 0.55), 0 2px 4px rgba(0, 0, 0, 0.25);
+}
+
+.disclaimer-star {
+    font-size: 0.9rem;
+    filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.3));
+}
+
 .podium-skeleton,
 .loading-row {
     color: #9a8f85;
     font-size: 0.9rem;
     padding: 30px 10px;
-}
-
-/* זווית מונפשת המשמשת לסובב את מסגרת הזהב סביב מקום ראשון וטיימר */
-@property --border-angle {
-    syntax: '<angle>';
-    inherits: false;
-    initial-value: 0deg;
-}
-
-@keyframes rotateBorderAngle {
-    to { --border-angle: 360deg; }
 }
 
 /* === באנר גיבור (Hero Banner) של CSGORoll + קוד PF5, מעל הפודיום === */
@@ -941,16 +821,16 @@ footer {
     justify-content: space-between;
     gap: 22px;
     padding: 22px 30px;
-    /* צורת "שבבים חתוכים" (ניסוי עיצובי) - תואם לכרטיסי הבית */
-    border-radius: 0 20px 0 20px;
-    clip-path: polygon(22px 0, 100% 0, 100% calc(100% - 22px), calc(100% - 22px) 100%, 0 100%, 0 22px);
-    /* זכוכית זהובה זהה בדיוק לכרטיסי הבית (ניסוי עיצובי) - איחוד מלא בין הטאבים.
-       backdrop-filter הוסר מכאן - מוחלף בבלור אחד משותף על .leaderboard-glass-group */
-    background: rgba(15, 20, 10, 0.45);
-    border: 1px solid rgba(255, 220, 100, 0.45);
-    /* filter:drop-shadow לצל החיצוני (עוקב אחרי הצללית החתוכה) - הזוהר הפנימי נשאר box-shadow (inset) */
-    filter: drop-shadow(0 12px 24px rgba(0, 0, 0, 0.4));
-    box-shadow: inset 0 0 26px rgba(212, 175, 55, 0.05);
+    /* פינות מעוגלות גדולות - תואם למוקאפ, בניגוד ל"שבב חתוך" ששאר האתר משתמש בו */
+    border-radius: 20px;
+    /* פחות אטום/כהה מקודם, לפי בקשה מפורשת - !important לנצח בוודאות כל שכבה/מטמון קודם.
+       backdrop-filter הוחזר במפורש כאן בלבד (לא בשאר הפאנלים שהוסר מהם קודם) כדי שהרקע
+       הטרופי מאחורי הבאנר עדיין ייראה מטושטש-רך דרך הזכוכית השקופה יותר */
+    background: rgba(15, 23, 35, 0.4) !important;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1.5px solid rgba(255, 215, 0, 0.4);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.4), inset 0 0 26px rgba(212, 175, 55, 0.05);
     opacity: 0;
     will-change: transform;
     contain: layout style;
@@ -990,9 +870,9 @@ footer {
        ומרכזית יותר בבאנר. text-align:center שומר על הטקסט ממורכז בתוך הקופסה הרחבה יותר */
     flex: 1;
     text-align: center;
-    font-size: 1.4rem;
-    font-weight: 700;
-    letter-spacing: 2px;
+    font-size: 26px;
+    font-weight: 900;
+    letter-spacing: 1.5px;
     text-transform: uppercase;
     color: #ffffff;
     white-space: nowrap;
@@ -1058,22 +938,22 @@ footer {
 .leaderboard-podium {
     display: flex;
     align-items: flex-end;
-    gap: 12px;
+    /* הכרטיסים כעת flex:1 (ר' .podium-card) - ממלאים את כל רוחב הפאנל בעצמם, אז אין
+       יותר צורך ב-justify-content:center למרכוז; gap גדול יותר (14px, היה 8px) כי
+       הכרטיסים הרבה יותר רחבים עכשיו */
+    gap: 14px;
     position: relative;
     z-index: 0;
-    /* שמור מראש בדיוק לגובה 3 כרטיסי הפודיום המלאים בדסקטופ (נמדד בפועל, ר' override
-       בנייד ב-@media max-width:480px) - כך מסך "טוען לידרבורד..." הראשוני כבר תופס
-       את אותו שטח בדיוק שהפודיום האמיתי יתפוס, ומונע קפיצת layout (CLS) ברגע שהנתונים נטענים */
-    min-height: 380px;
-    /* פאנל זכוכית כהה מאחד (ניסוי עיצובי) - זהה לטיימר ולטבלה, מייצב את הפודיום מול הרקע הבהיר */
-    padding: 20px 16px 16px;
-    /* צורת "שבבים חתוכים" (ניסוי עיצובי) - תואם לכרטיסי הבית */
-    border-radius: 0 20px 0 20px;
-    clip-path: polygon(22px 0, 100% 0, 100% calc(100% - 22px), calc(100% - 22px) 100%, 0 100%, 0 22px);
-    /* זכוכית זהובה זהה בדיוק לכרטיסי הבית (ניסוי עיצובי) - איחוד מלא בין הטאבים.
-       backdrop-filter הוסר מכאן - מוחלף בבלור אחד משותף על .leaderboard-glass-group */
-    background: rgba(15, 20, 10, 0.45);
-    border: 1px solid rgba(255, 220, 100, 0.45);
+    /* שמור מראש בקירוב לגובה כרטיס הזהב המלא + הריפוד - כך מסך "טוען לידרבורד..." הראשוני
+       כבר תופס שטח קרוב לזה שהפודיום האמיתי יתפוס, ומצמצם קפיצת layout (CLS). הערכה
+       גסה יותר מקודם - הגובה בפועל תלוי עכשיו ברוחב הפאנל (aspect-ratio, ר' .podium-card) */
+    min-height: 480px;
+    /* ללא padding צדדי בכוונה - כך שהשוליים החיצוניים של שורת הכרטיסים (הקצה השמאלי של
+       Rank 2 / הימני של Rank 3) יתיישרו עם הקצוות של הטיימר/הטבלה מתחת, בדיוק כמו שהתבקש.
+       ללא רקע/גבול/blur בכוונה - הפודיום שוכב ישירות על רקע העמוד (כמו במוקאפ), לא בתוך
+       פאנל זכוכית כהה. padding-top 40px כדי לפנות מקום לכתר של מקום ראשון (שמוגבה
+       translateY(-14px) ובולט עוד כ-22px מעל קצה הכרטיס) */
+    padding: 40px 0 16px;
     contain: layout style;
 }
 
@@ -1112,29 +992,42 @@ footer {
     50% { transform: translate(12px, -10px) scale(1.15); opacity: 0.9; }
 }
 
+/* כרטיס פודיום - התג המשושה, הכתר, המסגרת התלת-ממדית, זרי הדפנה וכותרות "WAGERED"/
+   "PRIZE" כולם מצוירים כבר בתוך קובצי ה-PNG החדשים (card-gold/silver/bronze.png,
+   ר' assets/images) - אין יותר שום clip-path/border/badge מלאכותיים ב-CSS. הכרטיס
+   עצמו הוא רק "מסגרת מיקום" לתוכן הדינמי (אווטר/שם/סכומים, ר' .podium-avatar וכו'
+   למטה), הממוקם עם position:absolute בתוך האזורים הריקים שכבר מצוירים על גבי התמונה */
 .podium-card {
+    --rank-frame: url('assets/images/card-gold.png?v=2');
+    --rank-glow: rgba(255, 215, 0, 0.45);
+    /* מיקומי התוכן הדינמי (%, נקודת מרכז) - נמדדו בפועל בפיקסלים מתוך קובץ ה-PNG עצמו
+       (סריקת עמודת/שורת פיקסלים לאיתור טבעת הזהב סביב האווטר וגבולות קופסאות
+       WAGERED/PRIZE), לא הערכה חזותית - כדי שהמרכוז יהיה מדויק ולא "בערך" */
+    --avatar-center-y: 35.2%;
+    --avatar-diameter: 31.8%;
+    --name-center-y: 48.7%;
+    --wagered-center-y: 63.7%;
+    --prize-center-y: 80.1%;
     position: relative;
-    top: 0;
+    /* flex:1 (היה flex:0 0 auto + width קבוע) - שלושת הכרטיסים ממלאים יחד את כל רוחב
+       הפאנל, כדי שהקצה השמאלי של Rank 2 והימני של Rank 3 יתיישרו עם קצוות הטיימר/הטבלה
+       מתחת. aspect-ratio משותף (לא width+height קבועים) שומר על אותה צורת קופסה בדיוק
+       לשלוש הדרגות (עדיין "100% זהות" בגודל, רק עכשיו רוחב-מלא במקום רוחב קבוע קטן) -
+       background-size:contain ממלא כל PNG בלי לעוות אותו, גם אם היחס המדויק שלו שונה
+       במעט מ-234:420 (הפרש קטן ב-letterbox שקוף, לא מורגש בפועל) */
     flex: 1;
-    min-width: 0;
-    background: linear-gradient(145deg, #251a14 0%, #1a0f0a 100%);
-    /* גבול פנימי מודגש יותר (ניסוי עיצובי) - כדי שהכרטיס יבלוט בבירור מול פאנל הזכוכית הכהה החדש */
-    border: 1px solid rgba(255, 204, 51, 0.3);
-    border-radius: 16px;
-    padding: 16px 8px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 6px;
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
+    aspect-ratio: 234 / 420;
+    background-image: var(--rank-frame);
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
     opacity: 0;
     margin-top: 24px;
     contain: layout style;
-    /* will-change:top הוסר בכוונה - top הוא תכונת layout ולעולם לא יכול להיות compositor-only,
-       כך שההינט הזה לא סיפק שום תועלת בפועל, רק אילץ ניסיון קידום שכבה מיותר.
-       transform נשאר חופשי לריחוף מעבר עכבר וההגבהה הקבועה של מקום ראשון (translateY סטטי) - הכניסה זזה דרך margin-top, והריחוף האיטי והעדין דרך top, כך ששתי האנימציות לא מתנגשות ב-transform */
-    animation: podiumFadeIn 0.6s ease-out forwards, cardFloatTop 11s ease-in-out 0.6s infinite;
-    transition: transform 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275), border-color 0.3s ease;
+    /* ריחוף אידלי (podiumFloat) הוסר בכוונה - הכרטיסים נשארים סטטיים לגמרי מלבד אנימציית
+       הכניסה החד-פעמית (podiumFadeIn) */
+    animation: podiumFadeIn 0.6s ease-out forwards;
+    transition: transform 0.3s ease;
 }
 
 @keyframes podiumFadeIn {
@@ -1142,213 +1035,141 @@ footer {
     to { opacity: 1; margin-top: 0; }
 }
 
-/* ריחוף עדין, איטי ומתמשך של כרטיסי הפודיום - הזזה מינימלית בלבד */
-@keyframes cardFloatTop {
-    0%, 100% { top: 0; }
-    50% { top: -2px; }
-}
-
-/* זוהר ריחוף עצמאי (שכבה נפרדת) כדי לא להתנגש עם הבהוב הזוהר הקבוע של מקום ראשון */
-.podium-card::after {
-    content: "";
-    position: absolute;
-    inset: -3px;
-    border-radius: 18px;
-    opacity: 0;
-    box-shadow: 0 0 26px rgba(255, 204, 51, 0.5);
-    transition: opacity 0.3s ease;
-    pointer-events: none;
-}
-
 .podium-card:hover {
-    transform: translateY(-5px) scale(1.03);
-    border-color: rgba(255, 204, 51, 0.5);
+    transform: scale(1.03);
 }
 
-.podium-card:hover::after {
-    opacity: 1;
-}
-
-/* מקום שני ושלישי - הבהוב עדין של קו המסגרת + זוהר פנימי נושם */
+/* מקום שני - כסף/פלטינה (card-silver.png) - אותו width/height בדיוק כמו rank-3 (ר'
+   .podium-card הבסיסי) - סימטריה מלאה בגודל בין השתיים */
 .podium-card.rank-2 {
+    --rank-frame: url('assets/images/card-silver.png?v=2');
+    --rank-glow: rgba(66, 153, 225, 0.35);
+    --avatar-center-y: 33.6%;
+    --avatar-diameter: 33%;
+    --name-center-y: 47.4%;
+    --wagered-center-y: 61.6%;
+    --prize-center-y: 78.5%;
     order: 1;
-    animation:
-        podiumFadeIn 0.6s ease-out 0.05s forwards,
-        edgeShimmer 3.2s ease-in-out 0.6s infinite,
-        cardFloatTop 11s ease-in-out 1.1s infinite;
+    animation: podiumFadeIn 0.6s ease-out 0.05s forwards;
 }
+
+/* מקום שלישי - ברונזה/נחושת חמה (card-bronze.png) - אותו width/height בדיוק כמו rank-2 */
 .podium-card.rank-3 {
+    --rank-frame: url('assets/images/card-bronze.png?v=2');
+    --rank-glow: rgba(221, 107, 32, 0.35);
+    --avatar-center-y: 32.6%;
+    --avatar-diameter: 32.5%;
+    --name-center-y: 47%;
+    --wagered-center-y: 62.6%;
+    --prize-center-y: 80.1%;
     order: 3;
-    animation:
-        podiumFadeIn 0.6s ease-out 0.25s forwards,
-        edgeShimmer 3.2s ease-in-out 0.9s infinite,
-        cardFloatTop 11.6s ease-in-out 1.6s infinite;
+    animation: podiumFadeIn 0.6s ease-out 0.25s forwards;
 }
 
-@keyframes edgeShimmer {
-    0%, 100% {
-        border-color: rgba(255, 204, 51, 0.15);
-        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
-    }
-    50% {
-        border-color: rgba(255, 204, 51, 0.45);
-        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5), inset 0 0 18px rgba(255, 204, 51, 0.1);
-    }
-}
-
-/* מקום ראשון - מסגרת זהב מסתובבת + זוהר פנימי נושם */
+/* מקום ראשון - זהב (card-gold.png): אותה קופסת width/height בסיסית בדיוק כמו 2/3,
+   עם transform:scale(1.08) בלבד להבלטה (לא גובה מפורש שונה) + זוהר חם קבוע (filter,
+   לא box-shadow - עוקב אחרי צורת ה-PNG השקופה בפועל במקום ליצור "ריבוע" מאחוריה).
+   ההגבהה הקבועה (-14px) היא transform סטטי רגיל - אין יותר אנימציית ריחוף שדורסת אותו */
 .podium-card.rank-1 {
     order: 2;
-    transform: translateY(-14px);
-    padding-top: 22px;
-    border: 2px solid transparent;
-    background:
-        linear-gradient(145deg, #251a14 0%, #1a0f0a 100%) padding-box,
-        conic-gradient(from var(--border-angle, 0deg), #ff9900, #ffcc00, #ff9900) border-box;
-    animation:
-        podiumFadeIn 0.6s ease-out 0.15s forwards,
-        championGlow 2.4s ease-in-out 0.75s infinite,
-        rotateBorderAngle 4s linear infinite,
-        cardFloatTop 10.4s ease-in-out 2.1s infinite;
+    transform: translateY(-14px) scale(1.08);
+    filter: drop-shadow(0 0 16px rgba(255, 215, 0, 0.45));
+    animation: podiumFadeIn 0.6s ease-out 0.15s forwards;
 }
+
 .podium-card.rank-1:hover {
-    transform: translateY(-19px) scale(1.03);
-    border-color: transparent;
-}
-.podium-card.rank-1::after {
-    inset: -4px;
+    transform: translateY(-14px) scale(1.11);
 }
 
-@keyframes championGlow {
-    0%, 100% {
-        box-shadow: 0 12px 35px rgba(255, 204, 51, 0.25), inset 0 0 20px rgba(255, 153, 0, 0.08);
-    }
-    50% {
-        box-shadow: 0 16px 46px rgba(255, 204, 51, 0.6), inset 0 0 34px rgba(255, 153, 0, 0.22);
-    }
-}
-
-/* ניצוצות זהב מהבהבים סביב תג האלוף */
-.podium-sparkle {
-    position: absolute;
-    font-size: 0.85rem;
-    pointer-events: none;
-    filter: drop-shadow(0 0 4px rgba(255, 204, 51, 0.8));
-    animation: sparkleTwinkle 2.2s ease-in-out infinite;
-}
-
-.podium-sparkle.sparkle-a { top: 6px; left: 10px; animation-delay: 0s; }
-.podium-sparkle.sparkle-b { top: 18px; right: 10px; animation-delay: 1.1s; }
-
-@keyframes sparkleTwinkle {
-    0%, 100% { opacity: 0; transform: scale(0.5) rotate(0deg); }
-    50% { opacity: 1; transform: scale(1.1) rotate(15deg); }
-}
-
-.podium-medal {
-    font-size: 1.4rem;
-    line-height: 1;
-}
-
-.podium-card.rank-1 .podium-medal {
-    animation: crownGlow 2.4s ease-in-out 0.75s infinite;
-}
-
-@keyframes crownGlow {
-    0%, 100% { filter: drop-shadow(0 0 3px rgba(255, 204, 51, 0.35)); }
-    50% { filter: drop-shadow(0 0 11px rgba(255, 204, 51, 0.9)); }
-}
-
-.podium-label {
-    font-size: 0.75rem;
-    font-weight: 800;
-    letter-spacing: 1px;
-    color: #cbd5e0;
-}
-
-.rank-1 .podium-label { color: #ffcc33; }
-
+/* === תוכן דינמי בלבד - ממוקם על נקודת המרכז המדויקת (--avatar-center-y וכו', נמדדו
+   בפועל בפיקסלים לכל דרגה בנפרד - ר' .podium-card/.rank-2/.rank-3 למעלה) של כל אזור
+   ריק שכבר מצויר ב-PNG (טבעת אווטר / קופסת WAGERED / קופסת PRIZE).
+   translate(-50%, -50%) ולא רק translateX - כך שנקודת ה-top:%/left:50% מייצגת את
+   המרכז האמיתי של האלמנט (גם אנכית, לא רק אופקית), למרכוז מדויק בשתי הצירים === */
 .podium-avatar {
-    width: 56px;
-    height: 56px;
+    position: absolute;
+    top: var(--avatar-center-y);
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: var(--avatar-diameter);
+    aspect-ratio: 1;
     border-radius: 50%;
     object-fit: cover;
-    border: 2px solid rgba(255, 204, 51, 0.4);
-    margin: 4px 0;
+    /* טבעת זהב זוהרת סביב האווטר - שכבה נוספת מעל טבעת הקו הדקה שכבר מצוירת ב-PNG */
+    border: 2.5px solid #ffde6a;
+    box-shadow: 0 0 12px rgba(255, 222, 106, 0.5);
     transition: transform 0.3s ease;
 }
 
+/* podiumAvatarBounce ולא avatarBounce המשותף - האווטר הזה ממורכז ב-translate(-50%,-50%)
+   קבוע (position:absolute), אז ה-keyframes חייב לשמר את זה בכל frame. שימוש בשם/keyframes
+   המשותפים עם .row-avatar (בטבלה, שאינו absolute וללא translate בסיסי) היה גורם לו
+   "לקפוץ" ב-50% מגודלו-שלו ברגע שהאנימציה מתחילה - זה בדיוק היה הבאג */
 .podium-card:hover .podium-avatar {
-    animation: avatarBounce 0.55s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    animation: podiumAvatarBounce 0.55s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
 }
 
-@keyframes avatarBounce {
-    0% { transform: scale(1); }
-    45% { transform: scale(1.28); }
-    70% { transform: scale(1.02); }
-    100% { transform: scale(1.12); }
-}
-
-.rank-1 .podium-avatar {
-    width: 68px;
-    height: 68px;
-    border-color: #ffcc33;
-    box-shadow: 0 0 20px rgba(255, 204, 51, 0.5);
+@keyframes podiumAvatarBounce {
+    0% { transform: translate(-50%, -50%) scale(1); }
+    45% { transform: translate(-50%, -50%) scale(1.28); }
+    70% { transform: translate(-50%, -50%) scale(1.02); }
+    100% { transform: translate(-50%, -50%) scale(1.12); }
 }
 
 .podium-name {
+    position: absolute;
+    top: var(--name-center-y);
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 80%;
+    text-align: center;
     font-weight: 800;
-    font-size: 0.95rem;
-    max-width: 100%;
+    font-size: 15px;
+    color: #ffffff;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
 }
 
-.podium-stats {
+/* עוטף flex למרכוז אופקי+אנכי מדויק של האייקון+המספר יחד כיחידה אחת, בדיוק במרכז
+   האזור השמור להם בתוך כל קופסה (כפי שהתבקש) - לא רק טקסט צף עם transform */
+.podium-wagered-value,
+.podium-prize-value {
+    position: absolute;
+    left: 50%;
     display: flex;
-    flex-direction: column;
-    gap: 6px;
-    width: 100%;
-    margin-top: 8px;
-}
-
-.stat-pill {
-    background: rgba(255, 255, 255, 0.04);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: 10px;
-    padding: 6px 4px;
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-}
-
-.stat-label {
-    font-size: 0.62rem;
-    color: #9a8f85;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-}
-
-.stat-value {
-    font-size: 0.82rem;
+    align-items: center;
+    justify-content: center;
+    transform: translate(-50%, -50%);
     font-weight: 800;
-    color: #ffcc33;
+    font-size: 17px;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6), 0 0 6px rgba(0, 0, 0, 0.3);
 }
 
-.prize-pill .stat-value { color: #00ff66; }
+/* זהב - קריא בבירור מול קופסת ה-WAGERED הכהה שכבר מצוירת ב-PNG */
+.podium-wagered-value {
+    top: var(--wagered-center-y);
+    color: #ffde6a;
+}
 
-/* === טיימר ספירה לאחור === */
+/* ירוק תוסס - קריא בבירור מול קופסת ה-PRIZE הכהה שכבר מצוירת ב-PNG */
+.podium-prize-value {
+    top: var(--prize-center-y);
+    color: #22c55e;
+}
+
+/* === טיימר ספירה לאחור - זכוכית קרם/זהב בהירה (תואם למוקאפ), בניגוד לפודיום/hero הכהים === */
 .leaderboard-timer {
     position: relative;
-    /* צורת "שבבים חתוכים" (ניסוי עיצובי) - תואם לכרטיסי הבית */
-    border-radius: 0 16px 0 16px;
-    clip-path: polygon(18px 0, 100% 0, 100% calc(100% - 18px), calc(100% - 18px) 100%, 0 100%, 0 18px);
+    /* פינות מוקצעות (chamfered) בכל ארבעת הפינות - תואם למוקאפ, בניגוד ל"שבב חתוך" בפינה
+       אחת שמשמש בשאר האתר */
+    clip-path: polygon(18px 0%, calc(100% - 18px) 0%, 100% 18px, 100% calc(100% - 18px), calc(100% - 18px) 100%, 18px 100%, 0% calc(100% - 18px), 0% 18px);
     padding: 16px;
-    /* זכוכית זהובה זהה בדיוק לכרטיסי הבית (ניסוי עיצובי) - !important לנצח בוודאות כל שכבה/מטמון קודם.
-       backdrop-filter הוסר מכאן - מוחלף בבלור אחד משותף על .leaderboard-glass-group */
-    background: rgba(15, 20, 10, 0.45) !important;
-    border: 1px solid rgba(255, 220, 100, 0.45) !important;
+    /* !important לנצח בוודאות כל שכבה/מטמון קודם. ללא backdrop-filter בכוונה - הוסר לגמרי.
+       גרדיאנט קרם/זהב אטום (לא rgba שקוף) כדי שיבלוט בבירור מול הרקע, בלי להיראות "שטוף" */
+    background: linear-gradient(180deg, #fceecb 0%, #f7dfa5 100%) !important;
+    border: 1px solid #d4af37 !important;
     opacity: 0;
     will-change: transform;
     contain: layout style;
@@ -1357,7 +1178,7 @@ footer {
         float 11s ease-in-out 0.6s infinite;
 }
 
-/* === כותרת הטיימר - טקסט פתוח וללא מיכל, ללא רקע/גבול/פיל === */
+/* === כותרת הטיימר - טקסט פתוח + קווי-מפריד מעוינים משני הצדדים === */
 .timer-badge {
     display: inline-flex;
     align-items: center;
@@ -1365,14 +1186,24 @@ footer {
 }
 
 .timer-badge-text {
-    color: #ffc83b;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8), 0 0 2px rgba(0, 0, 0, 0.9), 0 0 10px rgba(255, 200, 59, 0.3);
+    color: #8a5a10;
+    text-shadow: 0 1px 1px rgba(255, 255, 255, 0.4);
     font-weight: 900;
     font-size: 0.85rem;
     letter-spacing: 2px;
     text-transform: uppercase;
     white-space: nowrap;
 }
+
+.timer-badge-text::before,
+.timer-badge-text::after {
+    color: #b8860b;
+    font-weight: 700;
+    letter-spacing: 3px;
+}
+
+.timer-badge-text::before { content: "─── ◆ "; }
+.timer-badge-text::after { content: " ◆ ───"; }
 
 .timer-boxes {
     display: flex;
@@ -1386,15 +1217,17 @@ footer {
 }
 
 .timer-sep {
-    color: #9a8f85;
+    color: #a5895a;
     font-weight: 900;
     font-size: 1.6rem;
     padding-bottom: 28px;
 }
 
 .timer-box {
-    background: linear-gradient(145deg, #251a14 0%, #1a0f0a 100%);
-    border: 1px solid rgba(255, 204, 51, 0.25);
+    /* אריח "מוגבה" (raised card) - רקע קרם בהיר וחד, גבול זהב עדין וצל תחתון מודגש שמעניק
+       מראה תלת-ממדי מורם מעל פאנל הטיימר */
+    background: #fdf6e2;
+    border: 1px solid rgba(184, 134, 11, 0.4);
     border-radius: 16px;
     padding: 18px 20px;
     min-width: 96px;
@@ -1406,7 +1239,7 @@ footer {
     display: flex;
     flex-direction: column;
     align-items: center;
-    box-shadow: 0 8px 22px rgba(0, 0, 0, 0.45);
+    box-shadow: 0 6px 15px rgba(184, 134, 11, 0.25), inset 0 1px 2px rgba(255, 255, 255, 0.9);
     will-change: transform;
     animation: float 11s ease-in-out infinite;
 }
@@ -1420,19 +1253,18 @@ footer {
 .timer-box span {
     font-size: 2.8rem;
     font-weight: 900;
-    color: #ffcc33;
+    color: #b8860b;
     line-height: 1.1;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8), 0 0 2px rgba(0, 0, 0, 0.9), 0 0 20px rgba(255, 204, 51, 0.5);
+    text-shadow: 0 1px 1px rgba(255, 255, 255, 0.5);
 }
 
 .timer-box label {
     margin-top: 5px;
     font-size: 0.72rem;
     font-weight: 800;
-    color: #cbd5e0;
+    color: #96700a;
     letter-spacing: 1.2px;
     text-transform: uppercase;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8), 0 0 2px rgba(0, 0, 0, 0.9);
 }
 
 /* פעימת "טיק" בכל שנייה בתיבת השניות */
@@ -1465,17 +1297,16 @@ footer {
     }
 }
 
-/* === תאריך הסיום - טקסט פתוח וללא מיכל, ללא רקע/גבול/פיל === */
+/* === תאריך הסיום - טקסט פתוח, ללא אייקון === */
 .timer-date-badge {
     display: inline-flex;
     align-items: center;
     margin-top: 1.2rem;
-    color: rgba(255, 200, 59, 0.9);
+    color: #96703a;
     font-size: 0.78rem;
     font-weight: 600;
     letter-spacing: 1.5px;
     text-transform: uppercase;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8), 0 0 2px rgba(0, 0, 0, 0.9);
 }
 
 /* === טבלת דירוגים === */
@@ -1485,16 +1316,15 @@ footer {
        אין צורך ב-override נפרד ב-@media. מונע קפיצת layout (CLS) בין שורת "טוען נתונים..."
        הראשונית לטבלה המלאה */
     min-height: 308px;
-    /* צורת "שבבים חתוכים" (ניסוי עיצובי) - תואם לכרטיסי הבית */
-    border-radius: 0 16px 0 16px;
-    clip-path: polygon(18px 0, 100% 0, 100% calc(100% - 18px), calc(100% - 18px) 100%, 0 100%, 0 18px);
+    /* קופסה מעוגלת אחידה (לא "שבבים חתוכים" כמו שאר האתר) - כך ביקש המוקאפ במפורש
+       לטבלת הדירוגים, מיכל זכוכית קרם/זהב יחיד ורציף במקום שורות שנראות מנותקות */
+    border-radius: 20px;
     overflow: hidden;
-    /* זכוכית זהובה זהה בדיוק לכרטיסי הבית (ניסוי עיצובי) - !important לנצח בוודאות כל שכבה/מטמון קודם.
-       backdrop-filter הוסר מכאן - מוחלף בבלור אחד משותף על .leaderboard-glass-group */
-    background: rgba(15, 20, 10, 0.45) !important;
-    border: 1px solid rgba(255, 220, 100, 0.45) !important;
-    /* filter:drop-shadow במקום box-shadow - עוקב אחרי הצללית החתוכה בפועל (clip-path) */
-    filter: drop-shadow(0 10px 22px rgba(0, 0, 0, 0.4));
+    /* זכוכית קרם/זהב בהירה (תואם למוקאפ), בניגוד לפודיום/hero הכהים - !important לנצח
+       בוודאות כל שכבה/מטמון קודם. ללא backdrop-filter בכוונה - הוסר לגמרי */
+    background: linear-gradient(160deg, rgba(250, 240, 214, 0.94) 0%, rgba(238, 220, 176, 0.94) 100%) !important;
+    border: 2px solid rgba(212, 175, 55, 0.6) !important;
+    box-shadow: 0 10px 22px rgba(0, 0, 0, 0.25);
     opacity: 0;
     will-change: transform;
     contain: layout style;
@@ -1516,14 +1346,19 @@ footer {
     position: relative;
     z-index: 5;
     overflow: visible;
-    background: rgba(255, 255, 255, 0.04);
+    background: rgba(184, 134, 11, 0.06);
     padding: 12px 10px;
     text-align: center;
-    /* קו זוהר נקי מתחת לכותרות - זהה בדיוק ל-.donator-table thead th. הטיפוגרפיה עצמה
-       (צבע/משקל/letter-spacing/צל) עברה ל-.donators-header-label המשותף (ר' שם) - אותו
-       "כדור" רקע עדין בדיוק כמו בטאב ה-DONATORS, לאיחוד חזותי מלא בין שני הטאבים */
-    border-bottom: 1px solid rgba(255, 204, 51, 0.45);
-    box-shadow: 0 1px 8px -2px rgba(255, 204, 51, 0.5);
+    border-bottom: 1px solid rgba(184, 134, 11, 0.4);
+    box-shadow: 0 1px 8px -2px rgba(184, 134, 11, 0.35);
+}
+
+/* הטיפוגרפיה המשותפת (.donators-header-label, ר' למטה) נבנתה לרקע כהה - override מקומי
+   בהיקף הלידרבורד בלבד, כדי לא לשנות את מראה הכותרות בטאב ה-DONATORS הכהה */
+.leaderboard-table-wrap .donators-header-label {
+    background: rgba(184, 134, 11, 0.12);
+    color: #8a5a10;
+    text-shadow: none;
 }
 
 .leaderboard-table tbody td {
@@ -1532,7 +1367,8 @@ footer {
     text-align: center;
     font-size: 0.85rem;
     font-weight: 700;
-    border-top: 1px solid rgba(255, 255, 255, 0.06);
+    color: #4a3620;
+    border-top: 1px solid rgba(184, 134, 11, 0.18);
     overflow: hidden;
 }
 
@@ -1555,7 +1391,7 @@ footer {
 }
 
 .leaderboard-table tbody tr {
-    transition: background 0.25s ease, box-shadow 0.25s ease, transform 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    transition: background 0.25s ease, box-shadow 0.25s ease;
     will-change: transform;
     animation: float 11s ease-in-out infinite;
 }
@@ -1583,30 +1419,65 @@ footer {
 .leaderboard-table tbody tr:nth-child(4) td { animation-delay: 1.2s; }
 .leaderboard-table tbody tr:nth-child(5) td { animation-delay: 1.6s; }
 
-/* הדגשת זהב עדינה לשורות הקרובות לפודיום */
-.leaderboard-table tbody tr:nth-child(1) { background: rgba(255, 204, 51, 0.045); }
-.leaderboard-table tbody tr:nth-child(2) { background: rgba(255, 204, 51, 0.03); }
+/* פסים לסירוגין (zebra striping) לאורך כל הטבלה, לא רק לשורות הקרובות לפודיום - עוזר
+   לעין לעקוב אחרי כל שורה בתוך המיכל המעוגל האחיד (ר' .leaderboard-table-wrap) */
+.leaderboard-table tbody tr:nth-child(odd) { background: rgba(184, 134, 11, 0.05); }
+.leaderboard-table tbody tr:nth-child(even) { background: rgba(184, 134, 11, 0.09); }
 
+/* ללא transform/translateY בכוונה - הזזת השורה מעלה ב-hover הייתה גורמת לה לחפוף/
+   לחסום את השורה שמעליה (הן צמודות מאוד זו לזו בטבלה). ההדגשה נשארת רקע+מסגרת פנימית
+   בלבד, בלי שום קפיצת layout */
 .leaderboard-table tbody tr:hover {
-    background: rgba(255, 204, 51, 0.09);
-    box-shadow: inset 0 0 0 1px rgba(255, 204, 51, 0.3);
-    /* important כדי לנצח את אנימציית ה-float הפעילה שמחזיקה ב-transform */
-    transform: translateY(-6px) scale(1.01) !important;
+    background: rgba(255, 255, 255, 0.06);
+    box-shadow: inset 0 0 0 1px rgba(184, 134, 11, 0.4);
+    transition: background 0.2s ease;
 }
 
+/* scale בלבד - .row-avatar אינו position:absolute (בניגוד ל-.podium-avatar), אין לו
+   translate בסיסי לשמר, אז ה-keyframes הזה נשאר "נקי". ר' podiumAvatarBounce למעלה
+   להסבר המלא על הבאג שקרה כששני האלמנטים שיתפו את אותו שם keyframes */
 .leaderboard-table tbody tr:hover .row-avatar {
-    animation: avatarBounce 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    animation: rowAvatarBounce 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
 }
 
+@keyframes rowAvatarBounce {
+    0% { transform: scale(1); }
+    45% { transform: scale(1.28); }
+    70% { transform: scale(1.02); }
+    100% { transform: scale(1.12); }
+}
+
+/* טקסט לבן עבה + text-shadow כפול (כהה+זהוב) - ניגודיות גבוהה על כל רקע אפשרי בשורה
+   (כולל הרקע המודגש-זהוב של שורת #1, ר' .rank-first למעלה), בניגוד לגרסה הקודמת
+   (זהב חיוור על רקע זהוב) שהייתה קשה לקריאה */
 .rank-badge {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 26px;
-    height: 26px;
+    width: 28px;
+    height: 28px;
     border-radius: 50%;
     background: rgba(255, 255, 255, 0.06);
-    font-size: 0.75rem;
+    font-size: 1rem;
+    font-weight: 800;
+    color: #ffffff;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 215, 0, 0.6);
+}
+
+/* תג דירוג משושה זהב-מתכתי, גדול ובולט עם מסגרת גרדיאנט עבה - override מקומי בהיקף
+   הלידרבורד בלבד; טאב ה-DONATORS (משתף את אותה מחלקת .rank-badge הבסיסית) ממשיך לקבל
+   את התג העגול/הכהה המקורי */
+.leaderboard-table-wrap .rank-badge {
+    width: 32px;
+    height: 32px;
+    clip-path: polygon(50% 0%, 100% 20%, 100% 65%, 50% 100%, 0% 65%, 0% 20%);
+    background: linear-gradient(160deg, #fff6cf 0%, #ffcc33 45%, #b8860b 100%);
+    border: 2px solid transparent;
+    border-image: linear-gradient(160deg, #fff6cf, #ffcc33 50%, #b8860b) 1;
+    color: #1a0f0a;
+    font-weight: 900;
+    font-size: 0.85rem;
+    box-shadow: 0 0 8px rgba(255, 204, 51, 0.55), 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 .user-cell {
@@ -1621,71 +1492,36 @@ footer {
     height: 26px;
     border-radius: 50%;
     object-fit: cover;
+    border: 1px solid rgba(184, 134, 11, 0.4);
 }
 
-.prize-cell { color: #00ff66; }
+.prize-cell { color: #22c55e; }
 
 @media (max-width: 480px) {
     /* שלושת כרטיסי הפודיום נשארים בשורה אחת אופקית קומפקטית בנייד - לא נערמים לעמודה אנכית.
        הסדר (2nd | 1st | 3rd) וההגבהה של מקום ראשון נשארים כמו בדסקטופ (מוגדרים למעלה ב-.podium-card.rank-*) */
     .leaderboard-podium {
         gap: 6px;
-        /* גובה נמדד בפועל בנייד קטן מהדסקטופ (כרטיסים/אווטרים/גופנים מוקטנים למטה) -
-           override נפרד כדי לא להשאיר רווח לבן מיותר מתחת לפודיום המלא בנייד */
-        min-height: 285px;
+        /* גובה/ריפוד עליון קטנים מהדסקטופ (כרטיסים/כתר מוקטנים למטה) - override נפרד כדי
+           לא להשאיר רווח לבן מיותר מעל/מתחת לפודיום המלא בנייד */
+        min-height: 200px;
+        padding-top: 24px;
     }
 
-    .podium-card {
-        padding: 10px 4px;
-        gap: 4px;
-        border-radius: 12px;
-    }
+    /* אין יותר override נפרד ל-width/height כאן: .podium-card הבסיסי הוא flex:1 +
+       aspect-ratio (לא width+height קבועים), אז הכרטיסים כבר מתכווצים אוטומטית יחד עם
+       רוחב הפאנל הצר בנייד - אותו מנגנון בדיוק כמו בדסקטופ. התוכן הדינמי כולו ממוקם ב-%
+       (ר' .podium-avatar וכו' למעלה), כך שהוא מתכווץ אוטומטית יחד עם הכרטיס */
 
-    .podium-card.rank-1 {
-        padding-top: 16px;
-    }
-
-    /* אווטרים, טקסט ותגיות מוקטנים כדי להתאים לשלוש עמודות צרות במסך נייד */
-    .podium-avatar {
-        width: 36px;
-        height: 36px;
-        margin: 2px 0;
-    }
-
-    .rank-1 .podium-avatar {
-        width: 44px;
-        height: 44px;
-    }
-
-    .podium-medal {
-        font-size: 1rem;
-    }
-
-    .podium-label {
-        font-size: 0.6rem;
-        letter-spacing: 0.5px;
-    }
-
+    /* טקסט מוקטן כדי להתאים לשלוש עמודות צרות במסך נייד - המיקום/הגודל היחסי (%) של
+       האווטאר עצמו כבר מתכווץ בלי override נפרד */
     .podium-name {
-        font-size: 0.72rem;
+        font-size: 0.6rem;
     }
 
-    .podium-stats {
-        gap: 4px;
-        margin-top: 4px;
-    }
-
-    .stat-pill {
-        padding: 4px 2px;
-        border-radius: 8px;
-    }
-
-    .stat-label {
-        font-size: 0.5rem;
-    }
-
-    .stat-value {
-        font-size: 0.64rem;
+    .podium-wagered-value,
+    .podium-prize-value {
+        font-size: 0.62rem;
     }
 
     .leaderboard-table thead th:nth-child(2),
@@ -1708,16 +1544,17 @@ footer {
    עצמו (לא מסלול משותף חיצוני), וממלא ברצף על פני 8 שניות עד למעבר האוטומטי הבא -
    ר' script.js: hover לא עוצר את זה בכוונה, רק לחיצה/Enter/Space */
 .donators-toggle {
+    position: relative;
     display: flex;
     width: 100%;
     gap: 3px;
-    padding: 5px;
-    border-radius: 16px 16px 0 0;
+    padding: 5px 14px;
+    margin-bottom: 18px;
+    /* פינות מעוגלות מלאות + מסגרת זהב דקה - קפסולה עצמאית, לא מחוברת ישירות לכרטיסי
+       הטבלאות שמתחתיה (ר' מוקאפ a726e034) */
+    border-radius: 16px;
     background: rgba(15, 20, 10, 0.55);
-    border: 1px solid rgba(255, 220, 100, 0.45);
-    /* קו מפריד עדין מתחת לפס הכותרת - מבדיל בבירור בין בקרות המצב לתוכן הטבלה שמתחתיהן,
-       גם כשאין רווח/פער חזותי (הפס מחובר ישירות ל-.donators-grid, ר' .donators-panel) */
-    border-bottom: 1px solid rgba(255, 204, 51, 0.28);
+    border: 1.5px solid rgba(255, 215, 0, 0.5);
     -webkit-backdrop-filter: blur(6px);
     backdrop-filter: blur(6px);
 }
@@ -1730,10 +1567,11 @@ footer {
     justify-content: center;
     padding: 11px 10px 13px;
     border: none;
-    border-radius: 10px;
-    /* מצב לא-פעיל - שקוע ומעומעם, מודגש בבירור ביחס לפלח הפעיל לצידו */
-    background: rgba(0, 0, 0, 0.35);
-    color: rgba(255, 255, 255, 0.5);
+    border-radius: 12px;
+    /* מצב לא-פעיל - זכוכית כהה שקועה, מודגש בבירור ביחס לפלח הפעיל לצידו */
+    background: rgba(0, 0, 0, 0.4);
+    color: #cccccc;
+    font-weight: 700;
     font-family: inherit;
     cursor: pointer;
     overflow: hidden;
@@ -1755,12 +1593,13 @@ footer {
     color: rgba(255, 255, 255, 0.85);
 }
 
-/* מצב פעיל - זכוכית זהובה חמה + טקסט זהב חד ומודגש + זוהר פנימי (inset) עדין שמעניק
-   לפלח הפעיל תחושת "עומק שקוע" קלה, כדי שיבלוט באופן חד-משמעי ביחס לפלח הלא-פעיל */
+/* מצב פעיל - גרדיאנט זהב בהיר מלא + טקסט שחור עבה, בהתאם למוקאפ a726e034 - ניגוד חד
+   וברור ביחס לפלח הכהה הלא-פעיל */
 .donators-toggle-segment.active {
-    background: rgba(255, 204, 51, 0.18);
-    color: #ffcc33;
-    box-shadow: inset 0 1px 10px rgba(255, 204, 51, 0.3);
+    background: linear-gradient(180deg, #ffde6a 0%, #e6a100 100%);
+    color: #000000;
+    font-weight: 900;
+    box-shadow: 0 2px 10px rgba(255, 204, 51, 0.4);
 }
 
 /* קו ההתקדמות משובץ בתוך הפלח עצמו - ממורכז אופקית לרוחב מלא, 3px עבה, קצוות מעוגלים,
@@ -1787,25 +1626,52 @@ footer {
     to { width: 100%; }
 }
 
+/* תגי משושה זהב תלויים על קצוות המתג - מדליון "Kicks" (cash.png) צמוד לפלח TOP KICKS,
+   ומדליון "מתנה" (gift.png, אותו קובץ בדיוק כמו שאר האתר) צמוד לפלח GIFTED SUBS. אותה
+   שפה חזותית בדיוק כמו .disclaimer-badge (hexagon clip-path + גרדיאנט זהב-מתכתי).
+   הדף כולו dir="rtl" (ר' index.html) - הפלח הראשון ב-DOM (GIFTED SUBS) מוצג בפועל בצד
+   ימין הפיזי, והשני (TOP KICKS) בצד שמאל הפיזי, אז מיקום כל תג משתמש ב-right/left
+   הפיזי הנכון כדי להיצמד לפלח שלו בפועל, לא לפי סדר ה-DOM */
+.donators-toggle-badge {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 34px;
+    height: 38px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    clip-path: polygon(50% 0%, 100% 20%, 100% 65%, 50% 100%, 0% 65%, 0% 20%);
+    background: linear-gradient(160deg, #fff6cf 0%, #ffd700 45%, #b8860b 100%);
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.6), 0 2px 4px rgba(0, 0, 0, 0.3);
+    z-index: 2;
+}
+
+.donators-toggle-badge img {
+    width: 19px;
+    height: 19px;
+    object-fit: contain;
+    filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.3));
+}
+
+/* GIFTED SUBS מוצג פיזית בצד ימין (ר' הערה למעלה) */
+.donators-toggle-badge-gift {
+    right: -14px;
+}
+
+/* TOP KICKS מוצג פיזית בצד שמאל (ר' הערה למעלה) */
+.donators-toggle-badge-boot {
+    left: -14px;
+}
+
 /* === DONATORS - שני לוחות "טופ גיפטרים" (Kick) - All-Time ו-Weekly === */
+/* אין יותר שכבת blur מאחורי הכרטיסים (ר' הערה למטה) - הרקע הטרופי מאחורי הכרטיסים
+   הזהובים נשאר חד וברור. gap מצומצם (היה 20px) נותן לכל כרטיס קצת יותר רוחב בפועל */
 .donators-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 20px;
+    gap: 14px;
     position: relative;
-}
-
-/* בלור אחד משותף מאחורי שני הכרטיסים - עקבי עם הדפוס שכבר קיים ב-#tab-home/
-   .leaderboard-glass-group, במקום backdrop-filter נפרד לכל כרטיס (שהיה מכפיל שוב
-   את מספר משטחי הבלור הבו-זמניים שכרום צריך לחשב כל פריים) */
-.donators-grid::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    z-index: -1;
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    pointer-events: none;
 }
 
 @media (max-width: 768px) {
@@ -1814,14 +1680,11 @@ footer {
     }
 }
 
+/* הכרטיס עצמו כבר לא נושא רקע/מסגרת/חיתוך משלו - כל השכבה החזותית (מסגרת זהב, פינות
+   מעוגלות, כותרת, קווי הרשת) מגיעה עכשיו מתוך תמונות ה-PNG (Week.png/AllTime.png,
+   ר' .donator-table-wrap-weekly/-alltime למטה), כדי למנוע כפילות/חפיפה של רקעים */
 .donator-card {
     position: relative;
-    /* זכוכית זהובה זהה בדיוק לכרטיסי הבית/הלידרבורד - איחוד מלא של האסתטיקה בין הטאבים */
-    background: rgba(15, 20, 10, 0.45);
-    border: 1px solid rgba(255, 220, 100, 0.45);
-    border-radius: 0 16px 0 16px;
-    clip-path: polygon(18px 0, 100% 0, 100% calc(100% - 18px), calc(100% - 18px) 100%, 0 100%, 0 18px);
-    padding: 20px 16px;
     opacity: 0;
     will-change: transform;
     /* ריחוף עדין ומתמשך (@keyframes float הגלובלי, כמו הטיימר/הטבלה) לצד הכניסה החד-פעמית -
@@ -1834,26 +1697,18 @@ footer {
     animation-delay: 0s, -5.5s;
 }
 
-/* זוהר אמביינטי נושם מאחורי התוכן (שכבה נפרדת, כמו .link-btn::before) - "חיים" מתמשכים
-   ועדינים לפאנלים בלי להיות מסיח דעת. מבוטל לגמרי תחת body.low-perf (ר' למטה) */
-.donator-card::after {
-    content: "";
+/* מוסתר חזותית בלבד (לא display:none) - הכותרות/עמודות עדיין נגישות לקוראי מסך, גם
+   כשהתוכן הזהה כבר מצויר בתוך תמונות ה-PNG (Week.png/AllTime.png) ולכן מיותר חזותית */
+.visually-hidden {
     position: absolute;
-    inset: 0;
-    z-index: -1;
-    border-radius: inherit;
-    pointer-events: none;
-    animation: donatorAura 4.5s ease-in-out infinite;
-    will-change: box-shadow;
-}
-
-.donator-card:nth-child(2)::after {
-    animation-delay: -2.25s;
-}
-
-@keyframes donatorAura {
-    0%, 100% { box-shadow: inset 0 0 18px rgba(255, 204, 51, 0.05); }
-    50% { box-shadow: inset 0 0 32px rgba(255, 204, 51, 0.2); }
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
 }
 
 .donator-card-title {
@@ -1893,17 +1748,35 @@ footer {
    את .donators-switching סביב עדכון תוכן הטבלה. תחת body.low-perf (למטה) מוגבל אך ורק
    ל-opacity - transform מבוטל לגמרי */
 .donator-table-wrap {
-    /* שמור מראש בדיוק לגובה טבלה מלאה של 10 שורות (המקסימום שהקוד מציג בפועל, ר' script.js
-       gifters.slice(0,10)) - נמדד בפועל מול נתונים חיים אמיתיים. override נפרד לנייד למטה
-       (@media max-width:480px) כי גובה השורה מוקטן שם. מונע קפיצת layout (CLS) בין שורת
-       "טוען נתונים..." הראשונית לטבלה המלאה */
-    min-height: 523px;
-    border-radius: 12px;
-    overflow: hidden;
-    background: rgba(255, 255, 255, 0.02);
+    position: relative;
+    width: 100%;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 100% 100%;
     opacity: 1;
     transform: translateY(0) scale(1);
     transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+/* שני הכרטיסים חייבים להיות זהים ב-100% מבחינת מידות (רוחב/גובה/יחס), אחרת הם נראים
+   לא-סימטריים זה לצד זה - יחס גובה-רוחב משותף אחד לשניהם (ממוצע בין שני קבצי ה-PNG
+   העדכניים ביותר, 749x1052 ו-742x1052 - כבר כמעט זהים באופן טבעי), במקום יחס נפרד
+   לכל אחד. שני התאים כבר זהים ברוחב הודות ל-grid-template-columns:1fr 1fr (ר'
+   .donators-grid), אז aspect-ratio משותף מבטיח גם גובה זהה בדיוק, בכל רוחב מסך */
+.donator-table-wrap-alltime,
+.donator-table-wrap-weekly {
+    aspect-ratio: 746 / 1052;
+}
+
+/* ?v=4 - cache-busting: הקבצים הוחלפו שוב בגרסה חדשה (עכשיו בלי שום כותרות עמודות
+   מצוירות בכלל) תחת אותו שם קובץ בדיוק - חובה query string חדש בכל החלפה כדי
+   שדפדפנים עם קאש קיים של הקובץ הישן יטענו בפועל את הגרסה המעודכנת */
+.donator-table-wrap-alltime {
+    background-image: url('assets/images/AllTime.png?v=4');
+}
+
+.donator-table-wrap-weekly {
+    background-image: url('assets/images/Week.png?v=4');
 }
 
 .donator-table-wrap.donators-switching {
@@ -1911,24 +1784,117 @@ footer {
     transform: translateY(10px) scale(0.98);
 }
 
+/* הכותרת/עמודות המקוריות (RANK/USERNAME/KICKS) כבר מצוירות בתוך ה-PNG עצמו - הטבלה
+   ממוקמת בצורה מוחלטת בתוך האזור שמתחת לכותרת הגדולה ("WEEKLY/ALL-TIME TOP GIFTERS")
+   ומעל תג התחתית - כולל גם שורת כותרות העמודות (thead, עכשיו overlay CSS גלוי,
+   ר' למטה) וגם עשר שורות הנתונים. display:flex (לא table layout רגיל) - thead
+   מקבל גובה טבעי קבוע (flex:0 0 auto), tbody תופס את כל מה שנשאר ומחלק אותו שווה
+   בשווה בין עשר השורות. הגרסה העדכנית של ה-PNG כבר לא מציירת קווי מפריד פנימיים
+   בכלל, אז החלוקה השווה (flex:1 לכל שורה, ר' tbody tr למטה) היא לגמרי מה שקובע את
+   המרווח בין השורות */
 .donator-table {
-    width: 100%;
-    border-collapse: collapse;
+    position: absolute;
+    /* נמדד בפועל בפיקסלים מול קו המסגרת הפנימית - שני קובצי ה-PNG אינם סימטריים זהה
+       ביניהם (Week.png: מסגרת קרובה יותר לקצה הימני; AllTime.png: קרובה יותר לקצה
+       השמאלי), אז 6% הוא ה-inset הבטוח ביותר משני הצדדים שמכסה את שניהם בלי חפיפה
+       לגבול הזהב באף אחת מהתמונות (היה 4%, לא מספיק לצד הצר יותר בכל תמונה) */
+    left: 6%;
+    right: 6%;
+    width: 88%;
+    /* נמדד מחדש מול הגרסה הנקייה החדשה של ה-PNG (בלי כותרות עמודות מצוירות בכלל) -
+       קו המסגרת הפנימית העליון עכשיו קרוב יותר לכותרת הגדולה (13.1%, היה 16.7% כשעוד
+       היה אזור תוויות מצויר נפרד), וקו המסגרת התחתון ב-85.3%. top/bottom כאן משאירים
+       רווח בטוח קטן מבפנים לשני הקווים (לא יושבים בדיוק עליהם) */
+    top: 14%;
+    bottom: 15%;
+    display: flex;
+    flex-direction: column;
+    /* קריטי: מונע משורות 9-10 "לגלוש" מתחת לתג התחתון. ל-flex items יש min-height:auto
+       מרומז כברירת מחדל - גם עם flex:1 (flex-basis:0), דפדפן מסרב לכווץ אותם מתחת
+       לגובה התוכן הטבעי שלהם (padding+line-height של 10 שורות) אם התוכן דורש יותר
+       מקום מהשטח השמור. overflow:hidden כאן הוא רשת ביטחון קשיחה - גם אם זה קורה בכל
+      זאת ברוחב מסך קיצוני, התוכן ייחתך בתוך גבולות האזור ולעולם לא יצייר מעל התג */
+    overflow: hidden;
+}
+
+/* === שורת כותרות עמודות (RANK/USERNAME/KICKS-SUBS) - overlay CSS גלוי (ר' index.html -
+   thead כבר לא נושא .visually-hidden). הגרסה הנקייה החדשה של ה-PNG כבר לא מציירת שום
+   טקסט כותרת עמודות בכלל, אז אין יותר צורך במסכה כהה - הטקסט יושב ישירות על הזכוכית
+   הזהובה, עם text-shadow (ר' .donators-header-label למטה) בלבד לקריאות. מאפשר לעמודה
+   השלישית להתחלף דינמית בין KICKS ל-SUBS לפי הטאב הפעיל (ר' DONATORS_COLUMN_LABELS
+   ב-index.html). flex:0 0 auto - גובה טבעי קבוע, לא משתתף בחלוקת flex:1 של עשר
+   השורות (tbody, ר' למטה) */
+.donator-table thead {
+    flex: 0 0 auto;
+    display: block;
+    margin-bottom: 4px;
+}
+
+.donator-table thead tr {
+    display: flex;
+    align-items: center;
+    /* אותו inset בדיוק כמו tbody tr (14px) - כדי שתוויות הכותרת יתיישרו בול עם הנתונים
+       שמתחתיהן */
+    margin: 0 14px;
 }
 
 .donator-table thead th {
-    /* position:relative + z-index כדי שהכותרת תמיד תישאר מעל שורה #1 - overflow:visible
-       מוצהר במפורש (גם אם זו כבר ברירת המחדל) כדי לוודא שקו הזוהר התחתון לעולם לא נחתך */
-    position: relative;
-    z-index: 5;
-    overflow: visible;
-    background: rgba(255, 255, 255, 0.04);
-    padding: 10px 8px;
-    text-align: center;
-    /* קו זוהר נקי מתחת לכותרות - גבול זהב עדין + זוהר box-shadow סטטי (חד-פעמי לצייר, לא
-       מונפש) שנצמד לקצה התחתון בלבד */
-    border-bottom: 1px solid rgba(255, 204, 51, 0.45);
-    box-shadow: 0 1px 8px -2px rgba(255, 204, 51, 0.5);
+    display: flex;
+    align-items: center;
+    padding: 8px 6px;
+}
+
+.donator-table tbody {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    width: 100%;
+    /* ר' הערה למעלה - min-height:0 מבטל את ברירת המחדל min-height:auto של flex items,
+       כדי שהחלוקה השווה בין 10 השורות תמיד תכבד את גובה האזור השמור בפועל */
+    min-height: 0;
+}
+
+.donator-table tbody tr {
+    display: flex;
+    align-items: center;
+    flex: 1;
+    min-height: 0;
+    /* קו מפריד עדין בין שורות, ממוקם בתוך שוליים פנימיים (ר' margin למטה) כדי שהוא
+       לעולם לא ייגע/יבצבץ מעבר למסגרת הזהב הפנימית - הגרסה העדכנית של ה-PNG כבר לא
+       מציירת קווי רשת פנימיים בכלל, אז המפרידים בין השורות עכשיו כולם CSS טהור.
+       לא על השורה האחרונה (ר' :last-child למטה) */
+    margin: 0 14px;
+    border-bottom: 1px solid rgba(255, 215, 0, 0.18);
+}
+
+.donator-table tbody tr:last-child {
+    border-bottom: none;
+}
+
+.donator-table tbody td {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* רוחבי עמודות - משותפים בין thead ל-tbody (אותם ערכים בדיוק) כדי שתוויות הכותרת
+   (RANK/USERNAME/KICKS-SUBS) יתיישרו בול מעל הנתונים שמתחתיהן בשתי הטבלאות. סימטריה
+   מכוונת: RANK משמאל, USERNAME במרכז, KICKS/SUBS מימין (טבלה כולה dir="ltr", ר'
+   index.html - flex-start/flex-end כאן הם שמאל/ימין פיזיים בפועל). העמודה השלישית
+   מקבלת padding-right ייעודי נוסף כדי למשוך את התוכן פנימה, הרחק מקו המסגרת הימני -
+   זו העמודה הכי קרובה לגבול הזהב מבין השלוש */
+.donator-table thead th:nth-child(1),
+.donator-table tbody td:nth-child(1) { flex: 0 0 20%; justify-content: flex-start; text-align: left; }
+
+.donator-table thead th:nth-child(2),
+.donator-table tbody td:nth-child(2) { flex: 0 0 50%; justify-content: center; text-align: center; }
+
+.donator-table thead th:nth-child(3),
+.donator-table tbody td:nth-child(3) { flex: 0 0 30%; justify-content: flex-end; text-align: right; padding-right: 18px; }
+
+.donator-table tbody tr td[colspan] {
+    flex: 1;
+    justify-content: center;
 }
 
 /* "כדור" רקע עדין סביב תווית הכותרת עצמה - מבדיל אותה בבירור מתוכן הנתונים שמתחתיה.
@@ -1953,15 +1919,28 @@ footer {
     white-space: nowrap;
 }
 
+/* אזור השורות (~66% מגובה הכרטיס, ר' .donator-table למעלה - top:20%/bottom:14%) -
+   padding/line-height מתונים שמשאירים רווח בטוח בתוך כל אחת מעשר השורות בלי להישען
+   על min-height:auto של flex (ר' הערה ב-.donator-table tbody/tr למעלה). align-items:
+   center ב-tr (ר' למטה) ממרכז כל שורה אנכית בתוך חלקה השווה בגובה הכולל */
 .donator-table tbody td {
     position: relative;
-    padding: 10px 8px;
+    padding: 6px 10px;
+    line-height: 1.2;
     text-align: center;
     font-size: 0.82rem;
     font-weight: 700;
     color: #ffffff;
-    border-top: 1px solid rgba(255, 255, 255, 0.06);
     overflow: hidden;
+}
+
+/* תא שם המשתמש - מיושר לשמאל, מצטמצם בביטחון עם "..." כדי ששם ארוך לעולם לא ידחוף
+   את עמודת ה-KICKS שלצידו. אין תמונות אווטר בשורות (Kick לא מספק כאלה ל-gifters) */
+.donator-table td.donator-user-cell span {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    min-width: 0;
 }
 
 /* קרן אור זכוכית שחולפת על פני השורה ב-hover - זהה בדיוק לאפקט הקיים ב-.leaderboard-table
@@ -1984,18 +1963,17 @@ footer {
     left: 150%;
 }
 
-/* hover קליל - translateY(-1px) בלבד (לא scale, לא שינוי גובה/רוחב) כדי שהשורה לעולם לא
-   "תתפח" ותחפוף לשכנתה. transform+opacity הם היחידים שמורכבים ע"י הקומפוזיטור בלבד
-   (ללא raster/paint מחדש), ולכן נשארים זולים גם ברינדור תוכנה - עדיין מוחלפים ב-none
-   תחת body.low-perf (למטה) כי גם קומפוזיציה זולה כזו נערמת עם שאר העומס בציוד חלש מאוד */
+/* hover נקי - background-color + box-shadow פנימי בלבד, בלי שום transform, כדי שלא תהיה
+   שום קפיצת layout/הזזה חזותית של השורה ביחס לקווי הרשת המצוירים בתוך ה-PNG (ר' מוקאפ
+   a726e034) - אלו שתי התכונות היחידות שמורכבות ע"י הקומפוזיטור בלבד (ללא raster/paint
+   מחדש), ולכן נשארות זולות גם ברינדור תוכנה */
 .donator-table tbody tr {
-    transition: background-color 0.25s ease, box-shadow 0.25s ease, transform 0.2s ease;
+    transition: background-color 0.25s ease, box-shadow 0.25s ease;
 }
 
 .donator-table tbody tr:hover {
-    background: rgba(255, 204, 51, 0.09);
+    background: rgba(255, 215, 0, 0.08);
     box-shadow: inset 0 0 16px rgba(255, 204, 51, 0.15);
-    transform: translateY(-1px);
 }
 
 /* === מקום #1 (מוביל) - הדגשה מיוחדת, בשתי הטבלאות === */
@@ -2027,20 +2005,13 @@ footer {
     50% { opacity: 1; }
 }
 
+/* צבע טקסט לבן (לא זהב) בכוונה - זהב-על-זהב מול הרקע המודגש של שורת #1 (ר' .rank-first
+   למעלה) היה נמוך-ניגודיות וקשה לקריאה; הרקע/הזוהר הזהובים כאן עדיין מבדילים חזותית
+   את מקום #1 מהשאר, בלי לפגוע בקריאות המספר עצמו */
 .rank-badge-first {
     background: rgba(255, 204, 51, 0.28);
-    color: #ffcc33;
+    color: #ffffff;
     box-shadow: 0 0 8px rgba(255, 204, 51, 0.5);
-}
-
-.rank-crown-icon {
-    display: inline-block;
-    width: 14px;
-    height: 14px;
-    vertical-align: -2px;
-    margin-inline-start: 3px;
-    color: #ffcc33;
-    filter: drop-shadow(0 0 3px rgba(255, 204, 51, 0.7));
 }
 
 /* === Stagger כניסה עדין לשורות בעת מעבר מצב (Gifted Subs <-> Top Kicks) בלבד - script.js
@@ -2077,8 +2048,8 @@ footer {
    שלה, drop-shadow עדין כדי להשתלב עם זוהר הזהב הכללי של הטבלה */
 .donator-quantity-icon {
     display: inline-block;
-    width: 20px;
-    height: 20px;
+    width: 18px;
+    height: 18px;
     vertical-align: middle;
     object-fit: contain;
     margin-inline-end: 3px;
@@ -2086,27 +2057,24 @@ footer {
 }
 
 @media (max-width: 480px) {
-    .donator-card {
-        padding: 14px 10px;
-    }
-    .donator-card-title {
-        font-size: 0.85rem;
-    }
     .donator-table thead th {
-        padding: 8px 4px;
-    }
-    .donators-header-label {
-        font-size: 0.58rem;
-        padding: 3px 7px;
+        padding: 5px 4px;
     }
     .donator-table tbody td {
-        font-size: 0.75rem;
-        padding: 8px 4px;
+        font-size: 0.72rem;
+        padding: 5px 6px;
     }
-    /* גובה נמדד בפועל בנייד קטן מהדסקטופ (padding/font-size מוקטנים למעלה) - override
-       נפרד כדי לא להשאיר רווח לבן מיותר מתחת לטבלה המלאה בנייד */
-    .donator-table-wrap {
-        min-height: 478px;
+    .donator-quantity-icon {
+        width: 15px;
+        height: 15px;
+    }
+    .donators-toggle-badge {
+        width: 26px;
+        height: 30px;
+    }
+    .donators-toggle-badge img {
+        width: 14px;
+        height: 14px;
     }
 }
 
@@ -2212,10 +2180,10 @@ footer {
    כל האלמנטים שומרים על אותה פריסה/צורה/טיפוגרפיה - רק הבלור מוסר ומוחלף ברקע כהה
    ואטום משמעותית יותר, שנותן מראה "זכוכית פרימיום" דומה בלי שום עלות טשטוש בזמן ריצה */
 
-/* שכבות הבלור המשותפות (המחליפות בלורים בודדים נפרדים לכל כרטיס/פאנל) */
-body.low-perf #tab-home.tab-panel.active::before,
-body.low-perf .leaderboard-glass-group::before,
-body.low-perf .donators-grid::before {
+/* שכבת הבלור המשותפת של טאב הבית - .leaderboard-glass-group ו-.donators-grid אינם
+   כלולים כאן: לשניהם אין יותר בלור גם במצב רגיל (ר' .leaderboard-glass-group ו-
+   .donators-grid למעלה), אין מה לבטל */
+body.low-perf #tab-home.tab-panel.active::before {
     backdrop-filter: none;
     -webkit-backdrop-filter: none;
 }
@@ -2250,13 +2218,21 @@ body.low-perf .modal-overlay {
     background-color: rgba(0, 0, 0, 0.92);
 }
 
-/* כל כרטיס/פאנל זכוכית - אותו גוון, אטום משמעותית יותר במקום הטשטוש.
-   .leaderboard-timer/.leaderboard-table-wrap מקבלים את אותו רקע יחד עם ביטול האנימציה
-   האינסופית שלהם למטה (באותה חתימת סלקטור), כדי לא לפצל אותו סלקטור לשני בלוקים נפרדים */
-body.low-perf .link-btn,
-body.low-perf .csgoroll-hero,
-body.low-perf .leaderboard-podium {
-    background: rgba(15, 20, 10, 0.88);
+/* כל כרטיס/פאנל זכוכית - אותו גוון, אטום משמעותית יותר במקום הטשטוש. .leaderboard-podium
+   לא כלול בכוונה - אין לו רקע גם במצב רגיל (ר' .leaderboard-podium למעלה), אז אין מה
+   "לאטום" עבורו תחת low-perf. .leaderboard-timer/.leaderboard-table-wrap מקבלים את אותו
+   רקע יחד עם ביטול האנימציה האינסופית שלהם למטה (באותה חתימת סלקטור), כדי לא לפצל אותו
+   סלקטור לשני בלוקים נפרדים */
+body.low-perf .link-btn {
+    background: rgba(18, 24, 36, 0.9);
+}
+
+/* .csgoroll-hero קיבל backdrop-filter משלו (ר' למעלה, בקשה מפורשת) - צריך override נפרד
+   כאן כדי לבטל גם אותו תחת low-perf, לא רק לאטום את הרקע */
+body.low-perf .csgoroll-hero {
+    background: rgba(15, 23, 35, 0.9);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
 }
 
 /* עצירה מלאה של שכבות הרקע המונפשות - הקנבס נעצר גם ב-JS (ר' index.html), וההסתרה כאן
@@ -2264,13 +2240,6 @@ body.low-perf .leaderboard-podium {
    כי filter:blur(120px) על אלמנט מונפש הוא בעצמו עבודה יקרה מאוד ללא האצת GPU */
 body.low-perf #particles-bg,
 body.low-perf .glow-orb {
-    display: none;
-}
-
-/* STRICTLY DISABLE: הגנת-יתר ברמת ה-CSS בנוסף לחסימה ב-JS עצמו (initVideoBackground
-   ב-script.js לעולם לא מוסיף את .bg-video ל-DOM תחת low-perf מלכתחילה) - display:none
-   כאן הוא הבטחה כפולה שהוא לעולם לא יצויר/יפוענח גם אם איכשהו כן הוזרק */
-body.low-perf .bg-video {
     display: none;
 }
 
@@ -2283,25 +2252,15 @@ body.low-perf .link-btn {
     transition: background-color 0.15s ease, border-color 0.15s ease, opacity 0.15s ease;
 }
 
-body.low-perf .link-btn::before {
-    animation: none;
-}
-
 body.low-perf .csgoroll-hero {
     animation-name: fadeInUp;
 }
 
 /* CRITICAL: הריחוף האינסופי (float) על כרטיסי הגיפטרים מבוטל לגמרי תחת low-perf - נשארת
-   רק אנימציית הכניסה החד-פעמית, עם אותו עיכוב/timing מקוריים (animation-name longhand) */
+   רק אנימציית הכניסה החד-פעמית, עם אותו עיכוב/timing מקוריים (animation-name longhand).
+   הכרטיס עצמו כבר לא נושא רקע/אורה משלו (ר' .donator-card למעלה - הרקע מגיע מה-PNG) */
 body.low-perf .donator-card {
-    background: rgba(15, 20, 10, 0.88);
     animation-name: fadeInUp;
-}
-
-/* STRICTLY DISABLE: זוהר האורה האמביינטי המתמשך מבוטל לגמרי - box-shadow מונפש הוא
-   בדיוק מהסוג שגורם לגמגום ברינדור תוכנה */
-body.low-perf .donator-card::after {
-    animation: none;
 }
 
 /* אייקון הכתר/גביע מרחף - מבוטל לגמרי תחת low-perf, נשאר סטטי */
@@ -2327,19 +2286,11 @@ body.low-perf .leaderboard-podium::after {
 
 body.low-perf .podium-card {
     animation-name: podiumFadeIn;
-    transition: background-color 0.15s ease, border-color 0.15s ease, opacity 0.15s ease;
-}
-
-body.low-perf .podium-card.rank-1 .podium-medal {
-    animation: none;
-}
-
-body.low-perf .podium-sparkle {
-    animation: none;
+    transition: opacity 0.15s ease;
 }
 
 body.low-perf .leaderboard-timer {
-    background: rgba(15, 20, 10, 0.88) !important;
+    background: rgba(245, 232, 200, 0.96) !important;
     animation-name: fadeInUp;
 }
 
@@ -2353,7 +2304,7 @@ body.low-perf .live-pill.live .dot {
 }
 
 body.low-perf .leaderboard-table-wrap {
-    background: rgba(15, 20, 10, 0.88) !important;
+    background: rgba(245, 232, 200, 0.96) !important;
     animation-name: fadeInUp;
 }
 
@@ -2415,13 +2366,9 @@ body.low-perf .tab-btn:hover {
 
 body.low-perf .link-btn:hover {
     transform: none !important;
-    filter: drop-shadow(0 8px 18px rgba(0, 0, 0, 0.35));
-    background: rgba(255, 204, 51, 0.14);
+    box-shadow: none;
+    border-color: rgba(255, 222, 106, 0.8);
     opacity: 0.95;
-}
-
-body.low-perf .link-btn::after {
-    display: none;
 }
 
 body.low-perf .link-btn:hover .icon {
@@ -2438,10 +2385,6 @@ body.low-perf .podium-card.rank-1:hover {
     /* -14px = ההגבהה הקבועה של מקום ראשון גם במנוחה - כדי שהמצב לא "יקפוץ" ב-hover */
     transform: translateY(-14px) !important;
     opacity: 0.95;
-}
-
-body.low-perf .podium-card::after {
-    display: none;
 }
 
 body.low-perf .podium-card:hover .podium-avatar {

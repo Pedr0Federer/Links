@@ -180,15 +180,14 @@
 // הוא נמוך מדי - מוסיפים מחלקה שמפעילה נפילה חיננית ב-CSS (ר' style.css) ועוצרים את
 // לולאת הקנבס (ר' index.html) כדי להוריד את העומס למינימום האפשרי.
 //
-// BUGFIX: המדידה לא מתחילה מיד עם טעינת הסקריפט יותר - נמצא בבדיקה ישירה (ffprobe על
+// BUGFIX: המדידה לא מתחילה מיד עם טעינת הסקריפט - נמצא בבדיקה ישירה (ffprobe על
 // assets/media/intro.mp4: 2.23 שניות, ~1.79 שניות בפועל אחרי playbackRate=1.25) שחלון
 // המדידה המקורי (0-1.5 שניות מטעינת הדף) חופף כמעט לחלוטין לזמן שבו וידאו האינטרו עצמו
 // מפוענח ומתנגן - פענוח וידאו הוא בדיוק אחד הדברים היקרים ביותר לחישוב, כך שקצב
 // הפריימים הנמדד באותו חלון היה מוטה כלפי מטה באופן מלאכותי גם על חומרה חזקה לגמרי,
-// וגרם לזיהוי-שווא של low-perf (התוצאה המורגשת: רקע הווידאו וכו' לא הופיעו אפילו כשהאצת
-// החומרה בפועל דלוקה). כעת ממתינים SAMPLE_START_DELAY_MS (חופף את משך האינטרו + מרווח
-// ביטחון) לפני שמתחילים לספור פריימים בכלל, כך שהמדידה משקפת ביצועים אמיתיים במצב יציב,
-// לא עומס חד-פעמי של טעינת הדף
+// וגרם לזיהוי-שווא של low-perf. כעת ממתינים SAMPLE_START_DELAY_MS (חופף את משך האינטרו +
+// מרווח ביטחון) לפני שמתחילים לספור פריימים בכלל, כך שהמדידה משקפת ביצועים אמיתיים
+// במצב יציב, לא עומס חד-פעמי של טעינת הדף
 (function () {
     "use strict";
 
@@ -223,16 +222,9 @@
         }
 
         console.log(
-            "[VideoBG] FPS sample: " + fps.toFixed(1) +
+            "[Perf] FPS sample: " + fps.toFixed(1) +
             " (threshold " + LOW_FPS_THRESHOLD + ") -> isLowPerfDevice=" + window.isLowPerfDevice
         );
-
-        // ההחלטה על רקע הווידאו מחכה בכוונה לרגע הזה (סוף מדידת ה-FPS, אחרי ההשהיה
-        // למעלה), לא רק לבדיקת ה-WebGL הסינכרונית שלמעלה - ר' initVideoBackground
-        // להסבר המלא
-        if (typeof window.initVideoBackground === "function") {
-            window.initVideoBackground();
-        }
     }
 
     setTimeout(function () {
@@ -240,121 +232,3 @@
     }, SAMPLE_START_DELAY_MS);
 })();
 
-// === רקע וידאו - מותנה לגמרי בהאצת חומרה פעילה + low-perf כבוי, ורק אחרי שהקביעה
-// הסופית ידועה (ר' הקריאה מלמעלה, בסוף מדידת ה-FPS הא-סינכרונית - לא רק הבדיקה
-// הסינכרונית המיידית) - כדי למנוע בדיוק את התרחיש שגרם לבעיות בגרסה קודמת של התכונה
-// הזו באתר הזה (ר' היסטוריית git: נוגן, התגלה כבד, הוסר תוך כדי ניגון - "הבזק" מיותר
-// וגם בזבוז של הורדה/פענוח שכבר קרו לשווא). הרקע הסטטי (bg-jungle.webp, ר' body::before
-// ב-style.css) הוא ברירת המחדל הבטוחה תמיד - זמין מהרגע הראשון בלי תלות בהחלטה הזו,
-// וממשיך לשמש כרשת ביטחון (מוסתר ויזואלית מתחת לווידאו רק כשהוא באמת מתחיל לנגן
-// בהצלחה, לעולם לא מוסר מה-DOM)
-(function () {
-    "use strict";
-
-    const VIDEO_BG_SRC = "assets/media/BackVid.mp4";
-    let alreadyDecided = false;
-
-    function removeVideoBackground(video) {
-        if (video && video.parentNode) video.parentNode.removeChild(video);
-    }
-
-    // לוג אבחון יחיד וברור - כך שב-DevTools (F12) אפשר לראות מיידית למה הווידאו כן/לא
-    // פעיל, בלי לנחש. נקרא בכל נקודת החלטה (הצלחה או כל סיבת נפילה)
-    function logDecision(active, reason) {
-        if (active) {
-            console.log("[VideoBG] Active (HW accelerated)");
-        } else {
-            console.log("[VideoBG] Fallback to static image: " + reason);
-        }
-    }
-
-    window.initVideoBackground = function () {
-        // נקרא פעם אחת בלבד לאורך חיי העמוד - מדידת ה-FPS עצמה כבר לא חוזרת על עצמה,
-        // אבל ההגנה כאן מפורשת ליתר ביטחון
-        if (alreadyDecided) return;
-        alreadyDecided = true;
-
-        // ה-*יחיד* שחוסם את וידאו הרקע הוא ביצועים בפועל (isLowPerfDevice - נקבע ע"י
-        // בדיקת ה-WebGL הסינכרונית ו/או מד ה-FPS הא-סינכרוני למעלה, וגם מתעדכן ידנית ע"י
-        // body.low-perf) - לא prefers-reduced-motion. ההעדפה הזו עדיין מכובדת במלואה
-        // עבור אנימציות CSS לא-חיוניות (פעימת מקום #1, stagger כניסת שורות וכו', ר'
-        // style.css), אבל וידאו הרקע המושתק מותר לפעול כל עוד המערכת מסוגלת לזה בפועל -
-        // החלטה מפורשת של בעל האתר
-        if (window.isLowPerfDevice) {
-            logDecision(false, "isLowPerfDevice=true (WebGL renderer check or measured FPS below threshold)");
-            return;
-        }
-
-        const video = document.createElement("video");
-        video.id = "bgVideo";
-        video.className = "bg-video";
-        video.src = VIDEO_BG_SRC;
-        video.autoplay = true;
-        video.loop = true;
-        video.muted = true;
-        video.defaultMuted = true;
-        video.playsInline = true;
-        video.preload = "auto";
-        video.setAttribute("aria-hidden", "true");
-        video.setAttribute("tabindex", "-1");
-        // בנוסף לתכונות ה-JS למעלה (autoplay/loop/muted/playsInline) - מוסיפים גם את
-        // תגי ה-HTML המפורשים ישירות, בדיוק כמו וידאו האינטרו (ר' index.html, introVideo),
-        // כדי להבטיח שהן תמיד מופיעות ב-DOM המוצג בפועל בכל דפדפן/build, ללא תלות
-        // בפרטי ה-reflection הפנימיים של כל תכונת IDL
-        video.setAttribute("autoplay", "");
-        video.setAttribute("loop", "");
-        video.setAttribute("muted", "");
-        video.setAttribute("playsinline", "");
-        video.setAttribute("webkit-playsinline", "true");
-
-        // כשל טעינה (קובץ חסר/שבור/רשת) - מסירים לגמרי, הרקע הסטטי שכבר קיים ממשיך
-        // להיראות בדיוק כפי שנראה עד עכשיו, בלי שום מעבר/הבזק מורגש
-        video.addEventListener("error", function () {
-            logDecision(false, "video failed to load (network error or missing/corrupt file)");
-            removeVideoBackground(video);
-        });
-
-        // מוסיפים .loaded רק אחרי אישור אמיתי שהפריים הראשון כבר מוצג על המסך (אירוע
-        // "playing", עם timeupdate כגיבוי למקרה שהדפדפן לא יורה אותו באופן עקבי) - כך
-        // ה-opacity:0->1 ב-CSS (fade חלק) מתחיל בדיוק כשיש כבר תוכן וידאו אמיתי מתחתיו,
-        // במקום לקפוץ/להבהב מעל bg-jungle.webp ברגע ההזרקה ל-DOM לפני שיש פריים לצייר
-        let markLoaded = function () {
-            video.classList.add("loaded");
-            markLoaded = function () {}; // חד-פעמי - אין צורך לרוץ שוב בכל timeupdate
-        };
-        video.addEventListener("playing", function () { markLoaded(); });
-        video.addEventListener("timeupdate", function () {
-            if (video.currentTime > 0) markLoaded();
-        });
-
-        // מוסיפים כילד ה-DOM הראשון של body (לפני #particles-bg/.glow-orb, שגם הם
-        // z-index:-1) כדי שהם ימשיכו לצייר מעליו באותה שכבת עומק בדיוק כמו שהיו
-        // מציירים מעל הרקע הסטטי
-        document.body.insertBefore(video, document.body.firstChild);
-
-        // עוצרים את פענוח/ניגון הווידאו לגמרי כשהטאב לא גלוי (למשל המשתמש עבר לטאב אחר) -
-        // דפדפנים ממשיכים לפענח פריימים לווידאו מושתק ברקע גם כשאין שום תועלת חזותית בכך,
-        // מה שצורך CPU/סוללה לחינם. חוזרים לנגן אוטומטית ברגע שהטאב גלוי שוב
-        document.addEventListener("visibilitychange", function () {
-            if (!video.isConnected) return;
-            if (document.hidden) {
-                video.pause();
-            } else {
-                video.play().catch(function () {});
-            }
-        });
-
-        // אכיפה מפורשת של muted לפני play() (כמו ב-playIntroSplash), כדי לעמוד
-        // במדיניות ה-autoplay של הדפדפנים גם כשמסתמכים גם על התכונה autoplay וגם על
-        // קריאת play() יזומה
-        video.muted = true;
-        video.play().then(function () {
-            logDecision(true);
-        }).catch(function (err) {
-            // מדיניות autoplay חסמה ניגון (נדיר עבור מושתק, אבל קורה) - מסירים לגמרי
-            // במקום להשאיר <video> שחור/ריק תקוע במקום הרקע התקין
-            logDecision(false, "autoplay blocked by browser (" + (err && err.name ? err.name : err) + ")");
-            removeVideoBackground(video);
-        });
-    };
-})();
