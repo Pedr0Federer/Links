@@ -220,11 +220,6 @@
         if (window.isLowPerfDevice && document.body) {
             document.body.classList.add("low-perf");
         }
-
-        console.log(
-            "[Perf] FPS sample: " + fps.toFixed(1) +
-            " (threshold " + LOW_FPS_THRESHOLD + ") -> isLowPerfDevice=" + window.isLowPerfDevice
-        );
     }
 
     setTimeout(function () {
