@@ -788,7 +788,7 @@
                         <tr class="${isFirst ? "rank-first" : ""}${staggerClass}">
                             <td><span class="rank-badge${isFirst ? " rank-badge-first" : ""}">${idx + 1}</span></td>
                             <td class="donator-user-cell"><span>${escapeHtml(g.username)}</span></td>
-                            <td class="gift-count-cell">${iconHtml} ${Number(g.quantity || 0).toLocaleString("en-US")}</td>
+                            <td class="gift-count-cell">${iconHtml}<span class="gift-count-value">${Number(g.quantity || 0).toLocaleString("en-US")}</span></td>
                         </tr>`;
                 }).join("");
             }
