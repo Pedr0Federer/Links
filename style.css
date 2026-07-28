@@ -330,7 +330,8 @@ header {
 }
 
 h1 {
-    font-size: 2.3rem;
+    /* 2.5rem, היה 2.3rem (~+8.7%) - תואם את ההגדלה של כרטיסי ה-Donators (ר' .donators-grid) */
+    font-size: 2.5rem;
     font-weight: 900;
     margin-bottom: 5px;
     letter-spacing: 1px;
@@ -1690,6 +1691,25 @@ footer {
     grid-template-columns: 1fr 1fr;
     gap: 14px;
     position: relative;
+}
+
+/* הגדלה חזותית אחידה של ~9% לכל תוכן הכרטיסים (מסגרות זהב, רקע כהה, טקסט, אייקונים) יחד -
+   transform:scale על כל התת-עץ מבטיח שכל היחסים המדודים בדיוק (inset הרקע הכהה מהמסגרת,
+   border-radius, מרווחי טקסט/אייקונים - ר' .donator-table למעלה) יישארו זהים ב-100%, בלי
+   לגעת בעשרות כללי CSS נפרדים בנפרד (וסיכון לפספס אחד מהם וליצור חוסר-סימטריה). רק מ-769px
+   ומעלה - מתחת לזה הכרטיסים נערמים בעמודה אחת (ר' למטה) והריפוד הצדדי של .container קטן
+   בהרבה (16px, לא 50px), אין מספיק מרווח בטוח לגדילה אופקית. transform-origin:center top -
+   הגדילה "דוחפת" רק כלפי מטה/הצדדים, לא כלפי מעלה אל המתג/הכותרת שמעל. margin-bottom מפצה
+   על הגובה הנוסף שה-transform לא מדווח עליו לזרימת העמוד (אחרת הפוטר מתחת היה חופף לתחתית
+   הכרטיסים המוגדלים) - מחושב מול רוחב-תוכן ה-container המקסימלי (1000px, ר' .container
+   למעלה), ולכן מספיק גם ברוחבי מסך צרים יותר בטווח הזה (הגובה בפועל רק קטן מזה). מוגן גם
+   ע"י overflow-x:hidden הגלובלי על body (ר' למעלה) מפני scrollbar אופקי בכל רוחב מסך */
+@media (min-width: 769px) {
+    .donators-grid {
+        transform: scale(1.09);
+        transform-origin: center top;
+        margin-bottom: 65px;
+    }
 }
 
 @media (max-width: 768px) {
