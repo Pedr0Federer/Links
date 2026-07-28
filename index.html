@@ -838,28 +838,38 @@
                     lastGiftsWeekly = Array.isArray(data.gifts_week) ? data.gifts_week : [];
                 }
 
+                // null (לא { lifetime: [], weekly: [] }) מסמן כישלון שליפה בפועל - ר' הערה
+                // ב-loadKicksSnapshot למטה. שומרים על lastKicksAllTime/lastKicksWeekly הקודמים
+                // במקרה כזה במקום לדרוס אותם ברשימות ריקות, בדיוק כמו התבנית הקיימת כבר
+                // ל-lastGiftsAllTime/lastGiftsWeekly למעלה (if (data) {...}) - כך שכישלון חולף
+                // בפולינג התקופתי לא "מרוקן" טבלה שכבר הציגה נתונים תקינים בהצלחה
                 const kicks = await loadKicksSnapshot();
-                lastKicksAllTime = kicks.lifetime;
-                lastKicksWeekly = kicks.weekly;
+                if (kicks) {
+                    lastKicksAllTime = kicks.lifetime;
+                    lastKicksWeekly = kicks.weekly;
+                }
 
                 renderDonators();
             }
 
             // קריאה מקומית פשוטה, בלי proxy/retry/timeout ארוך - data/kicks.json הוא קובץ סטטי
-            // באותו origin בדיוק כמו index.html/style.css עצמם, לא endpoint רשת חיצוני. הקובץ
-            // עשוי לא להתקיים עדיין (ריצה ראשונה של ה-GitHub Action טרם קרתה) - זה לא נחשב שגיאה,
-            // פשוט חוזרים עם רשימות ריקות ו-renderDonatorTable מציג הודעת "אין נתונים" רגילה
+            // באותו origin בדיוק כמו index.html/style.css עצמם, לא endpoint רשת חיצוני.
+            // מחזירים null במפורש עבור כישלון שליפה בפועל (סטטוס לא-תקין/JSON פגום/שגיאת רשת) -
+            // לא אותו דבר כמו "הקובץ עדיין לא קיים כי ריצה ראשונה של ה-GitHub Action טרם קרתה",
+            // שזה מצב תקין (200 עם lifetime/weekly ריקים בפועל, לא נחשב שגיאה כלל). ההבחנה
+            // הזו מאפשרת ל-loadDonators למעלה לשמר את הנתונים הידועים האחרונים בכישלון אמיתי,
+            // במקום להציג טבלה ריקה למשתמש רק בגלל תקלת רשת חולפת
             async function loadKicksSnapshot() {
                 try {
                     const res = await fetch(`data/kicks.json?t=${Date.now()}`, { headers: { "Accept": "application/json" } });
-                    if (!res.ok) return { lifetime: [], weekly: [] };
+                    if (!res.ok) return null;
                     const data = await res.json();
                     return {
                         lifetime: Array.isArray(data.lifetime) ? data.lifetime : [],
                         weekly: Array.isArray(data.weekly) ? data.weekly : []
                     };
                 } catch {
-                    return { lifetime: [], weekly: [] };
+                    return null;
                 }
             }
 
