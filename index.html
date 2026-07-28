@@ -599,16 +599,21 @@
             const PRIZE_SHARE = { 1: 0.30, 2: 0.20, 3: 0.15, 4: 0.10, 5: 0.08, 6: 0.07, 7: 0.06, 8: 0.04 };
             const DEFAULT_MONTHLY_REWARD = 7500;
 
-            // תמונת מצב אחרונה ידועה - משמשת רק אם הדומיין החוסם CORS מונע שליפה חיה מהדפדפן
+            // תמונת מצב אחרונה ידועה - משמשת מיידית ב-loadLeaderboard (ר' למטה) לפני שהשליפה
+            // החיה מסתיימת, ונשארת בפועל רק אם הדומיין החוסם CORS מונע שליפה חיה מהדפדפן
+            // לגמרי. חייבת להתעדכן מעת לעת מול הנתונים החיים בפועל (ר' https://nickpf.com/
+            // api/csgoroll-leaderboard) - אחרת המספרים "קופצים" בבירור מהערכים הישנים כאן
+            // לערכים החיים העדכניים ברגע שהשליפה מסתיימת (עודכן לאחרונה 2026-07-28, כולל
+            // סדר הדירוג המעודכן - l****s עקף את q****` למקום 4)
             const FALLBACK_PLAYERS = [
-                { name: "T****x", wagered: 135622, avatar: "https://avatars.fastly.steamstatic.com/dc04818ef0a0a676cbf6dee40c044dff72c91091_full.jpg" },
-                { name: "M*c", wagered: 80860, avatar: "https://avatars.fastly.steamstatic.com/e657577c6013671cf9a2c26fa6de9b6082fe1307_full.jpg" },
-                { name: "G****s", wagered: 52541, avatar: "https://avatars.fastly.steamstatic.com/320efe74646d20ff85c810e0b42380f097e1b8ba_full.jpg" },
-                { name: "q****`", wagered: 35056, avatar: "https://avatars.fastly.steamstatic.com/82b1bcae2bdc3ac16cd1613afef1698361d735bb_full.jpg" },
-                { name: "s****o", wagered: 28874, avatar: "https://avatars.fastly.steamstatic.com/da558491c706c7f445bcba3357e87412cd847d06_full.jpg" },
-                { name: "l****s", wagered: 22982, avatar: "https://avatars.akamai.steamstatic.com/50767cea96889a121066ed45c098873cb258f8f3_full.jpg" },
-                { name: "B****y", wagered: 21915, avatar: "https://avatars.fastly.steamstatic.com/ff48e2ea7247047386bf99214fe443c5d0a15276_full.jpg" },
-                { name: "B****n", wagered: 12648, avatar: "https://avatars.akamai.steamstatic.com/3bff0a761c2059400d73e8165c7a4c2f2308492f_full.jpg" }
+                { name: "T****x", wagered: 165175, avatar: "https://avatars.fastly.steamstatic.com/dc04818ef0a0a676cbf6dee40c044dff72c91091_full.jpg" },
+                { name: "M*c", wagered: 81620, avatar: "https://avatars.fastly.steamstatic.com/e657577c6013671cf9a2c26fa6de9b6082fe1307_full.jpg" },
+                { name: "G****s", wagered: 59040, avatar: "https://avatars.fastly.steamstatic.com/320efe74646d20ff85c810e0b42380f097e1b8ba_full.jpg" },
+                { name: "l****s", wagered: 37230, avatar: "https://avatars.akamai.steamstatic.com/50767cea96889a121066ed45c098873cb258f8f3_full.jpg" },
+                { name: "q****`", wagered: 35745, avatar: "https://avatars.fastly.steamstatic.com/82b1bcae2bdc3ac16cd1613afef1698361d735bb_full.jpg" },
+                { name: "s****o", wagered: 28933, avatar: "https://avatars.fastly.steamstatic.com/da558491c706c7f445bcba3357e87412cd847d06_full.jpg" },
+                { name: "B****y", wagered: 26393, avatar: "https://avatars.fastly.steamstatic.com/ff48e2ea7247047386bf99214fe443c5d0a15276_full.jpg" },
+                { name: "B****n", wagered: 16184, avatar: "https://avatars.akamai.steamstatic.com/3bff0a761c2059400d73e8165c7a4c2f2308492f_full.jpg" }
             ];
 
             function roundTo50(n) {
