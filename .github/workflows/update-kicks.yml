@@ -2,7 +2,11 @@ name: Update Kicks Leaderboard
 
 on:
   schedule:
-    - cron: '*/20 * * * *'
+    # GitHub is documented to throttle/delay `schedule` events under load - it does not
+    # guarantee this exact cadence, especially below ~15min (low-priority queue, can be
+    # skipped/batched). This is the closest to "every 5-10 min" GitHub's scheduler will
+    # realistically honor without runs getting silently dropped.
+    - cron: '*/10 * * * *'
   workflow_dispatch:
 
 permissions:
