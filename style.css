@@ -334,20 +334,38 @@ h1 {
     font-weight: 900;
     margin-bottom: 5px;
     letter-spacing: 1px;
-    background: linear-gradient(180deg, #ffb347 0%, #ff6e2e 100%);
+    /* גרדיאנט זהב מטאלי (היה גרדיאנט כתום שטוח דו-גוני) - background-size:200% + אנימציית
+       headerShimmer (למטה) מזיזים את מיקום הגרדיאנט כדי שהברק "יזוז" לאורך השם */
+    background: linear-gradient(135deg, #FFE082 0%, #FFB300 40%, #FFF8E1 50%, #FF8F00 70%, #FFE082 100%);
+    background-size: 200% auto;
     -webkit-background-clip: text;
+    background-clip: text;
     -webkit-text-fill-color: transparent;
-    /* קו מתאר כהה דק סביב הטקסט עצמו - נשאר יעיל גם כשהרקע מאחוריו הוא וידאו בהיר/להבות
-       נעות, לא רק תמונה סטטית עמומה */
-    -webkit-text-stroke: 1px rgba(0, 0, 0, 0.5);
-    /* filter:drop-shadow במקום text-shadow (ניסוי עיצובי) - text-shadow על טקסט עם gradient-clip
-       שקוף "מלכלך" את הצבע החי; drop-shadow פועל על הצללית המעובדת בלי לגעת במילוי עצמו.
-       שלוש שכבות דרופ-שאדו מוערמות (המקבילה של drop-shadow ל-text-shadow רב-שכבתי) - הוגברו
-       משמעותית כדי שהטקסט יישאר קריא בבירור גם מעל וידאו רקע בהיר/מתחלף (להבות וכו') */
+    /* text-stroke הוסר בכוונה - הוא זה שיצר את קווי הפגם הפנימיים בתוך אותיות עגולות
+       (e/d/o וכו'): קו המתאר מצויר ממורכז על קו המתאר של האות, כולל על הלולאה הפנימית
+       שלה, לא רק על השוליים החיצוניים - נראה כמו קו "שבור" בתוך האות. הקריאות מול וידאו
+       הרקע הבהיר/המתחלף (במקום זאת) נשענת על שכבת ה-drop-shadow הכהה למטה בלבד - הוגברה
+       (שתי שכבות כהות חדות + זוהר זהוב עדין) כדי לבלוט בבירור מול טלאים בהירים ברקע
+       (עצי דקל/שמיים) */
     filter:
-        drop-shadow(0 3px 8px rgba(0, 0, 0, 0.9))
-        drop-shadow(0 0 15px rgba(0, 0, 0, 0.8))
-        drop-shadow(0 0 2px #000);
+        drop-shadow(0 2px 4px rgba(0, 0, 0, 0.95))
+        drop-shadow(0 0 8px rgba(0, 0, 0, 0.85))
+        drop-shadow(0 0 16px rgba(255, 179, 0, 0.25));
+    animation: headerShimmer 4.5s linear infinite;
+}
+
+@keyframes headerShimmer {
+    0% { background-position: 0% center; }
+    100% { background-position: 200% center; }
+}
+
+/* מבוטל תחת body.low-perf - אנימציית background-position רציפה על טקסט gradient-clip
+   מחייבת רה-רסטור/רה-קומפוזיציה חוזרים של הטקסט המלא בכל frame, בלי קיצור דרך זול
+   בקומפוזיטור (בניגוד ל-transform/opacity) - יקר מדי לרינדור תוכנה, בהתאם לאותו עיקרון
+   STRICTLY DISABLE שכל שאר האנימציות היקרות תחת low-perf כאן כבר מיישמות */
+body.low-perf h1 {
+    animation: none;
+    background-position: 35% center;
 }
 
 .subtitle {
