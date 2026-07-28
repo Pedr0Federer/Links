@@ -599,14 +599,15 @@
             const PRIZE_SHARE = { 1: 0.30, 2: 0.20, 3: 0.15, 4: 0.10, 5: 0.08, 6: 0.07, 7: 0.06, 8: 0.04 };
             const DEFAULT_MONTHLY_REWARD = 7500;
 
-            // תמונת מצב אחרונה ידועה - משמשת מיידית ב-loadLeaderboard (ר' למטה) לפני שהשליפה
-            // החיה מסתיימת, ונשארת בפועל רק אם הדומיין החוסם CORS מונע שליפה חיה מהדפדפן
-            // לגמרי. חייבת להתעדכן מעת לעת מול הנתונים החיים בפועל (ר' https://nickpf.com/
-            // api/csgoroll-leaderboard) - אחרת המספרים "קופצים" בבירור מהערכים הישנים כאן
-            // לערכים החיים העדכניים ברגע שהשליפה מסתיימת (עודכן לאחרונה 2026-07-28, כולל
-            // סדר הדירוג המעודכן - l****s עקף את q****` למקום 4)
+            // תמונת מצב אחרונה ידועה - מוצגת באופן סינכרוני-לגמרי מיידית ב-loadLeaderboard
+            // (ר' למטה), לפני שכל fetch אסינכרוני מתחיל בכלל - זו הדרך היחידה להשיג רינדור
+            // מיידי אמיתי (0ms) של "הלידרבורד המלא", מאחר שנתונים חיים אמיתיים תמיד מחייבים
+            // קריאת רשת אסינכרונית (לא ניתן לסיים ב-0ms מטבעה). המחיר: הערכים כאן נשארים
+            // מדויקים רק עד שהם משתנים בפועל בצד קיק - חייבים להתעדכן מעת לעת מול הנתונים
+            // החיים (ר' https://nickpf.com/api/csgoroll-leaderboard) אחרת יוצגו כערכים
+            // "חיים" בעוד שבפועל הם מיושנים (עודכן לאחרונה 2026-07-28)
             const FALLBACK_PLAYERS = [
-                { name: "T****x", wagered: 165175, avatar: "https://avatars.fastly.steamstatic.com/dc04818ef0a0a676cbf6dee40c044dff72c91091_full.jpg" },
+                { name: "T****x", wagered: 167608, avatar: "https://avatars.fastly.steamstatic.com/dc04818ef0a0a676cbf6dee40c044dff72c91091_full.jpg" },
                 { name: "M*c", wagered: 81620, avatar: "https://avatars.fastly.steamstatic.com/e657577c6013671cf9a2c26fa6de9b6082fe1307_full.jpg" },
                 { name: "G****s", wagered: 59040, avatar: "https://avatars.fastly.steamstatic.com/320efe74646d20ff85c810e0b42380f097e1b8ba_full.jpg" },
                 { name: "l****s", wagered: 37230, avatar: "https://avatars.akamai.steamstatic.com/50767cea96889a121066ed45c098873cb258f8f3_full.jpg" },
@@ -738,10 +739,21 @@
                 return DEFAULT_MONTHLY_REWARD;
             }
 
+            // true רק לפני ה-render הראשון אי-פעם - רק אז מציגים את FALLBACK_PLAYERS באופן
+            // סינכרוני מיידי (רינדור "פריים 1"). בכל קריאה חוזרת ל-loadLeaderboard (רץ שוב
+            // כל שעה, ר' pollLeaderboard למטה) הדילוג הזה חיוני: בלעדיו, נתונים אמיתיים
+            // שכבר מוצגים על המסך היו נדרסים בחזרה לתמונת המצב הישנה של FALLBACK_PLAYERS
+            // לפני שה-fetch השקט ברקע מסתיים - בדיוק ה"הבהוב" שאסור שיקרה גם ברענון תקופתי,
+            // לא רק בטעינה הראשונית
+            let leaderboardHasRenderedOnce = false;
+
             async function loadLeaderboard() {
-                // מציגים מיידית את נתוני הגיבוי כדי שהטאב לעולם לא יישאר תקוע על "טוען נתונים..."
-                // גם אם השרת החיצוני חוסם/נתקע - ומעדכנים לנתונים חיים אם/כאשר השליפה מצליחה
-                renderLeaderboard(FALLBACK_PLAYERS, DEFAULT_MONTHLY_REWARD);
+                // רינדור סינכרוני מיידי - לפני כל await/fetch - כדי שהלידרבורד המלא יופיע
+                // כבר בפריים הראשון, 0ms, בלי לחכות לשום קריאת רשת
+                if (!leaderboardHasRenderedOnce) {
+                    renderLeaderboard(FALLBACK_PLAYERS, DEFAULT_MONTHLY_REWARD);
+                    leaderboardHasRenderedOnce = true;
+                }
 
                 let players = FALLBACK_PLAYERS;
 
