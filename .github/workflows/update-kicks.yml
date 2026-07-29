@@ -2,19 +2,46 @@ name: Update Kicks Leaderboard
 
 on:
   schedule:
-    # GitHub is documented to throttle/delay `schedule` events under load - it does not
-    # guarantee this exact cadence, especially below ~15min (low-priority queue, can be
-    # skipped/batched). This is the closest to "every 5-10 min" GitHub's scheduler will
-    # realistically honor without runs getting silently dropped.
-    - cron: '*/10 * * * *'
+    # Demoted to an hourly SAFETY NET only - the real ~5min cadence now comes from the
+    # self-dispatch relay at the bottom of this job (see "Trigger next update cycle"
+    # below), not from this cron. `schedule` events are documented to be throttled/
+    # delayed/dropped under load, especially below ~15min (low-priority queue) - that's
+    # exactly why the relay exists. This hourly tick only exists to restart the chain if
+    # a link ever breaks (a run fails before reaching the dispatch step, a transient
+    # GitHub incident, a manual disable/enable leaving it stalled).
+    #
+    # NOTE: this safety net does NOT cover GitHub's 60-day whole-workflow auto-disable
+    # for inactive repos - if that ever fires, both this schedule AND workflow_dispatch
+    # (including the relay's self-dispatch calls) stop working until someone manually
+    # re-enables the workflow. In practice this resets itself as long as data/kicks.json
+    # keeps changing (each update is a commit = repo activity), so it's only a real risk
+    # if the channel goes fully dormant for 60+ days.
+    - cron: '0 * * * *'
   workflow_dispatch:
 
+# actions: write is required for the "Trigger next update cycle" step below, which calls
+# the workflow_dispatch REST API on this same workflow using the ambient GITHUB_TOKEN.
+# GitHub explicitly exempts workflow_dispatch/repository_dispatch from the rule that
+# normally blocks GITHUB_TOKEN-triggered events from cascading into new workflow runs -
+# so this self-dispatch is fully supported and, critically, is NOT subject to the same
+# low-priority `schedule` throttling that makes the cron above unreliable at high frequency.
 permissions:
   contents: write
+  actions: write
+
+# Prevents a manually-triggered run and an in-flight relay link from racing on
+# `git push`. cancel-in-progress is deliberately false - cancelling a chain link would
+# break the relay instead of just delaying it, so overlapping triggers queue instead.
+concurrency:
+  group: update-kicks
+  cancel-in-progress: false
 
 jobs:
   update-kicks:
     runs-on: ubuntu-latest
+    # Bounds how long a single stuck link can block the chain - well above the ~30-40s
+    # scrape + ~5min relay sleep this job normally takes, far below the 360min platform max.
+    timeout-minutes: 10
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -36,3 +63,25 @@ jobs:
           git config --local user.name "GitHub Action"
           git add data/kicks.json
           git diff --staged --quiet && echo "No changes to commit" || (git commit -m "Auto-update Kicks leaderboard snapshot" && git push)
+
+      # Runs regardless of whether the scrape/commit above succeeded (if: always()) - a
+      # single failed scrape must not break the relay chain; the hourly schedule safety
+      # net exists for the case where this step itself never runs (e.g. the job was
+      # killed before reaching it).
+      - name: Sleep before triggering next cycle
+        if: always()
+        run: sleep 300
+
+      # Queues the next run of this same workflow via the REST API instead of waiting on
+      # `schedule` - see the permissions/concurrency comments above for why this bypasses
+      # the throttling that made the old */10 cron unreliable. If the workflow is ever
+      # disabled (the kill switch for this relay), this call fails with a clean 409 and
+      # no further runs get queued.
+      - name: Trigger next update cycle (bypasses schedule throttling)
+        if: always()
+        run: |
+          curl --fail-with-body -sS -X POST \
+            -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+            -H "Accept: application/vnd.github+json" \
+            "https://api.github.com/repos/${{ github.repository }}/actions/workflows/update-kicks.yml/dispatches" \
+            -d '{"ref":"${{ github.ref_name }}"}'
