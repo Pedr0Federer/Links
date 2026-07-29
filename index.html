@@ -692,31 +692,91 @@
                 }).join("");
             }
 
+            /* אותו עיקרון diff-DOM כמו renderPodium/renderDonatorTable למעלה: במקום לזרוק את
+               כל ה-tbody ולבנות מחדש בכל רענון שקט ברקע (60 שניות), משווים לפי שם השחקן (מפתח
+               יציב, לא לפי אינדקס - אינדקס משתנה כשהדירוג מתחלף) מול ה-DOM הקיים:
+               - שורה קיימת עם אותו שם: מעדכנים avatar/rank/wagered/prize רק אם השתנו בפועל
+               - שחקן חדש בטווח 4-8: נבנית שורה חדשה
+               - שחקן שירד מהטווח: השורה שלו מוסרת
+               - הסדר משוחזר תמיד באמצעות insertBefore, שמזיז node קיים בלי להרוס אותו */
+            function renderLeaderboardRows(rest, prizes) {
+                const rowsEl = document.getElementById("leaderboardRows");
+
+                if (rest.length === 0) {
+                    rowsEl.innerHTML = `<tr><td colspan="4" class="loading-row">אין דירוגים נוספים כרגע</td></tr>`;
+                    return;
+                }
+
+                function buildRow(player, rank) {
+                    const tr = document.createElement("tr");
+                    tr.dataset.playerName = player.name;
+                    tr.innerHTML = `
+                        <td><span class="rank-badge">${rank}</span></td>
+                        <td class="user-cell">
+                            <img class="row-avatar" src="${player.avatar}" alt="${player.name}" onerror="this.onerror=null;this.src='assets/images/profile.jpg';">
+                            <span>${player.name}</span>
+                        </td>
+                        <td>🪙 ${player.wagered.toLocaleString("en-US")}</td>
+                        <td class="prize-cell">🪙 ${(prizes[rank] || 0).toLocaleString("en-US")}</td>`;
+                    return tr;
+                }
+
+                // מנקים מראש שורות "placeholder" ישנות בלי data-player-name (מסך הטעינה
+                // הראשוני/מצב ריק קודם) - הן לעולם לא נחשבות בנות-שימוש-חוזר ל-diff
+                Array.from(rowsEl.children).forEach(function (row) {
+                    if (!row.dataset || !row.dataset.playerName) row.remove();
+                });
+
+                const existingByName = new Map();
+                Array.from(rowsEl.children).forEach(function (row) {
+                    existingByName.set(row.dataset.playerName, row);
+                });
+
+                rest.forEach(function (player, idx) {
+                    const rank = idx + 4;
+                    let row = existingByName.get(player.name);
+
+                    if (row) {
+                        existingByName.delete(player.name);
+
+                        const badge = row.querySelector(".rank-badge");
+                        if (badge.textContent !== String(rank)) badge.textContent = String(rank);
+
+                        const avatar = row.querySelector(".row-avatar");
+                        if (avatar.src !== player.avatar) avatar.src = player.avatar;
+                        if (avatar.alt !== player.name) avatar.alt = player.name;
+
+                        const nameEl = row.querySelector(".user-cell span");
+                        if (nameEl.textContent !== player.name) nameEl.textContent = player.name;
+
+                        const wageredEl = row.children[2];
+                        const newWageredText = "🪙 " + player.wagered.toLocaleString("en-US");
+                        if (wageredEl.textContent !== newWageredText) wageredEl.textContent = newWageredText;
+
+                        const prizeEl = row.querySelector(".prize-cell");
+                        const newPrizeText = "🪙 " + (prizes[rank] || 0).toLocaleString("en-US");
+                        if (prizeEl.textContent !== newPrizeText) prizeEl.textContent = newPrizeText;
+                    } else {
+                        row = buildRow(player, rank);
+                    }
+
+                    const refNode = rowsEl.children[idx] || null;
+                    if (refNode !== row) rowsEl.insertBefore(row, refNode);
+                });
+
+                // שחקנים שנשארו במפה הם כאלה שירדו מהטווח 4-8 ברענון הזה - השורות שלהם מוסרות
+                existingByName.forEach(function (row) {
+                    row.remove();
+                });
+            }
+
             function renderLeaderboard(players, monthlyReward) {
                 const prizes = computePrizes(monthlyReward);
                 const top3 = players.slice(0, 3);
                 const rest = players.slice(3, 8);
 
                 renderPodium(top3, prizes);
-
-                const rowsEl = document.getElementById("leaderboardRows");
-                if (rest.length === 0) {
-                    rowsEl.innerHTML = `<tr><td colspan="4" class="loading-row">אין דירוגים נוספים כרגע</td></tr>`;
-                } else {
-                    rowsEl.innerHTML = rest.map((player, idx) => {
-                        const rank = idx + 4;
-                        return `
-                            <tr>
-                                <td><span class="rank-badge">${rank}</span></td>
-                                <td class="user-cell">
-                                    <img class="row-avatar" src="${player.avatar}" alt="${player.name}" onerror="this.onerror=null;this.src='assets/images/profile.jpg';">
-                                    <span>${player.name}</span>
-                                </td>
-                                <td>🪙 ${player.wagered.toLocaleString("en-US")}</td>
-                                <td class="prize-cell">🪙 ${(prizes[rank] || 0).toLocaleString("en-US")}</td>
-                            </tr>`;
-                    }).join("");
-                }
+                renderLeaderboardRows(rest, prizes);
             }
 
             // === שכבת שליפה עם גיבוי דרך שרשרת CORS Proxies ===
@@ -887,25 +947,87 @@
             // כך שהאפקט מופיע רק ב"מעבר" בפועל בין הטאבים, לא בכל עדכון נתונים שקט ברקע
             let donatorsIsModeSwitchRender = false;
 
+            /* אותו עיקרון diff-DOM כמו renderPodium למעלה: במקום לזרוק את כל ה-tbody ולבנות
+               מחדש בכל רענון שקט ברקע (מה שגרם להבהוב/קפיצה של שורות Kicks/Subs כל 60 שניות,
+               כולל ריצוד ה-avatar/מספרים גם כשהם לא השתנו בפועל), משווים לפי username (מפתח
+               יציב, לא לפי אינדקס - אינדקס משתנה כשהדירוג מתחלף) מול ה-DOM הקיים:
+               - שורה קיימת עם אותו username: מעדכנים rank/first-class/quantity רק אם השתנו
+               - משתמש חדש בטופ 10: נבנית שורה חדשה
+               - משתמש שירד מהטופ 10: השורה שלו מוסרת
+               - הסדר משוחזר תמיד באמצעות insertBefore, שמזיז node קיים בלי להרוס אותו (בניגוד
+               ל-remove+re-append) כשהוא כבר לא באינדקס הנכון
+               מעבר מצב ידני/אוטומטי (gifts<->kicks, ר' setDonatorsMode) ממשיך לבנות הכל מחדש
+               במפורש כדי לשמר את אנימציית ה-stagger בכניסה - שם מדובר בשתי רשימות שונות
+               לגמרי, לא בעדכון שקט של אותה רשימה, כך שאין טעם (ואין רצון) ל-diff שם */
             function renderDonatorTable(tbodyId, gifters, emptyMessage, iconHtml) {
                 const tbody = document.getElementById(tbodyId);
                 if (!tbody) return;
 
-                if (!Array.isArray(gifters) || gifters.length === 0) {
+                const list = Array.isArray(gifters) ? gifters.slice(0, 10) : [];
+
+                if (list.length === 0) {
                     tbody.innerHTML = `<tr><td colspan="3" class="loading-row">${emptyMessage}</td></tr>`;
                     return;
                 }
 
-                const staggerClass = donatorsIsModeSwitchRender ? " donators-row-stagger" : "";
-                tbody.innerHTML = gifters.slice(0, 10).map(function (g, idx) {
+                function buildRow(g, idx, staggerClass) {
                     const isFirst = idx === 0;
-                    return `
-                        <tr class="${isFirst ? "rank-first" : ""}${staggerClass}">
-                            <td><span class="rank-badge${isFirst ? " rank-badge-first" : ""}">${idx + 1}</span></td>
-                            <td class="donator-user-cell"><span>${escapeHtml(g.username)}</span></td>
-                            <td class="gift-count-cell">${iconHtml}<span class="gift-count-value">${Number(g.quantity || 0).toLocaleString("en-US")}</span></td>
-                        </tr>`;
-                }).join("");
+                    const tr = document.createElement("tr");
+                    tr.dataset.username = g.username;
+                    tr.className = (isFirst ? "rank-first" : "") + staggerClass;
+                    tr.innerHTML = `
+                        <td><span class="rank-badge${isFirst ? " rank-badge-first" : ""}">${idx + 1}</span></td>
+                        <td class="donator-user-cell"><span>${escapeHtml(g.username)}</span></td>
+                        <td class="gift-count-cell">${iconHtml}<span class="gift-count-value">${Number(g.quantity || 0).toLocaleString("en-US")}</span></td>`;
+                    return tr;
+                }
+
+                if (donatorsIsModeSwitchRender) {
+                    tbody.innerHTML = "";
+                    list.forEach(function (g, idx) {
+                        tbody.appendChild(buildRow(g, idx, " donators-row-stagger"));
+                    });
+                    return;
+                }
+
+                // מנקים מראש שורות "placeholder" ישנות בלי data-username (מסך הטעינה
+                // הראשוני/מצב ריק קודם) - הן לעולם לא נחשבות בנות-שימוש-חוזר ל-diff
+                Array.from(tbody.children).forEach(function (row) {
+                    if (!row.dataset || !row.dataset.username) row.remove();
+                });
+
+                const existingByUsername = new Map();
+                Array.from(tbody.children).forEach(function (row) {
+                    existingByUsername.set(row.dataset.username, row);
+                });
+
+                list.forEach(function (g, idx) {
+                    const isFirst = idx === 0;
+                    let row = existingByUsername.get(g.username);
+
+                    if (row) {
+                        existingByUsername.delete(g.username);
+                        row.classList.toggle("rank-first", isFirst);
+
+                        const badge = row.querySelector(".rank-badge");
+                        if (badge.textContent !== String(idx + 1)) badge.textContent = String(idx + 1);
+                        badge.classList.toggle("rank-badge-first", isFirst);
+
+                        const quantityEl = row.querySelector(".gift-count-value");
+                        const newQuantityText = Number(g.quantity || 0).toLocaleString("en-US");
+                        if (quantityEl.textContent !== newQuantityText) quantityEl.textContent = newQuantityText;
+                    } else {
+                        row = buildRow(g, idx, "");
+                    }
+
+                    const refNode = tbody.children[idx] || null;
+                    if (refNode !== row) tbody.insertBefore(row, refNode);
+                });
+
+                // משתמשים שנשארו במפה הם כאלה שירדו מהטופ 10 ברענון הזה - השורות שלהם מוסרות
+                existingByUsername.forEach(function (row) {
+                    row.remove();
+                });
             }
 
             // === סבב אוטומטי "Gifted Subs" / "Top Kicks" ===
