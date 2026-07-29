@@ -647,29 +647,57 @@
                 return prizes;
             }
 
-            function renderLeaderboard(players, monthlyReward) {
-                const prizes = computePrizes(monthlyReward);
-                const top3 = players.slice(0, 3);
-                const rest = players.slice(3, 8);
-
+            /* התג המשושה, הכתר, המסגרת התלת-ממדית וכותרות "WAGERED"/"PRIZE" כולם מצוירים
+               כבר בתוך קובצי ה-PNG החדשים (card-gold/silver/bronze.png) - ה-markup כאן נשאר
+               רק לתוכן הדינמי עצמו (אווטר/שם/סכומים), ממוקם באמצעות position:absolute
+               (ר' style.css) בתוך האזורים הריקים המיועדים שכבר מצוירים על גבי הפריים.
+               ברענון שקט ברקע (poll כל 60 שניות / חזרה לטאב) בונים את הכרטיסים רק בפעם
+               הראשונה - כשהמבנה (אילו rank-ים מוצגים) כבר זהה, מעדכנים את התוכן הקיים
+               in-place (src/textContent) בלי לגעת ב-innerHTML, כדי לא לאתחל מחדש את
+               אנימציית הכניסה (podiumFadeIn, ר' style.css) ולגרום לכרטיסים "לקפוץ"/להבהב
+               בכל רענון, למרות שהערכים בפועל השתנו רק במעט או בכלל לא */
+            function renderPodium(top3, prizes) {
                 const podiumEl = document.getElementById("leaderboardPodium");
                 const order = [2, 1, 3];
-                /* התג המשושה, הכתר, המסגרת התלת-ממדית וכותרות "WAGERED"/"PRIZE" כולם
-                   מצוירים כבר בתוך קובצי ה-PNG החדשים (card-gold/silver/bronze.png) -
-                   ה-markup כאן נשאר רק לתוכן הדינמי עצמו (אווטר/שם/סכומים), ממוקם
-                   באמצעות position:absolute (ר' style.css) בתוך האזורים הריקים המיועדים
-                   שכבר מצוירים על גבי הפריים */
+                const activeRanks = order.filter(rank => !!top3[rank - 1]);
+
+                const existingCards = Array.from(podiumEl.children);
+                const existingRanks = existingCards.map(card => Number(card.dataset.rank));
+                const structureMatches = existingRanks.length === activeRanks.length &&
+                    existingRanks.every((rank, idx) => rank === activeRanks[idx]);
+
+                if (structureMatches) {
+                    existingCards.forEach(card => {
+                        const rank = Number(card.dataset.rank);
+                        const player = top3[rank - 1];
+                        card.querySelector(".podium-avatar").src = player.avatar;
+                        card.querySelector(".podium-avatar").alt = player.name;
+                        card.querySelector(".podium-name").textContent = player.name;
+                        card.querySelector(".podium-wagered-value").textContent = "🪙 " + player.wagered.toLocaleString("en-US");
+                        card.querySelector(".podium-prize-value").textContent = "🪙 " + prizes[rank].toLocaleString("en-US");
+                    });
+                    return;
+                }
+
                 podiumEl.innerHTML = order.map(rank => {
                     const player = top3[rank - 1];
                     if (!player) return "";
                     return `
-                        <div class="podium-card rank-${rank}">
+                        <div class="podium-card rank-${rank}" data-rank="${rank}">
                             <img class="podium-avatar" src="${player.avatar}" alt="${player.name}" onerror="this.onerror=null;this.src='assets/images/profile.jpg';">
                             <span class="podium-name">${player.name}</span>
                             <span class="podium-wagered-value">🪙 ${player.wagered.toLocaleString("en-US")}</span>
                             <span class="podium-prize-value">🪙 ${prizes[rank].toLocaleString("en-US")}</span>
                         </div>`;
                 }).join("");
+            }
+
+            function renderLeaderboard(players, monthlyReward) {
+                const prizes = computePrizes(monthlyReward);
+                const top3 = players.slice(0, 3);
+                const rest = players.slice(3, 8);
+
+                renderPodium(top3, prizes);
 
                 const rowsEl = document.getElementById("leaderboardRows");
                 if (rest.length === 0) {
