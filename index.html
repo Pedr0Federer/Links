@@ -758,31 +758,72 @@
                 return DEFAULT_MONTHLY_REWARD;
             }
 
-            // true רק לפני ה-render הראשון אי-פעם - רק אז מציגים את FALLBACK_PLAYERS באופן
+            // תמונת מצב אחרונה שנשמרה ב-localStorage מקריאה חיה מוצלחת קודמת (ר' saveLeaderboardCache
+            // למטה) - עדיפה על FALLBACK_PLAYERS הסטטי לרינדור פריים-1, כי היא תמיד קרובה יותר
+            // למציאות מ-snapshot שהוקפא בזמן כתיבת הקוד. נשארת תקפה בין סגירה/פתיחה מחדש של הטאב
+            const LEADERBOARD_CACHE_KEY = "leaderboard_latest_cache";
+
+            function saveLeaderboardCache(players, monthlyReward) {
+                try {
+                    localStorage.setItem(LEADERBOARD_CACHE_KEY, JSON.stringify({
+                        timestamp: Date.now(),
+                        data: { players: players, monthlyReward: monthlyReward }
+                    }));
+                } catch {
+                    // localStorage חסום/מלא (למשל מצב פרטי) - לא קריטי, פשוט ממשיכים בלי קאש
+                }
+            }
+
+            function loadLeaderboardCache() {
+                try {
+                    const raw = localStorage.getItem(LEADERBOARD_CACHE_KEY);
+                    if (!raw) return null;
+                    const parsed = JSON.parse(raw);
+                    if (!parsed || !parsed.data || !Array.isArray(parsed.data.players) || parsed.data.players.length === 0) return null;
+                    return parsed.data;
+                } catch {
+                    return null;
+                }
+            }
+
+            // true רק לפני ה-render הראשון אי-פעם - רק אז מציגים קאש/FALLBACK_PLAYERS באופן
             // סינכרוני מיידי (רינדור "פריים 1"). בכל קריאה חוזרת ל-loadLeaderboard (רץ שוב
             // כל שעה, ר' pollLeaderboard למטה) הדילוג הזה חיוני: בלעדיו, נתונים אמיתיים
-            // שכבר מוצגים על המסך היו נדרסים בחזרה לתמונת המצב הישנה של FALLBACK_PLAYERS
-            // לפני שה-fetch השקט ברקע מסתיים - בדיוק ה"הבהוב" שאסור שיקרה גם ברענון תקופתי,
-            // לא רק בטעינה הראשונית
+            // שכבר מוצגים על המסך היו נדרסים בחזרה לתמונת מצב ישנה יותר לפני שה-fetch השקט
+            // ברקע מסתיים - בדיוק ה"הבהוב" שאסור שיקרה גם ברענון תקופתי, לא רק בטעינה הראשונית
             let leaderboardHasRenderedOnce = false;
 
             async function loadLeaderboard() {
+                const cached = loadLeaderboardCache();
+
                 // רינדור סינכרוני מיידי - לפני כל await/fetch - כדי שהלידרבורד המלא יופיע
-                // כבר בפריים הראשון, 0ms, בלי לחכות לשום קריאת רשת
+                // כבר בפריים הראשון, 0ms, בלי לחכות לשום קריאת רשת. אם יש קאש מקומי מביקור
+                // קודם הוא מוצג כאן; אחרת נופלים חזרה ל-FALLBACK_PLAYERS הסטטי
                 if (!leaderboardHasRenderedOnce) {
-                    renderLeaderboard(FALLBACK_PLAYERS, DEFAULT_MONTHLY_REWARD);
+                    if (cached) {
+                        renderLeaderboard(cached.players, typeof cached.monthlyReward === "number" ? cached.monthlyReward : DEFAULT_MONTHLY_REWARD);
+                    } else {
+                        renderLeaderboard(FALLBACK_PLAYERS, DEFAULT_MONTHLY_REWARD);
+                    }
                     leaderboardHasRenderedOnce = true;
                 }
 
-                let players = FALLBACK_PLAYERS;
+                let players = cached ? cached.players : FALLBACK_PLAYERS;
 
                 const data = await fetchJsonWithProxyFallback(`https://nickpf.com/api/csgoroll-leaderboard?t=${Date.now()}`);
-                if (data && data.success && Array.isArray(data.players) && data.players.length > 0) {
+                const liveFetchSucceeded = !!(data && data.success && Array.isArray(data.players) && data.players.length > 0);
+                if (liveFetchSucceeded) {
                     players = data.players;
                 }
 
                 const monthlyReward = await fetchMonthlyReward();
                 renderLeaderboard(players, monthlyReward);
+
+                // רק כשה-fetch החי הצליח בפועל - כישלון/ללא-שינוי משמר את הקאש הקיים כמו
+                // שהוא, כדי לא לדרוס נתונים תקינים בכישלון חולף
+                if (liveFetchSucceeded) {
+                    saveLeaderboardCache(players, monthlyReward);
+                }
             }
 
             // === DONATORS (לוחות "טופ גיפטרים" חיים מ-Kick) ===
