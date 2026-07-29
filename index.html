@@ -607,13 +607,13 @@
             // החיים (ר' https://nickpf.com/api/csgoroll-leaderboard) אחרת יוצגו כערכים
             // "חיים" בעוד שבפועל הם מיושנים (עודכן לאחרונה 2026-07-28)
             const FALLBACK_PLAYERS = [
-                { name: "T****x", wagered: 167608, avatar: "https://avatars.fastly.steamstatic.com/dc04818ef0a0a676cbf6dee40c044dff72c91091_full.jpg" },
-                { name: "M*c", wagered: 81620, avatar: "https://avatars.fastly.steamstatic.com/e657577c6013671cf9a2c26fa6de9b6082fe1307_full.jpg" },
+                { name: "T****x", wagered: 174186, avatar: "https://avatars.fastly.steamstatic.com/dc04818ef0a0a676cbf6dee40c044dff72c91091_full.jpg" },
+                { name: "M*c", wagered: 81684, avatar: "https://avatars.fastly.steamstatic.com/e657577c6013671cf9a2c26fa6de9b6082fe1307_full.jpg" },
                 { name: "G****s", wagered: 59040, avatar: "https://avatars.fastly.steamstatic.com/320efe74646d20ff85c810e0b42380f097e1b8ba_full.jpg" },
                 { name: "l****s", wagered: 37230, avatar: "https://avatars.akamai.steamstatic.com/50767cea96889a121066ed45c098873cb258f8f3_full.jpg" },
                 { name: "q****`", wagered: 35745, avatar: "https://avatars.fastly.steamstatic.com/82b1bcae2bdc3ac16cd1613afef1698361d735bb_full.jpg" },
                 { name: "s****o", wagered: 28933, avatar: "https://avatars.fastly.steamstatic.com/da558491c706c7f445bcba3357e87412cd847d06_full.jpg" },
-                { name: "B****y", wagered: 26393, avatar: "https://avatars.fastly.steamstatic.com/ff48e2ea7247047386bf99214fe443c5d0a15276_full.jpg" },
+                { name: "B****y", wagered: 26462, avatar: "https://avatars.fastly.steamstatic.com/ff48e2ea7247047386bf99214fe443c5d0a15276_full.jpg" },
                 { name: "B****n", wagered: 16184, avatar: "https://avatars.akamai.steamstatic.com/3bff0a761c2059400d73e8165c7a4c2f2308492f_full.jpg" }
             ];
 
@@ -763,10 +763,16 @@
             // למציאות מ-snapshot שהוקפא בזמן כתיבת הקוד. נשארת תקפה בין סגירה/פתיחה מחדש של הטאב
             const LEADERBOARD_CACHE_KEY = "leaderboard_latest_cache";
 
+            // מתעדכן ידנית בכל פעם שה-baseline הקשיח של FALLBACK_PLAYERS למעלה מתעדכן -
+            // קאש שנשמר לפני עדכון כזה תמיד ישן יותר מה-baseline החדש, אז מסמנים אותו
+            // כפג-תוקף ומוחקים אותו במקום להציג ערכים שהם בוודאות ישנים יותר מהקוד עצמו
+            const LEADERBOARD_BASELINE_VERSION = "2026-07-29";
+
             function saveLeaderboardCache(players, monthlyReward) {
                 try {
                     localStorage.setItem(LEADERBOARD_CACHE_KEY, JSON.stringify({
                         timestamp: Date.now(),
+                        baselineVersion: LEADERBOARD_BASELINE_VERSION,
                         data: { players: players, monthlyReward: monthlyReward }
                     }));
                 } catch {
@@ -780,6 +786,10 @@
                     if (!raw) return null;
                     const parsed = JSON.parse(raw);
                     if (!parsed || !parsed.data || !Array.isArray(parsed.data.players) || parsed.data.players.length === 0) return null;
+                    if (parsed.baselineVersion !== LEADERBOARD_BASELINE_VERSION) {
+                        localStorage.removeItem(LEADERBOARD_CACHE_KEY);
+                        return null;
+                    }
                     return parsed.data;
                 } catch {
                     return null;
@@ -1072,11 +1082,17 @@
             // כשהרענון קורה ברקע. loadDonators כולל גם את הפולינג של data/kicks.json
             // (ר' loadKicksSnapshot למעלה, עם cache-busting ?t=Date.now() משלו) - מחובר
             // לאותו מחזור בדיוק, ללא אינטרוול/טיימר נפרד
+            // false רק לפני הקריאה הראשונה אי-פעם ל-pollLeaderboard. חייבת לרוץ תמיד, גם אם
+            // document.hidden === true באותו רגע (למשל קישור שנפתח בטאב חדש-ברקע) - אחרת
+            // הביקור הראשון נתקע על FALLBACK_PLAYERS/קאש ישן עד שהמשתמש בפועל עובר לטאב
+            // (visibilitychange) או עד הטיק הבא של האינטרוול, בדיוק הבאג שדווח. רק טיקים
+            // תקופתיים (אחרי הראשון) מדלגים כשהטאב לא גלוי, כדי לא לבזבז קריאות רשת/מכסת
+            // פרוקסי על משתמש שלא בכלל מסתכל
+            let hasPolledLeaderboardOnce = false;
+
             function pollLeaderboard() {
-                // הטאב לא גלוי כרגע - מדלגים על הטיק הזה כדי לא לבזבז קריאות רשת/מכסת
-                // פרוקסי על משתמש שלא בכלל מסתכל; visibilitychange למטה כבר דואג לרענון
-                // מיידי ברגע שהוא חוזר להסתכל
-                if (document.hidden) return;
+                if (hasPolledLeaderboardOnce && document.hidden) return;
+                hasPolledLeaderboardOnce = true;
 
                 lastLeaderboardFetchAt = Date.now();
                 loadLeaderboard().catch(function (err) {
