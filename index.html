@@ -716,19 +716,38 @@
                 return res.json();
             }
 
+            // מריצים כמה ניסיונות fetch במקביל ומחזירים את הראשון שמצליח (Promise.race על
+            // "הצלחה", לא סתם על "סיום") - אם כולם נכשלים, מחזירים null במקום לדחות, כדי
+            // שהקריאה נשארת מתנהגת בדיוק כמו fetchJson הבודד מבחינת הקורא לה
+            function raceFirstSuccess(taskFns) {
+                return new Promise(resolve => {
+                    let remaining = taskFns.length;
+                    if (remaining === 0) { resolve(null); return; }
+                    taskFns.forEach(taskFn => {
+                        taskFn().then(resolve).catch(() => {
+                            remaining--;
+                            if (remaining === 0) resolve(null);
+                        });
+                    });
+                });
+            }
+
             async function fetchJsonWithProxyFallback(url) {
+                // מריצים במקביל: קריאה ישירה + שני הפרוקסי הראשונים (allorigins, codetabs) -
+                // אלו יציבים גם בפרודקשן, כך שהתוצאה הראשונה שמצליחה "מנצחת" במקום לחכות
+                // ברצף לכל אחד בתורו. corsproxy.io נשאר מחוץ למירוץ ומנוסה רק כמוצא אחרון:
+                // הטיר החינמי שלו חסום לפרודקשן (עובד רק מ-localhost/dev, ר' הערה למעלה), אז
+                // לכלול אותו במירוץ לא מזרז כלום בפרודקשן - רק מוסיף קריאת רשת מבוזבזת
+                const racedResult = await raceFirstSuccess([
+                    () => fetchJson(url, DIRECT_FETCH_TIMEOUT_MS),
+                    () => fetchJson(CORS_PROXIES[0](url), PROXY_FETCH_TIMEOUT_MS),
+                    () => fetchJson(CORS_PROXIES[1](url), PROXY_FETCH_TIMEOUT_MS)
+                ]);
+                if (racedResult !== null) return racedResult;
+
                 try {
-                    return await fetchJson(url, DIRECT_FETCH_TIMEOUT_MS);
+                    return await fetchJson(CORS_PROXIES[2](url), PROXY_FETCH_TIMEOUT_MS);
                 } catch {
-                    // חסימת CORS, timeout, או כל כשל רשת אחר בקריאה הישירה - עוברים לרשימת
-                    // הפרוקסי אחד אחרי השני, ועוצרים ברגע שאחד מהם מצליח
-                    for (const buildProxyUrl of CORS_PROXIES) {
-                        try {
-                            return await fetchJson(buildProxyUrl(url), PROXY_FETCH_TIMEOUT_MS);
-                        } catch {
-                            // ממשיכים לפרוקסי הבא ברשימה
-                        }
-                    }
                     return null;
                 }
             }
@@ -1002,20 +1021,26 @@
                 });
             });
 
-            // === רענון תקופתי של הלידרבורד (כל שעה) ===
-            const LEADERBOARD_POLL_INTERVAL_MS = 3600000; // שעה - איזון בין נתונים עדכניים לעומס מינימלי על השרת
+            // === רענון תקופתי של הלידרבורד + Kicks & Subs (כל 60 שניות) ===
+            const LEADERBOARD_POLL_INTERVAL_MS = 60000; // 60 שניות - נתונים טריים בלי להציף את הפרוקסי/השרת
             let leaderboardPollTimerId = null; // נשמר כדי למנוע יצירת אינטרוול כפול בטעות
             let lastLeaderboardFetchAt = 0;
 
-            // renderLeaderboard כבר עושה עדכון innerHTML ממוקד בתוך הפודיום/הטבלה בלבד - לא נוגע
-            // בשאר העמוד, כך שאין קפיצת גלילה או ריצוד פריסה כשהרענון קורה ברקע
+            // renderLeaderboard/renderDonators כבר עושים עדכון innerHTML ממוקד בתוך האזורים
+            // הרלוונטיים בלבד - לא נוגעים בשאר העמוד, כך שאין קפיצת גלילה או ריצוד פריסה
+            // כשהרענון קורה ברקע. loadDonators כולל גם את הפולינג של data/kicks.json
+            // (ר' loadKicksSnapshot למעלה, עם cache-busting ?t=Date.now() משלו) - מחובר
+            // לאותו מחזור בדיוק, ללא אינטרוול/טיימר נפרד
             function pollLeaderboard() {
+                // הטאב לא גלוי כרגע - מדלגים על הטיק הזה כדי לא לבזבז קריאות רשת/מכסת
+                // פרוקסי על משתמש שלא בכלל מסתכל; visibilitychange למטה כבר דואג לרענון
+                // מיידי ברגע שהוא חוזר להסתכל
+                if (document.hidden) return;
+
                 lastLeaderboardFetchAt = Date.now();
                 loadLeaderboard().catch(function (err) {
                     console.warn("[leaderboard] unexpected failure during periodic refresh, previous data stays visible", err);
                 });
-                // מחוברת לאותו מחזור פולינג/אינטרוול/visibilitychange בדיוק כמו הלידרבורד -
-                // ללא אינטרוול/טיימר נפרד משלה
                 loadDonators().catch(function (err) {
                     console.warn("[donators] unexpected failure during periodic refresh, previous data stays visible", err);
                 });
@@ -1028,10 +1053,10 @@
                 leaderboardPollTimerId = setInterval(pollLeaderboard, LEADERBOARD_POLL_INTERVAL_MS);
             }
 
-            // אם המשתמש עזב את הטאב ליותר משעה וחזר - מרעננים מיידית וללא רעש (בלי לחכות
-            // לאינטרוול הבא), כדי שהנתונים לעולם לא יישארו "תקועים" ישן מדי בזמן שהוא לא הסתכל
+            // אם המשתמש עזב את הטאב וחזר - מרעננים מיידית וללא רעש (בלי לחכות לטיק הבא של
+            // האינטרוול), כדי שהנתונים לעולם לא יישארו "תקועים" ישן מדי בזמן שהוא לא הסתכל
             document.addEventListener("visibilitychange", function () {
-                if (!document.hidden && (Date.now() - lastLeaderboardFetchAt) >= LEADERBOARD_POLL_INTERVAL_MS) {
+                if (!document.hidden) {
                     pollLeaderboard();
                 }
             });
