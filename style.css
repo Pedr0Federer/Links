@@ -385,86 +385,79 @@ body.low-perf h1 {
         0 0 12px rgba(255, 204, 51, 0.5);
 }
 
-/* === ניווט טאבים (Home / Codes & Leaderboards) === */
+/* === ניווט טאבים (Home / Leaderboard / Donators) - טקסט זהב מינימליסטי על גבי כדור
+   זכוכית כהה ועדין (לא הפילס המלא/הגרדיאנט הישן) - מופרד בקווים אנכיים דקים (ר'
+   .nav-separator, index.html) בין הקישורים. הקישור הפעיל מסומן בקו זהב דק מתחתיו בלבד
+   (ר' .tab-btn.active::after למטה) - ממורכז אופקית מתחת ללוגו/"OFFICIAL HUB" === */
 .tabs-nav {
     display: flex;
-    gap: 6px;
-    /* זכוכית כהה עדינה - תואמת לאסתטיקת הכרטיסים החדשה */
-    background: rgba(15, 20, 10, 0.45);
-    border: 1px solid rgba(255, 220, 100, 0.45);
-    padding: 6px;
-    border-radius: 999px;
-    margin-bottom: 28px;
-    backdrop-filter: blur(15px);
-    -webkit-backdrop-filter: blur(15px);
-    /* עומק לעטיפה החיצונית + הבהרה עדינה בקצה העליון לתחושת זכוכית */
-    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.06);
-    /* contain:layout style (בלי paint/size, כדי לא לחתוך אפקטים חזותיים) - מבודד את תת-העץ
-       הזה מבחינת layout/style recalculation, כך ששינויים במקום אחר בעמוד (טיימר שמתעדכן
-       כל שנייה, לידרבורד שמתרענן) לא נאלצים לבדוק את הענף הזה בכל פעם */
-    contain: layout style;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    width: fit-content;
+    margin: 0 auto 28px;
+    padding: 6px 20px;
+    border-radius: 30px;
+    background: rgba(10, 8, 5, 0.5);
+    border: 1px solid rgba(224, 170, 62, 0.3);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
 }
 
 .tab-btn {
-    flex: 1;
-    /* זכוכית כהה מוצקה לכרטיסייה הלא-פעילה - קריאה בבירור מול הרקע הבהיר */
-    background: rgba(20, 25, 15, 0.7);
-    border: 1px solid rgba(255, 204, 51, 0.5);
-    /* backdrop-filter הוסר בכוונה: .tabs-nav ההורה כבר מטשטש blur(15px) את מה שמאחוריו,
-       ומצב .active ממילא אטום לגמרי (גרדיאנט מלא) כך שהבלור שלו לא היה נראה כלל - טישטוש
-       כפול/מקונן כזה (בלור בתוך בלור) הוא אחד הדפוסים היקרים ביותר לקומפוזיטור, וכאן
-       הוא רץ פעמיים (2 כפתורים) על כל פריים לנצח בלי שום תוספת ויזואלית ממשית */
-    color: #ffe9a8;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8), 0 0 2px rgba(0, 0, 0, 0.9);
+    position: relative;
+    background: transparent;
+    border: none;
+    color: #ffcc33;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.9), 0 0 4px rgba(0, 0, 0, 0.8);
     font-family: inherit;
     font-weight: 800;
     font-size: 0.95rem;
-    letter-spacing: 0.3px;
-    padding: 12px 28px;
-    border-radius: 999px;
+    letter-spacing: 1.5px;
+    padding: 4px 2px 10px;
     cursor: pointer;
-    /* מעברים על תכונות ספציפיות בלבד (במקום "all") - הדפדפן לא צריך לעקוב אחר כל תכונה אנימבילית */
-    transition: background 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275),
-        border-color 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275),
-        color 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275),
-        box-shadow 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    transition: color 0.3s ease;
     white-space: nowrap;
 }
 
 .tab-btn:hover {
-    color: #ffcc33;
-    background: rgba(255, 204, 51, 0.18);
-    border-color: rgba(255, 204, 51, 0.7);
-    box-shadow: 0 0 16px rgba(255, 204, 51, 0.25);
+    color: #ffde6a;
 }
 
 .tab-btn.active {
-    /* גרדיאנט זהב/כתום עשיר + זוהר פנימי + זוהר ניאון חם מתחת לכרטיסייה */
-    background: linear-gradient(145deg, #ffd966, #ff8c00);
-    color: #111111;
-    text-shadow: none;
+    color: #ffde6a;
     font-weight: 900;
-    border-color: rgba(255, 204, 51, 0.7);
-    box-shadow:
-        inset 0 1px 0 rgba(255, 255, 255, 0.5),
-        inset 0 -3px 8px rgba(120, 50, 0, 0.25),
-        0 8px 22px rgba(255, 140, 0, 0.45),
-        0 0 30px rgba(255, 204, 51, 0.35);
 }
 
-/* "LEADERBOARD" (11 תווים) הוא המילה הארוכה מבין שלוש הכרטיסיות - ב-padding/font-size
-   הבסיסיים (28px/0.95rem, מיועדים לדסקטופ) היא גולשת מחוץ לגבול הכרטיסייה שלה במסכים
-   צרים. min-width:0 הוא התיקון המרכזי כאן - flex:1 לבדו (כבר קיים למעלה) לא מספיק כי
-   ברירת המחדל של פריט flex היא min-width:auto, שמונעת ממנו לכווץ מתחת לרוחב התוכן
-   הטבעי שלו (bit.ly/flexbox-min-width-auto) - בלי לבטל את זה, שלוש הכרטיסיות ביחד
-   פשוט דוחסות את ה-.tabs-nav ההורה לגלוש. קיים כבר override נפרד וחזק יותר תחת
-   @media max-width:420px למטה (0.72rem) שממשיך לחול/לנצח כאן במסכים הצרים עוד יותר */
+/* קו תחתון דק, זהוב, ממורכז ביחס לרוחב הטקסט - מופיע רק מתחת לקישור הפעיל */
+.tab-btn.active::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    bottom: 0;
+    transform: translateX(-50%);
+    width: 70%;
+    height: 2px;
+    border-radius: 999px;
+    background: #ffcc33;
+    box-shadow: 0 0 6px rgba(255, 204, 51, 0.7);
+}
+
+/* קו מפריד אנכי דק בין כל שני קישורים - ר' <span class="nav-separator"> ב-index.html */
+.nav-separator {
+    color: rgba(255, 204, 51, 0.4);
+    font-size: 0.85rem;
+    user-select: none;
+}
+
 @media (max-width: 480px) {
+    .tabs-nav {
+        gap: 8px;
+    }
     .tab-btn {
-        flex: 1 1 0px;
-        min-width: 0;
-        padding: 8px 4px;
         font-size: 0.78rem;
+        letter-spacing: 0.8px;
     }
 }
 
@@ -1547,140 +1540,111 @@ footer {
     .leaderboard-table tbody td:nth-child(2) { text-align: right; }
 }
 
-/* === DONATORS - יחידה מאוחדת אחת: מתג פילוג + שתי טבלאות הגיפטרים, עטופים יחד ב-
-   .donators-panel כדי שהמתג ייקרא כפס כותרת-משנה מחובר לתוכן שמתחתיו, לא "אי" צף נפרד
-   (בעל צורת "כדור" זהה לתפריט הראשי) ממש מתחתיו - ר' index.html === */
+/* === DONATORS - יחידה מאוחדת אחת: שתי טבלאות הגיפטרים + פס ניווט/טיימר תחתון (ר'
+   .donators-switch-bar למטה), עטופים יחד ב-.donators-panel - ר' index.html === */
 .donators-panel {
     margin-bottom: 24px;
 }
 
-/* === מתג פילוג בין "Gifted Subs" ל-"Top Kicks" - Kicks נטענים מ-data/kicks.json סטטי
-   (מעודכן ע"י GitHub Action מתוזמן), לא מ-fetch חי/פרוקסי, אז אין כאן שום צורך בלוגיקת
-   retry/pagination - קריאה אחת פשוטה, מקור נתונים, לא רשת ===
-   רוחב מלא (לא כדור ממורכז קטן כמו .tabs-nav) וקצוות תחתונים כמעט ישרים, כדי שייראה
-   בבירור כפס כותרת עליון של .donators-grid שמתחתיו ולא ככפילות של תפריט הטאבים הראשי.
-   שני פלחים לחיצים - הפלח הפעיל מודגש, וקו התקדמות זהוב-לכתום משובץ בקצה התחתון שלו
-   עצמו (לא מסלול משותף חיצוני), וממלא ברצף על פני 8 שניות עד למעבר האוטומטי הבא -
-   ר' script.js: hover לא עוצר את זה בכוונה, רק לחיצה/Enter/Space */
-.donators-toggle {
+/* === פס ניווט+טיימר, ממורכז מעל זוג טבלאות ה-Donators, מיד מתחת לתפריט הטאבים הראשי -
+   Kicks נטענים מ-data/kicks.json סטטי (מעודכן ע"י GitHub Action מתוזמן), לא מ-fetch
+   חי/פרוקסי, אז אין כאן שום צורך בלוגיקת retry/pagination - קריאה אחת פשוטה, מקור
+   נתונים, לא רשת === כדור זכוכית כהה צף, ממורכז אופקית, שקוף משמעותית יותר כך שרקע
+   הזהב של האתר בוקע מבעדו, עם מסגרת/זוהר זהב - הצד הפעיל (TOP KICKS/GIFTED SUBS)
+   מודגש באור בהיר יותר, והמספר המרכזי סופר לאחור בשניות (10 עד 0, ר' script.js) עד
+   למעבר האוטומטי הבא. לחיצה על כל צד עוברת ישירות לתצוגה שלו ומאפסת את הספירה */
+.donators-switch-bar {
     position: relative;
-    display: flex;
-    width: 100%;
-    gap: 3px;
-    padding: 5px 14px;
-    margin-bottom: 18px;
-    /* פינות מעוגלות מלאות + מסגרת זהב דקה - קפסולה עצמאית, לא מחוברת ישירות לכרטיסי
-       הטבלאות שמתחתיה (ר' מוקאפ a726e034) */
-    border-radius: 16px;
-    background: rgba(15, 20, 10, 0.55);
-    border: 1.5px solid rgba(255, 215, 0, 0.5);
-    -webkit-backdrop-filter: blur(6px);
-    backdrop-filter: blur(6px);
-}
-
-.donators-toggle-segment {
-    position: relative;
-    flex: 1;
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 11px 10px 13px;
-    border: none;
-    border-radius: 12px;
-    /* מצב לא-פעיל - זכוכית כהה שקועה, מודגש בבירור ביחס לפלח הפעיל לצידו */
-    background: rgba(0, 0, 0, 0.4);
-    color: #cccccc;
-    font-weight: 700;
-    font-family: inherit;
-    cursor: pointer;
-    overflow: hidden;
-    transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
+    gap: 14px;
+    width: fit-content;
+    max-width: 100%;
+    margin: 0 auto 20px;
+    padding: 10px 24px;
+    border-radius: 50px;
+    background: rgba(15, 10, 5, 0.5);
+    border: 1px solid #e0aa3e;
+    box-shadow: 0 0 15px rgba(224, 170, 62, 0.4), inset 0 0 10px rgba(224, 170, 62, 0.2);
+    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(12px);
 }
 
-.donators-toggle-segment-text {
-    position: relative;
-    z-index: 1;
+.donators-switch-side {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 10px;
+    border: none;
+    border-radius: 999px;
+    background: transparent;
+    color: rgba(224, 170, 62, 0.55);
+    font-family: inherit;
+    cursor: pointer;
+    transition: color 0.3s ease, text-shadow 0.3s ease;
+}
+
+.donators-switch-side:hover {
+    color: rgba(255, 223, 122, 0.85);
+}
+
+/* הצד הפעיל - זוהר בהיר משמעותית יותר, מציין איזו טבלה מוצגת כרגע */
+.donators-switch-side.active {
+    color: #ffdf7a;
+    text-shadow: 0 0 10px rgba(255, 223, 122, 0.8);
+}
+
+.donators-switch-icon {
+    width: 18px;
+    height: 18px;
+    object-fit: contain;
+    filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.4));
+}
+
+.donators-switch-label {
     font-weight: 900;
-    font-size: 0.9rem;
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
-    text-shadow: 0 2px 6px rgba(0, 0, 0, 0.75);
+    font-size: 0.78rem;
+    letter-spacing: 1.2px;
     white-space: nowrap;
 }
 
-.donators-toggle-segment:hover:not(.active) {
-    color: rgba(255, 255, 255, 0.85);
+.donators-switch-arrow {
+    color: #e0aa3e;
+    font-size: 1rem;
+    opacity: 0.7;
 }
 
-/* מצב פעיל - גרדיאנט זהב בהיר מלא + טקסט שחור עבה, בהתאם למוקאפ a726e034 - ניגוד חד
-   וברור ביחס לפלח הכהה הלא-פעיל */
-.donators-toggle-segment.active {
-    background: linear-gradient(180deg, #ffde6a 0%, #e6a100 100%);
-    color: #000000;
-    font-weight: 900;
-    box-shadow: 0 2px 10px rgba(255, 204, 51, 0.4);
+.donators-switch-center {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
 }
 
-/* קו ההתקדמות משובץ בתוך הפלח עצמו - ממורכז אופקית לרוחב מלא, 3px עבה, קצוות מעוגלים,
-   זוהר גבוה-ניגודיות שנראה בבירור מעל כל רקע. .filling מופעל/מתאפס ע"י script.js עם
-   double-rAF כדי לא לכפות reflow סינכרוני - אותו דפוס בדיוק כמו .timer-box.tick.
-   מבוטל לגמרי תחת body.low-perf (ר' למטה) */
-.donators-toggle-segment-progress {
-    position: absolute;
-    left: 0;
-    bottom: 0;
-    width: 0;
-    height: 3px;
-    border-radius: 999px;
-    background: linear-gradient(90deg, #ffcc33, #ff8c00);
-    box-shadow: 0 0 8px rgba(255, 204, 51, 0.8);
+.donators-switch-caption {
+    font-size: 0.6rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    color: rgba(224, 170, 62, 0.8);
+    white-space: nowrap;
 }
 
-.donators-toggle-segment-progress.filling {
-    animation: donatorsProgressFill 8s linear forwards;
-}
-
-@keyframes donatorsProgressFill {
-    from { width: 0%; }
-    to { width: 100%; }
-}
-
-/* תגי משושה זהב תלויים על קצוות המתג - מדליון "Kicks" (cash.png) צמוד לפלח TOP KICKS,
-   ומדליון "מתנה" (gift.png, אותו קובץ בדיוק כמו שאר האתר) צמוד לפלח GIFTED SUBS. אותה
-   שפה חזותית בדיוק כמו .disclaimer-badge (hexagon clip-path + גרדיאנט זהב-מתכתי).
-   הדף כולו dir="rtl" (ר' index.html) - הפלח הראשון ב-DOM (GIFTED SUBS) מוצג בפועל בצד
-   ימין הפיזי, והשני (TOP KICKS) בצד שמאל הפיזי, אז מיקום כל תג משתמש ב-right/left
-   הפיזי הנכון כדי להיצמד לפלח שלו בפועל, לא לפי סדר ה-DOM */
-.donators-toggle-badge {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 34px;
-    height: 38px;
+/* התג העגול המרכזי - המספר היחיד שמתעדכן כל שנייה (ר' script.js). מספיק רחב לתפוס
+   שתי ספרות בלי לשנות רוחב/לקפוץ בין "9" ל-"10" */
+.donators-switch-countdown {
     display: flex;
     align-items: center;
     justify-content: center;
-    clip-path: polygon(50% 0%, 100% 20%, 100% 65%, 50% 100%, 0% 65%, 0% 20%);
-    background: linear-gradient(160deg, #fff6cf 0%, #ffd700 45%, #b8860b 100%);
-    box-shadow: 0 0 10px rgba(255, 215, 0, 0.6), 0 2px 4px rgba(0, 0, 0, 0.3);
-    z-index: 2;
-}
-
-.donators-toggle-badge img {
-    width: 19px;
-    height: 19px;
-    object-fit: contain;
-    filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.3));
-}
-
-/* GIFTED SUBS מוצג פיזית בצד ימין (ר' הערה למעלה) */
-.donators-toggle-badge-gift {
-    right: -14px;
-}
-
-/* TOP KICKS מוצג פיזית בצד שמאל (ר' הערה למעלה) */
-.donators-toggle-badge-boot {
-    left: -14px;
+    min-width: 30px;
+    height: 30px;
+    padding: 0 4px;
+    border-radius: 50%;
+    background: linear-gradient(180deg, #ffde6a 0%, #e0aa3e 100%);
+    color: #1a1206;
+    font-weight: 900;
+    font-size: 0.95rem;
+    box-shadow: 0 0 10px rgba(224, 170, 62, 0.7);
 }
 
 /* === DONATORS - שני לוחות "טופ גיפטרים" (Kick) - All-Time ו-Weekly === */
@@ -2151,13 +2115,24 @@ footer {
         width: 15px;
         height: 15px;
     }
-    .donators-toggle-badge {
-        width: 26px;
-        height: 30px;
+    .donators-switch-bar {
+        gap: 8px;
+        padding: 8px 14px;
     }
-    .donators-toggle-badge img {
-        width: 14px;
-        height: 14px;
+    .donators-switch-label {
+        font-size: 0.68rem;
+    }
+    .donators-switch-icon {
+        width: 15px;
+        height: 15px;
+    }
+    .donators-switch-caption {
+        display: none;
+    }
+    .donators-switch-countdown {
+        min-width: 26px;
+        height: 26px;
+        font-size: 0.85rem;
     }
 }
 
@@ -2251,8 +2226,10 @@ footer {
 @media (max-width: 420px) {
     .tab-btn {
         font-size: 0.72rem;
-        padding: 12px 6px;
         letter-spacing: 0;
+    }
+    .nav-separator {
+        font-size: 0.72rem;
     }
 }
 
@@ -2271,34 +2248,28 @@ body.low-perf #tab-home.tab-panel.active::before {
     -webkit-backdrop-filter: none;
 }
 
-/* פאנל הטאבים והמודאל מטשטשים את הרקע שלהם ישירות - מבטלים גם כאן, עם רקע אטום יותר */
-body.low-perf .tabs-nav {
+/* מיכל הזכוכית מאחורי הפס התחתון - מבטלים את ה-blur (יקר ברינדור תוכנה) ומחליפים ברקע
+   אטום יותר, שנותן ניגודיות זהה מול כל רקע בלי שום עלות טשטוש בזמן ריצה. הספירה לאחור
+   עצמה היא עדכון טקסט פשוט כל שנייה (לא אנימציית CSS רציפה) - זול מספיק שאין צורך
+   לבטל אותה בנפרד */
+body.low-perf .donators-switch-bar {
     backdrop-filter: none;
     -webkit-backdrop-filter: none;
-    background: rgba(15, 20, 10, 0.88);
-}
-
-/* STRICTLY DISABLE: קו ההתקדמות המתמלא (לולאת keyframe רציפה, לא אירוע חד-פעמי) מבוטל
-   לגמרי תחת low-perf - display:none כאן הוא הבטחה כפולה שלא ייצרך שום ציור אפילו אם
-   מחלקת .filling תתווסף בטעות ע"י script.js. המעבר בין Gifted Subs ל-Top Kicks עצמו
-   ממשיך לקרות כרגיל דרך טיימר JS פשוט (setTimeout חד-פעמי, לא אנימציית CSS) - זה זול
-   מספיק שאין צורך לבטל אותו, רק את הציור הרציף של הקו החזותי */
-body.low-perf .donators-toggle-segment-progress {
-    display: none;
-}
-
-/* מיכל הזכוכית מאחורי המתג - מבטלים את ה-blur (יקר ברינדור תוכנה) ומחליפים ברקע אטום
-   יותר, שנותן ניגודיות זהה מול כל רקע בלי שום עלות טשטוש בזמן ריצה */
-body.low-perf .donators-toggle {
-    backdrop-filter: none;
-    -webkit-backdrop-filter: none;
-    background: rgba(8, 10, 6, 0.82);
+    background: rgba(8, 6, 4, 0.92);
 }
 
 body.low-perf .modal-overlay {
     backdrop-filter: none;
     -webkit-backdrop-filter: none;
     background-color: rgba(0, 0, 0, 0.92);
+}
+
+/* כדור הזכוכית מאחורי ניווט הטאבים - מבטלים את ה-blur (יקר ברינדור תוכנה) ומחליפים
+   ברקע אטום יותר, שנותן ניגודיות זהה מול כל רקע בלי שום עלות טשטוש בזמן ריצה */
+body.low-perf .tabs-nav {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    background: rgba(8, 6, 4, 0.88);
 }
 
 /* כל כרטיס/פאנל זכוכית - אותו גוון, אטום משמעותית יותר במקום הטשטוש. .leaderboard-podium
@@ -2453,11 +2424,7 @@ body.low-perf .profile-link:focus-visible .profile-img {
 }
 
 body.low-perf .tab-btn {
-    transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
-}
-
-body.low-perf .tab-btn:hover {
-    box-shadow: none;
+    transition: color 0.15s ease;
 }
 
 body.low-perf .link-btn:hover {

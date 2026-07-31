@@ -58,7 +58,9 @@
 
             <nav class="tabs-nav">
                 <button class="tab-btn" data-tab="donators" type="button">DONATORS</button>
+                <span class="nav-separator" aria-hidden="true">|</span>
                 <button class="tab-btn active" data-tab="home" type="button">HOME</button>
+                <span class="nav-separator" aria-hidden="true">|</span>
                 <button class="tab-btn" data-tab="codes" type="button">LEADERBOARD</button>
             </nav>
 
@@ -169,29 +171,29 @@
 
                 <section class="tab-panel" id="tab-donators">
 
-                    <!-- עוטף את המתג והטבלאות ביחידה חזותית אחת מאוחדת - המתג משמש כפס כותרת-משנה
-                         עליון מחובר, לא "אי" צף נפרד מתחת לתפריט הראשי -->
+                    <!-- עוטף את הטבלאות ופס הניווט+טיימר התחתון ביחידה חזותית אחת מאוחדת -->
                     <div class="donators-panel">
 
-                        <!-- מתג פילס מפולג בין "Gifted Subs" ו-"Top Kicks" (Kicks נטענים מ-data/kicks.json
-                             סטטי, מעודכן ע"י GitHub Action מתוזמן - ר' script.js). לחיצה על כל פלח עוברת
-                             ישירות לתצוגה שלו; קו ההתקדמות בתחתית הפלח הפעיל ממלא ברצף על פני 8 שניות
-                             עד למעבר אוטומטי הבא - ללא עצירה ב-hover בכוונה (ר' #tab-donators ב-JS/CSS) -->
-                        <div class="donators-toggle" id="donatorsToggle" role="tablist" aria-label="בחירת תצוגת גיפטרים">
-                            <span class="donators-toggle-badge donators-toggle-badge-gift" aria-hidden="true">
-                                <img src="assets/images/gift.png" alt="">
-                            </span>
-                            <button type="button" class="donators-toggle-segment active" data-mode="gifts" role="tab" aria-selected="true">
-                                <span class="donators-toggle-segment-text">GIFTED SUBS</span>
-                                <span class="donators-toggle-segment-progress" aria-hidden="true"></span>
+                        <!-- פס ניווט+טיימר, ממורכז מעל זוג הטבלאות, מיד מתחת לתפריט הטאבים הראשי
+                             (LEADERBOARD/HOME/DONATORS) - מחליף לגמרי את המתג העליון הישן (כולל קו
+                             ההתקדמות שלו). לחיצה על כל צד עוברת ישירות לתצוגה שלו; הספירה לאחור
+                             המרכזית (10 עד 0) רצה תמיד כשטאב ה-DONATORS גלוי, ומאפסת את עצמה עם כל
+                             מעבר - ידני או אוטומטי (ר' #tab-donators ב-JS/CSS) -->
+                        <div class="donators-switch-bar" id="donatorsSwitchBar" role="tablist" aria-label="בחירת תצוגת גיפטרים" dir="ltr">
+                            <button type="button" class="donators-switch-side" data-mode="kicks" role="tab" aria-selected="false">
+                                <img src="assets/images/cash.png" alt="" class="donators-switch-icon" aria-hidden="true">
+                                <span class="donators-switch-label">TOP KICKS</span>
                             </button>
-                            <button type="button" class="donators-toggle-segment" data-mode="kicks" role="tab" aria-selected="false">
-                                <span class="donators-toggle-segment-text">TOP KICKS</span>
-                                <span class="donators-toggle-segment-progress" aria-hidden="true"></span>
+                            <span class="donators-switch-arrow" aria-hidden="true">&#8646;</span>
+                            <div class="donators-switch-center">
+                                <span class="donators-switch-caption">AUTO SWITCHING IN</span>
+                                <span class="donators-switch-countdown" id="donatorsSwitchCountdown">10</span>
+                            </div>
+                            <span class="donators-switch-arrow" aria-hidden="true">&#8646;</span>
+                            <button type="button" class="donators-switch-side active" data-mode="gifts" role="tab" aria-selected="true">
+                                <img src="assets/images/gift.png" alt="" class="donators-switch-icon" aria-hidden="true">
+                                <span class="donators-switch-label">GIFTED SUBS</span>
                             </button>
-                            <span class="donators-toggle-badge donators-toggle-badge-boot" aria-hidden="true">
-                                <img src="assets/images/cash.png" alt="">
-                            </span>
                         </div>
 
                         <!-- בלור אחד משותף מאחורי שני כרטיסי הגיפטרים (ר' .donators-grid ב-CSS) - עקבי
@@ -1114,8 +1116,9 @@
             let donatorsMode = "gifts"; // "gifts" | "kicks"
             const donatorsUnitHeaders = document.querySelectorAll(".donators-unit-header");
             const donatorsTableWraps = document.querySelectorAll(".donator-table-wrap");
-            const donatorsToggleEl = document.getElementById("donatorsToggle");
-            const donatorsSegments = donatorsToggleEl ? donatorsToggleEl.querySelectorAll(".donators-toggle-segment") : [];
+            const donatorsSwitchBarEl = document.getElementById("donatorsSwitchBar");
+            const donatorsSwitchSides = donatorsSwitchBarEl ? donatorsSwitchBarEl.querySelectorAll(".donators-switch-side") : [];
+            const donatorsSwitchCountdownEl = document.getElementById("donatorsSwitchCountdown");
             const donatorsPanelEl = document.getElementById("tab-donators");
 
             // ממלא את כותרת העמודה הן באייקון (cash.png/gift.png) והן בטקסט - נקרא גם כאן
@@ -1131,10 +1134,10 @@
                 if (mode === donatorsMode) return;
                 donatorsMode = mode;
 
-                donatorsSegments.forEach(function (segment) {
-                    const isActive = segment.dataset.mode === mode;
-                    segment.classList.toggle("active", isActive);
-                    segment.setAttribute("aria-selected", isActive ? "true" : "false");
+                donatorsSwitchSides.forEach(function (side) {
+                    const isActive = side.dataset.mode === mode;
+                    side.classList.toggle("active", isActive);
+                    side.setAttribute("aria-selected", isActive ? "true" : "false");
                 });
 
                 updateDonatorsUnitHeaders(mode);
@@ -1155,69 +1158,50 @@
                 }, switchDelayMs);
             }
 
-            // === רוטציה אוטומטית + קו טיימר חזותי - מחליפה בין Gifted Subs ל-Top Kicks כל
-            // 8 שניות, ורק כשטאב ה-DONATORS בפועל פעיל/גלוי. בכוונה *אין* כאן עצירה ב-hover -
-            // קו ההתקדמות ממלא ברצף בלי הפרעה עד למעבר האוטומטי הבא; לחיצה על פלח (או Enter/
-            // Space, מובנה בתגי <button>) היא הדרך היחידה לעצור/לאפס את המחזור באמצע.
-            //
-            // המחזור עצמו (setTimeout פשוט, לא אנימציית CSS) רץ תמיד, גם תחת body.low-perf -
-            // זה אירוע חד-פעמי כל 8 שניות, זול מספיק שאין סיבה לבטל אותו. רק קו ההתקדמות
-            // החזותי (לולאת keyframe רציפה) מבוטל תחת low-perf - startDonatorsProgressBar
-            // בודקת window.isLowPerfDevice ולא עושה כלום אם כן, בלי להשפיע על תזמון המעבר
-            // עצמו ===
-            const DONATORS_AUTO_ROTATE_MS = 8000;
-            let donatorsAutoRotateTimerId = null;
+            // === רוטציה אוטומטית + ספירה לאחור מספרית - מחליפה בין Gifted Subs ל-Top Kicks
+            // כל 10 שניות, ורק כשטאב ה-DONATORS בפועל פעיל/גלוי. בכוונה *אין* כאן עצירה
+            // ב-hover - הספירה יורדת ברצף בלי הפרעה עד למעבר האוטומטי הבא; לחיצה על צד
+            // (או Enter/Space, מובנה בתגי <button>) היא הדרך היחידה לעצור/לאפס את המחזור
+            // באמצע. setInterval פשוט של שנייה - עדכון טקסט בלבד, זול מספיק שרץ גם תחת
+            // body.low-perf בלי צורך לבטל אותו ===
+            const DONATORS_AUTO_ROTATE_SECONDS = 10;
+            let donatorsCountdownValue = DONATORS_AUTO_ROTATE_SECONDS;
+            let donatorsCountdownTimerId = null;
 
-            // קו ההתקדמות משובץ בתוך הפלח הפעיל עצמו (לא מסלול נפרד משותף) - יש שניים, אחד
-            // לכל פלח, ורק זה שבפלח הפעיל אי פעם מקבל את מחלקת .filling
-            function getActiveSegmentProgressEl() {
-                return donatorsToggleEl
-                    ? donatorsToggleEl.querySelector(".donators-toggle-segment.active .donators-toggle-segment-progress")
-                    : null;
-            }
-
-            function startDonatorsProgressBar() {
-                // מאפסים את שני הפלחים תמיד (לא רק את הפעיל) - מבטיח שלפלח שהפך לא-פעיל לא
-                // יישאר קו מלא "תקוע" מהמחזור הקודם
-                donatorsToggleEl && donatorsToggleEl.querySelectorAll(".donators-toggle-segment-progress").forEach(function (el) {
-                    el.classList.remove("filling");
-                });
-                if (window.isLowPerfDevice) return;
-
-                const activeProgressEl = getActiveSegmentProgressEl();
-                if (!activeProgressEl) return;
-                // הסרה+הוספה מחדש עם שני rAF עוקבים (לא void offsetWidth) כדי להפעיל את
-                // האנימציה מההתחלה בלי לכפות reflow סינכרוני על כל הדף - אותו דפוס בדיוק
-                // כמו .timer-box.tick ב-updateCountdown()
-                requestAnimationFrame(function () {
-                    requestAnimationFrame(function () {
-                        activeProgressEl.classList.add("filling");
-                    });
-                });
+            function updateDonatorsCountdownDisplay() {
+                if (donatorsSwitchCountdownEl) {
+                    donatorsSwitchCountdownEl.textContent = String(donatorsCountdownValue).padStart(2, "0");
+                }
             }
 
             function startDonatorsAutoRotateCycle() {
-                clearTimeout(donatorsAutoRotateTimerId);
-                startDonatorsProgressBar();
+                clearInterval(donatorsCountdownTimerId);
+                donatorsCountdownValue = DONATORS_AUTO_ROTATE_SECONDS;
+                updateDonatorsCountdownDisplay();
 
-                donatorsAutoRotateTimerId = setTimeout(function () {
-                    // donatorsPanelEl כבר קאשור למעלה - אין צורך לשלוף מחדש מה-DOM כל 8
-                    // שניות בלולאה הזו
-                    const isVisible = !!(donatorsPanelEl && donatorsPanelEl.classList.contains("active"));
-                    if (isVisible) {
-                        setDonatorsMode(donatorsMode === "gifts" ? "kicks" : "gifts");
+                donatorsCountdownTimerId = setInterval(function () {
+                    donatorsCountdownValue--;
+
+                    if (donatorsCountdownValue <= 0) {
+                        // donatorsPanelEl כבר קאשור למעלה - אין צורך לשלוף מחדש מה-DOM בכל טיק
+                        const isVisible = !!(donatorsPanelEl && donatorsPanelEl.classList.contains("active"));
+                        if (isVisible) {
+                            setDonatorsMode(donatorsMode === "gifts" ? "kicks" : "gifts");
+                        }
+                        donatorsCountdownValue = DONATORS_AUTO_ROTATE_SECONDS;
                     }
-                    startDonatorsAutoRotateCycle();
-                }, DONATORS_AUTO_ROTATE_MS);
+
+                    updateDonatorsCountdownDisplay();
+                }, 1000);
             }
 
-            // לחיצה (או Enter/Space, מובנה בתגי <button>) על פלח בוחרת אותו ישירות ומאפסת
-            // את מחזור ה-8 שניות מההתחלה - כך שהבחירה הידנית לא "מתבטלת" כמעט מיד ע"י
+            // לחיצה (או Enter/Space, מובנה בתגי <button>) על צד בוחרת אותו ישירות ומאפסת
+            // את מחזור ה-10 שניות מההתחלה - כך שהבחירה הידנית לא "מתבטלת" כמעט מיד ע"י
             // המחזור האוטומטי שכבר היה בעיצומו
-            donatorsSegments.forEach(function (segment) {
-                segment.addEventListener("click", function () {
-                    if (segment.dataset.mode === donatorsMode) return;
-                    setDonatorsMode(segment.dataset.mode);
+            donatorsSwitchSides.forEach(function (side) {
+                side.addEventListener("click", function () {
+                    if (side.dataset.mode === donatorsMode) return;
+                    setDonatorsMode(side.dataset.mode);
                     startDonatorsAutoRotateCycle();
                 });
             });
