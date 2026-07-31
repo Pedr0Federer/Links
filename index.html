@@ -1142,18 +1142,36 @@
 
                 updateDonatorsUnitHeaders(mode);
 
-                // מעבר עומק/דעיכה עדין - מוסיפים את המחלקה (דועך החוצה), מחליפים את תוכן הטבלה
-                // כשהיא כבר שקופה, ואז מסירים אותה כדי שתדעך חזרה פנימה עם התוכן החדש
-                const switchDelayMs = window.isLowPerfDevice ? 150 : 250;
+                // מעבר "pop" גבוה-נראות - מוסיפים "switching-out" (שלב 1: כיווץ+שקיעה+דעיכה,
+                // 0.2s), מחליפים את תוכן הטבלה כשהיא כבר שקופה, ואז "קופצים" מיידית למצב
+                // ההתחלה של הכניסה (switching-in, עם transition:none ב-CSS) ומסירים אותה
+                // בפריים הבא - כך התוכן החדש "קופץ" למקום עם spring bounce (שלב 2, 0.3s).
+                // בכוונה רץ תמיד במלואו, כולל תחת low-perf/prefers-reduced-motion - הוגדר
+                // כך זמנית לפי בקשה מפורשת כדי לוודא שהאנימציה נראית לעין בבדיקה
+                const switchDelayMs = 200; // תואם את משך .donators-switching-out (0.2s)
+
                 donatorsTableWraps.forEach(function (wrap) {
-                    wrap.classList.add("donators-switching");
+                    wrap.classList.add("donators-switching-out");
                 });
+
                 setTimeout(function () {
                     donatorsIsModeSwitchRender = true;
                     renderDonators();
                     donatorsIsModeSwitchRender = false;
+
                     donatorsTableWraps.forEach(function (wrap) {
-                        wrap.classList.remove("donators-switching");
+                        wrap.classList.remove("donators-switching-out");
+                        wrap.classList.add("donators-switching-in");
+                        // כפיית reflow - חובה כדי שהדפדפן יקליט בפועל את מצב ההתחלה (מכווץ,
+                        // שקוף, מוזז) לפני שהמחלקה מוסרת, אחרת שני השינויים עלולים להתמזג
+                        // לפריים אחד בלי שום אנימציה נראית לעין
+                        void wrap.offsetWidth;
+                    });
+
+                    requestAnimationFrame(function () {
+                        donatorsTableWraps.forEach(function (wrap) {
+                            wrap.classList.remove("donators-switching-in");
+                        });
                     });
                 }, switchDelayMs);
             }

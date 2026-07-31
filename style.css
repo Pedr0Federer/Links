@@ -472,8 +472,26 @@ body.low-perf h1 {
     gap: 16px;
 }
 
+/* מעבר כניסה "Silk Glass" כשטאב הופך פעיל - opacity+blur+scale בלבד, בלי שום rotateX/
+   translateY או overshoot מקפיץ (דעיכה חלקה בלבד). רץ מחדש בכל פעם אוטומטית כי הטאב
+   חוזר מ-display:none (לא מרונדר כלל) בכל מעבר, אז אין צורך ב-JS כדי "לאתחל" את האנימציה */
+@keyframes tabPanelEnter {
+    from {
+        opacity: 0;
+        filter: blur(8px);
+        transform: scale(0.97);
+    }
+    to {
+        opacity: 1;
+        filter: blur(0px);
+        transform: scale(1);
+    }
+}
+
 .tab-panel.active {
     display: flex;
+    animation: tabPanelEnter 350ms cubic-bezier(0.16, 1, 0.3, 1) both;
+    will-change: opacity, transform, filter;
 }
 
 /* === רשת קישורים לטאב הבית - 3x3 גלאסמורפי אחיד, כל 9 הכרטיסים באותו גודל/צורה === */
@@ -1746,9 +1764,9 @@ footer {
     50% { transform: translateY(-4px); }
 }
 
-/* מעבר עומק/דעיכה עדין כשמחליפים מצב (Gifted Subs <-> Top Kicks) - script.js מוסיף/מסיר
-   את .donators-switching סביב עדכון תוכן הטבלה. תחת body.low-perf (למטה) מוגבל אך ורק
-   ל-opacity - transform מבוטל לגמרי */
+/* מעבר "pop"/קפיצה גבוהת-נראות כשמחליפים מצב (Gifted Subs <-> Top Kicks) - index.html
+   מוסיף/מסיר את .donators-switching-out (יציאה, 0.2s) ואז .donators-switching-in
+   (כניסה, 0.3s עם spring bounce) סביב עדכון תוכן הטבלה */
 .donator-table-wrap {
     position: relative;
     width: 100%;
@@ -1756,8 +1774,10 @@ footer {
     background-position: center;
     background-size: 100% 100%;
     opacity: 1;
-    transform: translateY(0) scale(1);
-    transition: opacity 0.25s ease, transform 0.25s ease;
+    transform: scale(1) translateY(0);
+    transition: opacity 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275),
+                transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    will-change: opacity, transform;
 }
 
 /* שני הכרטיסים חייבים להיות זהים ב-100% מבחינת מידות (רוחב/גובה/יחס), אחרת הם נראים
@@ -1781,9 +1801,22 @@ footer {
     background-image: url('assets/images/Week.png?v=4');
 }
 
-.donator-table-wrap.donators-switching {
+/* שלב 1 (יציאה, 0.2s) - התוכן הישן מתכווץ+שוקע (scale 0.95, translateY 20px) ודועך */
+.donator-table-wrap.donators-switching-out {
     opacity: 0;
-    transform: translateY(10px) scale(0.98);
+    transform: scale(0.95) translateY(20px);
+    transition: opacity 0.2s ease-in, transform 0.2s ease-in;
+}
+
+/* שלב 2 (כניסה, 0.3s) - נקודת ההתחלה של התוכן החדש: זהה חזותית לסוף שלב היציאה
+   (מכווץ+שקוף+מוזז), ואז "קופץ" למקום עם spring bounce. transition:none כאן כדי
+   שהמחלקה תקפוץ מיידית למצב הזה בלי לנפנף - האנימציה בפועל קורית כשה-JS מסיר את
+   המחלקה ברגע אחרי (ר' setDonatorsMode ב-index.html), ואז חוזרת חלה טרנזישן הבסיס
+   (.donator-table-wrap למעלה, 0.3s cubic-bezier(0.175,0.885,0.32,1.275)) */
+.donator-table-wrap.donators-switching-in {
+    opacity: 0;
+    transform: scale(0.95) translateY(20px);
+    transition: none;
 }
 
 /* הכותרת/עמודות המקוריות (RANK/USERNAME/KICKS) כבר מצוירות בתוך ה-PNG עצמו - הטבלה
@@ -2322,17 +2355,15 @@ body.low-perf .donator-icon {
     animation: none;
 }
 
-/* STRICTLY DISABLE: מעבר החלפת המצב (Gifted Subs <-> Top Kicks) מוגבל אך ורק ל-opacity
-   מהיר - transform:translateY/scale מבוטל לגמרי, בלי שום עומק/הזזה מונפשים */
-body.low-perf .donator-table-wrap {
-    transform: none;
-    transition: opacity 0.15s ease;
+/* מעבר הכניסה של הטאבים (Silk Glass, ר' .tab-panel.active למעלה) מבוטל תחת low-perf -
+   הטאב פשוט מופיע מיידית, בלי blur/scale מונפשים */
+body.low-perf .tab-panel.active {
+    animation: none;
 }
 
-body.low-perf .donator-table-wrap.donators-switching {
-    transform: none;
-}
-
+/* INTENTIONALLY ALWAYS ON: מעבר החלפת המצב של הדונייטורים (Gifted Subs <-> Top Kicks)
+   נשאר פעיל במלואו גם תחת low-perf - הוחלט במפורש לא להגביל אותו יותר (ר' גם ה-@media
+   prefers-reduced-motion למטה, אותה החלטה) */
 body.low-perf .leaderboard-podium::before,
 body.low-perf .leaderboard-podium::after {
     animation: none;
@@ -2489,8 +2520,9 @@ body.low-perf .close-modal:hover {
 
 /* === prefers-reduced-motion: reduce - העדפת משתמש ברמת מערכת ההפעלה/דפדפן (למשל בעיות
    וסטיבולריות), נפרד לגמרי מ-body.low-perf (שהוא זיהוי יכולת חומרה, לא העדפת נגישות) -
-   מבטל את אותן שלוש האנימציות החדשות של הדונייטורים בדיוק כמו תחת low-perf, ללא קשר
-   לביצועי המכשיר בפועל === */
+   מבטל אנימציות שורות/הובר של הדונייטורים ואת מעבר הכניסה של הטאבים. מעבר החלפת המצב
+   של הדונייטורים עצמו (.donator-table-wrap) נשאר במפורש פעיל במלואו גם כאן - החלטה
+   מודעת שאינה תלויה בביצועי המכשיר (ר' הערה מקבילה ב-body.low-perf למעלה) === */
 @media (prefers-reduced-motion: reduce) {
     .donator-table tbody tr {
         animation: none;
@@ -2504,5 +2536,9 @@ body.low-perf .close-modal:hover {
     .donator-table tbody tr.rank-first::after {
         animation: none;
         opacity: 0;
+    }
+
+    .tab-panel.active {
+        animation: none;
     }
 }
