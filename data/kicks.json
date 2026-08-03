@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-03T22:50:15.683Z",
+  "generatedAt": "2026-08-03T22:55:51.146Z",
   "lifetime": [
     {
       "username": "liorbond",
@@ -26,15 +26,15 @@
       "quantity": 7000
     },
     {
+      "username": "AVIathol",
+      "quantity": 6000
+    },
+    {
       "username": "ASA02",
       "quantity": 5500
     },
     {
       "username": "Adar_M",
-      "quantity": 5500
-    },
-    {
-      "username": "AVIathol",
       "quantity": 5500
     },
     {
@@ -45,7 +45,7 @@
   "weekly": [
     {
       "username": "AVIathol",
-      "quantity": 1000
+      "quantity": 1500
     },
     {
       "username": "Bensb711",
