@@ -52,7 +52,7 @@ jobs:
           node-version: '20'
 
       - name: Install Puppeteer dependencies
-        run: npm install puppeteer-extra puppeteer-extra-plugin-stealth puppeteer
+        run: npm install puppeteer-extra puppeteer-extra-plugin-stealth puppeteer --fetch-retries=5 --fetch-retry-mintimeout=5000
 
       - name: Fetch Kicks leaderboard snapshot
         run: node scripts/update-kicks.js
