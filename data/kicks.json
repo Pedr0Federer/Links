@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-07T14:35:21.908Z",
+  "generatedAt": "2026-08-07T14:40:55.633Z",
   "lifetime": [
     {
       "username": "liorbond",
@@ -38,11 +38,15 @@
       "quantity": 5500
     },
     {
-      "username": "MagicMoments21",
+      "username": "gclassov",
       "quantity": 5000
     }
   ],
   "weekly": [
+    {
+      "username": "gclassov",
+      "quantity": 5000
+    },
     {
       "username": "AVIathol",
       "quantity": 3000
@@ -78,10 +82,6 @@
     {
       "username": "michael853",
       "quantity": 10
-    },
-    {
-      "username": "SHAHARMAN",
-      "quantity": 1
     }
   ]
 }
