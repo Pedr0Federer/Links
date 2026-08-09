@@ -1,87 +1,46 @@
 {
-  "generatedAt": "2026-08-09T19:29:31.473Z",
+  "generatedAt": "2026-08-09T19:35:04.533Z",
   "lifetime": [
     {
-      "username": "liorbond",
-      "quantity": 26177
+      "username": "TheZohanLIVE",
+      "quantity": 1500
     },
     {
-      "username": "2PAC_3D",
-      "quantity": 16000
+      "username": "Itotem",
+      "quantity": 1500
     },
     {
-      "username": "YanivSa",
-      "quantity": 12000
+      "username": "sefftribe",
+      "quantity": 1500
     },
     {
-      "username": "barelXD",
-      "quantity": 11000
+      "username": "TheRoaringKing",
+      "quantity": 1500
     },
     {
-      "username": "Uniquee3e",
-      "quantity": 8000
+      "username": "SatlanMet",
+      "quantity": 1121
     },
     {
-      "username": "AVIathol",
-      "quantity": 7500
-    },
-    {
-      "username": "2PAC3D",
-      "quantity": 7000
-    },
-    {
-      "username": "ASA02",
-      "quantity": 5500
-    },
-    {
-      "username": "Adar_M",
-      "quantity": 5500
-    },
-    {
-      "username": "gclassov",
-      "quantity": 5000
-    }
-  ],
-  "weekly": [
-    {
-      "username": "gclassov",
-      "quantity": 5000
-    },
-    {
-      "username": "AVIathol",
-      "quantity": 3000
-    },
-    {
-      "username": "LioRozeri",
+      "username": "Nilox123",
       "quantity": 1000
     },
     {
-      "username": "Bensb711",
-      "quantity": 656
+      "username": "AmitLux",
+      "quantity": 1000
+    },
+    {
+      "username": "NEORAI08888",
+      "quantity": 1000
+    },
+    {
+      "username": "Storm_q0",
+      "quantity": 1000
     },
     {
       "username": "kogannn",
-      "quantity": 500
-    },
-    {
-      "username": "OrelHcs",
-      "quantity": 500
-    },
-    {
-      "username": "supitix",
-      "quantity": 500
-    },
-    {
-      "username": "Benda1936",
-      "quantity": 500
-    },
-    {
-      "username": "naorav",
-      "quantity": 500
-    },
-    {
-      "username": "sniknik",
-      "quantity": 500
+      "quantity": 1000
     }
-  ]
+  ],
+  "weekly": []
 }
