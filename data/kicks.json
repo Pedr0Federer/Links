@@ -1,9 +1,9 @@
 {
-  "generatedAt": "2026-08-21T13:51:07.502Z",
+  "generatedAt": "2026-08-21T13:56:41.343Z",
   "lifetime": [
     {
       "username": "liorbond",
-      "quantity": 27327
+      "quantity": 27827
     },
     {
       "username": "2PAC_3D",
@@ -48,6 +48,10 @@
       "quantity": 1500
     },
     {
+      "username": "liorbond",
+      "quantity": 1150
+    },
+    {
       "username": "pandipromax",
       "quantity": 1000
     },
@@ -70,10 +74,6 @@
     {
       "username": "yosidvir",
       "quantity": 1000
-    },
-    {
-      "username": "liorbond",
-      "quantity": 650
     },
     {
       "username": "Yuvalyhezkel1",
