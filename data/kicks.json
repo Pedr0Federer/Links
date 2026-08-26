@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-26T01:02:22.279Z",
+  "generatedAt": "2026-08-26T01:07:50.767Z",
   "lifetime": [
     {
       "username": "liorbond",
@@ -7,7 +7,7 @@
     },
     {
       "username": "2PAC_3D",
-      "quantity": 17000
+      "quantity": 17500
     },
     {
       "username": "YanivSa",
@@ -46,6 +46,10 @@
     {
       "username": "AVI_Peretz2003",
       "quantity": 1000
+    },
+    {
+      "username": "2PAC_3D",
+      "quantity": 500
     }
   ]
 }
