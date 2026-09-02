@@ -12,18 +12,18 @@
 
     <!-- Preload/preconnect - מתחילים להוריד את הנכסים הקריטיים (וידאו האינטרו, תמונת הפרופיל, גופן חיצוני)
          מוקדם ככל האפשר, במקביל לפרסור ה-HTML, במקום לחכות שהדפדפן יגיע אליהם בהמשך המסמך -->
-    <link rel="preload" as="video" href="assets/media/intro.mp4?v=10.21-leaderboard-pixel-perfect" type="video/mp4">
+    <link rel="preload" as="video" href="assets/media/intro.mp4?v=10.22-leaderboard-auto-rollover" type="video/mp4">
     <link rel="preload" as="image" href="assets/images/profile.jpg">
     <link rel="preload" as="image" href="assets/images/bg-jungle.webp">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-    <link rel="stylesheet" href="style.css?v=10.21-leaderboard-pixel-perfect">
+    <link rel="stylesheet" href="style.css?v=10.22-leaderboard-auto-rollover">
     <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;700;900&display=swap" rel="stylesheet">
 
     <!-- script.js נטען מוקדם עם defer - מתחיל להוריד אותו מיד (במקביל לפרסור ה-HTML) במקום להמתין
          שהפרסר יגיע לתחתית הגוף, בלי לחסום את הרינדור (defer מריץ אותו רק אחרי שה-DOM מוכן) -->
-    <script src="script.js?v=10.21-leaderboard-pixel-perfect" defer></script>
+    <script src="script.js?v=10.22-leaderboard-auto-rollover" defer></script>
 </head>
 <body>
 
@@ -31,7 +31,7 @@
         <video
             class="intro-video"
             id="introVideo"
-            src="assets/media/intro.mp4?v=10.21-leaderboard-pixel-perfect"
+            src="assets/media/intro.mp4?v=10.22-leaderboard-auto-rollover"
             muted
             playsinline
             webkit-playsinline="true"
@@ -269,7 +269,7 @@
                         <div class="leaderboard-glass-group">
                             <div class="csgoroll-hero" dir="ltr">
                                 <img src="assets/images/PF5.png" alt="" aria-hidden="true" class="csgoroll-hero-logo">
-                                <span class="csgoroll-hero-title"><span class="hero-amount">🪙 7,500</span> CODE <span class="hero-code">PF5</span> LEADERBOARD</span>
+                                <span class="csgoroll-hero-title"><span class="hero-amount" id="heroAmount">🪙 2,500</span> CODE <span class="hero-code" id="heroCode">PF5</span> LEADERBOARD</span>
                                 <img src="assets/images/Roll.png" alt="" aria-hidden="true" class="csgoroll-hero-roll">
                             </div>
                         </div>
@@ -598,26 +598,27 @@
             });
 
             // === לידרבורד חי (CODES & LEADERBOARDS) ===
+            // חלוקת הפרסים - זהה בדיוק לנוסחה שרצה בצד nickpf.com עצמו (אומת מול קוד המקור
+            // שלהם): S(x)=50*round(x/50) על כל דרגה, ואז חלוקת השארית ב-±50. לדוגמה קופה
+            // 2,500 -> מקום ראשון 700, בדיוק כפי ש-nickpf.com מציג
             const PRIZE_SHARE = { 1: 0.30, 2: 0.20, 3: 0.15, 4: 0.10, 5: 0.08, 6: 0.07, 7: 0.06, 8: 0.04 };
-            const DEFAULT_MONTHLY_REWARD = 7500;
+            const DEFAULT_MONTHLY_REWARD = 2500;
+            const DEFAULT_CODE = "PF5";
 
-            // תמונת מצב אחרונה ידועה - מוצגת באופן סינכרוני-לגמרי מיידית ב-loadLeaderboard
-            // (ר' למטה), לפני שכל fetch אסינכרוני מתחיל בכלל - זו הדרך היחידה להשיג רינדור
-            // מיידי אמיתי (0ms) של "הלידרבורד המלא", מאחר שנתונים חיים אמיתיים תמיד מחייבים
-            // קריאת רשת אסינכרונית (לא ניתן לסיים ב-0ms מטבעה). המחיר: הערכים כאן נשארים
-            // מדויקים רק עד שהם משתנים בפועל בצד קיק - חייבים להתעדכן מעת לעת מול הנתונים
-            // החיים (ר' https://nickpf.com/api/csgoroll-leaderboard) אחרת יוצגו כערכים
-            // "חיים" בעוד שבפועל הם מיושנים (עודכן לאחרונה 2026-07-28)
-            const FALLBACK_PLAYERS = [
-                { name: "T****x", wagered: 174186, avatar: "https://avatars.fastly.steamstatic.com/dc04818ef0a0a676cbf6dee40c044dff72c91091_full.jpg" },
-                { name: "M*c", wagered: 81684, avatar: "https://avatars.fastly.steamstatic.com/e657577c6013671cf9a2c26fa6de9b6082fe1307_full.jpg" },
-                { name: "G****s", wagered: 59040, avatar: "https://avatars.fastly.steamstatic.com/320efe74646d20ff85c810e0b42380f097e1b8ba_full.jpg" },
-                { name: "l****s", wagered: 37230, avatar: "https://avatars.akamai.steamstatic.com/50767cea96889a121066ed45c098873cb258f8f3_full.jpg" },
-                { name: "q****`", wagered: 35745, avatar: "https://avatars.fastly.steamstatic.com/82b1bcae2bdc3ac16cd1613afef1698361d735bb_full.jpg" },
-                { name: "s****o", wagered: 28933, avatar: "https://avatars.fastly.steamstatic.com/da558491c706c7f445bcba3357e87412cd847d06_full.jpg" },
-                { name: "B****y", wagered: 26462, avatar: "https://avatars.fastly.steamstatic.com/ff48e2ea7247047386bf99214fe443c5d0a15276_full.jpg" },
-                { name: "B****n", wagered: 16184, avatar: "https://avatars.akamai.steamstatic.com/3bff0a761c2059400d73e8165c7a4c2f2308492f_full.jpg" }
-            ];
+            // תמונת המצב הסטטית שנכתבת ע"י ה-GitHub Action המתוזמן (ר' scripts/update-leaderboard.js
+            // ו-.github/workflows/update-leaderboard.yml). same-origin, בלי CORS/פרוקסי - זהו
+            // המקור האמין הראשי. הוא מחליף את FALLBACK_PLAYERS המוקשח הישן, שהיה נתקע על
+            // נתוני חודש שעבר ברגע שכל הפרוקסי הציבוריים נפלו בו-זמנית (זה היה באג "הלידרבורד
+            // תקוע על החודש הקודם"). ה-Action תמיד שולף את אירוע החודש הנוכחי מ-nickpf.com,
+            // אז מעבר החודש מתגלגל אוטומטית בלי עריכה ידנית
+            const LEADERBOARD_SNAPSHOT_URL = "data/leaderboard.json";
+
+            // מפתח החודש הנוכחי ("YYYY-MM", שעון מקומי) - משמש לפסילת קאש/snapshot ששייכים
+            // לחודש שעבר, כדי שברגע מעבר החודש לא יוצגו "מנצחי" החודש הקודם
+            function currentPeriodKey() {
+                const now = new Date();
+                return now.getFullYear() + "-" + String(now.getMonth() + 1).padStart(2, "0");
+            }
 
             function roundTo50(n) {
                 return 50 * Math.round(n / 50);
@@ -649,134 +650,157 @@
                 return prizes;
             }
 
+            // כותרת הבאנר ("🪙 2,500 CODE PF5 LEADERBOARD") - הסכום והקוד נגזרים כעת מהנתונים
+            // (monthlyReward/code) במקום להיות מוקשחים ב-HTML. זה היה חלק מהבאג: גם כשהנתונים
+            // התעדכנו, הטקסט "7,500" נשאר קבוע כי אף אחד לא ערך אותו ידנית במעבר החודש
+            function updateHeroTitle(monthlyReward, code) {
+                const amountEl = document.getElementById("heroAmount");
+                if (amountEl) {
+                    const text = "🪙 " + Number(monthlyReward || 0).toLocaleString("en-US");
+                    if (amountEl.textContent !== text) amountEl.textContent = text;
+                }
+                const codeEl = document.getElementById("heroCode");
+                if (codeEl && code && codeEl.textContent !== code) codeEl.textContent = code;
+            }
+
             /* התג המשושה, הכתר, המסגרת התלת-ממדית וכותרות "WAGERED"/"PRIZE" כולם מצוירים
                כבר בתוך קובצי ה-PNG החדשים (card-gold/silver/bronze.png) - ה-markup כאן נשאר
                רק לתוכן הדינמי עצמו (אווטר/שם/סכומים), ממוקם באמצעות position:absolute
                (ר' style.css) בתוך האזורים הריקים המיועדים שכבר מצוירים על גבי הפריים.
-               ברענון שקט ברקע (poll כל 60 שניות / חזרה לטאב) בונים את הכרטיסים רק בפעם
-               הראשונה - כשהמבנה (אילו rank-ים מוצגים) כבר זהה, מעדכנים את התוכן הקיים
-               in-place (src/textContent) בלי לגעת ב-innerHTML, כדי לא לאתחל מחדש את
-               אנימציית הכניסה (podiumFadeIn, ר' style.css) ולגרום לכרטיסים "לקפוץ"/להבהב
-               בכל רענון, למרות שהערכים בפועל השתנו רק במעט או בכלל לא */
+               הפודיום מציג תמיד 3 כרטיסים (order 2,1,3), גם אם אין עדיין 3 שחקנים - דרגה
+               ריקה מקבלת מחלקת podium-card-empty, אווטר מוסתר, ושם "—" (בדיוק כמו nickpf.com
+               בתחילת חודש). המבנה קבוע, אז אחרי הבנייה הראשונה מעדכנים תוכן in-place בלבד,
+               בלי לגעת ב-innerHTML, כדי לא לאתחל מחדש את אנימציית הכניסה (podiumFadeIn) */
+            function podiumCardMarkup(rank) {
+                return `
+                    <div class="podium-card rank-${rank}" data-rank="${rank}">
+                        <img class="podium-avatar" alt="" onerror="this.onerror=null;this.src='assets/images/profile.jpg';">
+                        <span class="podium-name"></span>
+                        <span class="podium-wagered-value"></span>
+                        <span class="podium-prize-value"></span>
+                    </div>`;
+            }
+
+            function fillSlotAvatar(imgEl, player) {
+                const hasAvatar = !!(player && player.name && player.avatar);
+                if (hasAvatar) {
+                    if (imgEl.getAttribute("src") !== player.avatar) imgEl.src = player.avatar;
+                    imgEl.alt = player.name;
+                    imgEl.hidden = false;
+                } else {
+                    // מסירים src לגמרי (במקום מחרוזת ריקה) כדי שלא ייפול ל-onerror ויציג את
+                    // תמונת הפרופיל של הסטרימר בכל משבצת ריקה
+                    imgEl.removeAttribute("src");
+                    imgEl.alt = "";
+                    imgEl.hidden = true;
+                }
+            }
+
             function renderPodium(top3, prizes) {
                 const podiumEl = document.getElementById("leaderboardPodium");
                 const order = [2, 1, 3];
-                const activeRanks = order.filter(rank => !!top3[rank - 1]);
 
-                const existingCards = Array.from(podiumEl.children);
-                const existingRanks = existingCards.map(card => Number(card.dataset.rank));
-                const structureMatches = existingRanks.length === activeRanks.length &&
-                    existingRanks.every((rank, idx) => rank === activeRanks[idx]);
+                let cards = Array.from(podiumEl.children).filter(function (c) {
+                    return c.classList && c.classList.contains("podium-card");
+                });
+                const structureOk = cards.length === 3 &&
+                    order.every(function (rank, idx) { return Number(cards[idx].dataset.rank) === rank; });
 
-                if (structureMatches) {
-                    existingCards.forEach(card => {
-                        const rank = Number(card.dataset.rank);
-                        const player = top3[rank - 1];
-                        card.querySelector(".podium-avatar").src = player.avatar;
-                        card.querySelector(".podium-avatar").alt = player.name;
-                        card.querySelector(".podium-name").textContent = player.name;
-                        card.querySelector(".podium-wagered-value").textContent = "🪙 " + player.wagered.toLocaleString("en-US");
-                        card.querySelector(".podium-prize-value").textContent = "🪙 " + prizes[rank].toLocaleString("en-US");
-                    });
-                    return;
+                if (!structureOk) {
+                    podiumEl.innerHTML = order.map(podiumCardMarkup).join("");
+                    cards = Array.from(podiumEl.children);
                 }
 
-                podiumEl.innerHTML = order.map(rank => {
+                cards.forEach(function (card) {
+                    const rank = Number(card.dataset.rank);
                     const player = top3[rank - 1];
-                    if (!player) return "";
-                    return `
-                        <div class="podium-card rank-${rank}" data-rank="${rank}">
-                            <img class="podium-avatar" src="${player.avatar}" alt="${player.name}" onerror="this.onerror=null;this.src='assets/images/profile.jpg';">
-                            <span class="podium-name">${player.name}</span>
-                            <span class="podium-wagered-value">🪙 ${player.wagered.toLocaleString("en-US")}</span>
-                            <span class="podium-prize-value">🪙 ${prizes[rank].toLocaleString("en-US")}</span>
-                        </div>`;
-                }).join("");
+                    const hasPlayer = !!(player && player.name);
+
+                    card.classList.toggle("podium-card-empty", !hasPlayer);
+                    fillSlotAvatar(card.querySelector(".podium-avatar"), player);
+
+                    const nameEl = card.querySelector(".podium-name");
+                    const name = hasPlayer ? player.name : "—";
+                    if (nameEl.textContent !== name) nameEl.textContent = name;
+
+                    const wageredEl = card.querySelector(".podium-wagered-value");
+                    const wageredText = "🪙 " + (hasPlayer ? Number(player.wagered || 0) : 0).toLocaleString("en-US");
+                    if (wageredEl.textContent !== wageredText) wageredEl.textContent = wageredText;
+
+                    const prizeEl = card.querySelector(".podium-prize-value");
+                    const prizeText = "🪙 " + Number(prizes[rank] || 0).toLocaleString("en-US");
+                    if (prizeEl.textContent !== prizeText) prizeEl.textContent = prizeText;
+                });
             }
 
-            /* אותו עיקרון diff-DOM כמו renderPodium/renderDonatorTable למעלה: במקום לזרוק את
-               כל ה-tbody ולבנות מחדש בכל רענון שקט ברקע (60 שניות), משווים לפי שם השחקן (מפתח
-               יציב, לא לפי אינדקס - אינדקס משתנה כשהדירוג מתחלף) מול ה-DOM הקיים:
-               - שורה קיימת עם אותו שם: מעדכנים avatar/rank/wagered/prize רק אם השתנו בפועל
-               - שחקן חדש בטווח 4-8: נבנית שורה חדשה
-               - שחקן שירד מהטווח: השורה שלו מוסרת
-               - הסדר משוחזר תמיד באמצעות insertBefore, שמזיז node קיים בלי להרוס אותו */
+            /* הטבלה מציגה תמיד את דרגות 4-8 (5 שורות), גם כשאין שם עדיין שחקן - שורה ריקה
+               מקבלת מחלקת leaderboard-row-empty ושם "—", בדיוק כמו nickpf.com. המבנה קבוע
+               (data-rank על כל שורה), אז אחרי הבנייה הראשונה מעדכנים תוכן in-place בלבד ולא
+               נוגעים ב-innerHTML - כך אין הבהוב/קפיצה ברענון השקט כל 60 שניות */
+            const LEADERBOARD_TABLE_RANKS = [4, 5, 6, 7, 8];
+
+            function leaderboardRowMarkup(rank) {
+                return `
+                    <tr data-rank="${rank}">
+                        <td><span class="rank-badge">${rank}</span></td>
+                        <td class="user-cell">
+                            <img class="row-avatar" alt="" onerror="this.onerror=null;this.src='assets/images/profile.jpg';">
+                            <span></span>
+                        </td>
+                        <td></td>
+                        <td class="prize-cell"></td>
+                    </tr>`;
+            }
+
             function renderLeaderboardRows(rest, prizes) {
                 const rowsEl = document.getElementById("leaderboardRows");
 
-                if (rest.length === 0) {
-                    rowsEl.innerHTML = `<tr><td colspan="4" class="loading-row">אין דירוגים נוספים כרגע</td></tr>`;
-                    return;
+                let rows = Array.from(rowsEl.children).filter(function (row) {
+                    return row.dataset && row.dataset.rank;
+                });
+                const structureOk = rows.length === LEADERBOARD_TABLE_RANKS.length &&
+                    LEADERBOARD_TABLE_RANKS.every(function (rank, idx) {
+                        return Number(rows[idx].dataset.rank) === rank;
+                    });
+
+                if (!structureOk) {
+                    rowsEl.innerHTML = LEADERBOARD_TABLE_RANKS.map(leaderboardRowMarkup).join("");
+                    rows = Array.from(rowsEl.children);
                 }
 
-                function buildRow(player, rank) {
-                    const tr = document.createElement("tr");
-                    tr.dataset.playerName = player.name;
-                    tr.innerHTML = `
-                        <td><span class="rank-badge">${rank}</span></td>
-                        <td class="user-cell">
-                            <img class="row-avatar" src="${player.avatar}" alt="${player.name}" onerror="this.onerror=null;this.src='assets/images/profile.jpg';">
-                            <span>${player.name}</span>
-                        </td>
-                        <td>🪙 ${player.wagered.toLocaleString("en-US")}</td>
-                        <td class="prize-cell">🪙 ${(prizes[rank] || 0).toLocaleString("en-US")}</td>`;
-                    return tr;
-                }
+                rows.forEach(function (row, idx) {
+                    const rank = LEADERBOARD_TABLE_RANKS[idx];
+                    const player = rest[idx];
+                    const hasPlayer = !!(player && player.name);
 
-                // מנקים מראש שורות "placeholder" ישנות בלי data-player-name (מסך הטעינה
-                // הראשוני/מצב ריק קודם) - הן לעולם לא נחשבות בנות-שימוש-חוזר ל-diff
-                Array.from(rowsEl.children).forEach(function (row) {
-                    if (!row.dataset || !row.dataset.playerName) row.remove();
-                });
+                    row.classList.toggle("leaderboard-row-empty", !hasPlayer);
 
-                const existingByName = new Map();
-                Array.from(rowsEl.children).forEach(function (row) {
-                    existingByName.set(row.dataset.playerName, row);
-                });
+                    const badge = row.querySelector(".rank-badge");
+                    if (badge.textContent !== String(rank)) badge.textContent = String(rank);
 
-                rest.forEach(function (player, idx) {
-                    const rank = idx + 4;
-                    let row = existingByName.get(player.name);
+                    fillSlotAvatar(row.querySelector(".row-avatar"), player);
 
-                    if (row) {
-                        existingByName.delete(player.name);
+                    const nameEl = row.querySelector(".user-cell span");
+                    const name = hasPlayer ? player.name : "—";
+                    if (nameEl.textContent !== name) nameEl.textContent = name;
 
-                        const badge = row.querySelector(".rank-badge");
-                        if (badge.textContent !== String(rank)) badge.textContent = String(rank);
+                    const wageredEl = row.children[2];
+                    const wageredText = "🪙 " + (hasPlayer ? Number(player.wagered || 0) : 0).toLocaleString("en-US");
+                    if (wageredEl.textContent !== wageredText) wageredEl.textContent = wageredText;
 
-                        const avatar = row.querySelector(".row-avatar");
-                        if (avatar.src !== player.avatar) avatar.src = player.avatar;
-                        if (avatar.alt !== player.name) avatar.alt = player.name;
-
-                        const nameEl = row.querySelector(".user-cell span");
-                        if (nameEl.textContent !== player.name) nameEl.textContent = player.name;
-
-                        const wageredEl = row.children[2];
-                        const newWageredText = "🪙 " + player.wagered.toLocaleString("en-US");
-                        if (wageredEl.textContent !== newWageredText) wageredEl.textContent = newWageredText;
-
-                        const prizeEl = row.querySelector(".prize-cell");
-                        const newPrizeText = "🪙 " + (prizes[rank] || 0).toLocaleString("en-US");
-                        if (prizeEl.textContent !== newPrizeText) prizeEl.textContent = newPrizeText;
-                    } else {
-                        row = buildRow(player, rank);
-                    }
-
-                    const refNode = rowsEl.children[idx] || null;
-                    if (refNode !== row) rowsEl.insertBefore(row, refNode);
-                });
-
-                // שחקנים שנשארו במפה הם כאלה שירדו מהטווח 4-8 ברענון הזה - השורות שלהם מוסרות
-                existingByName.forEach(function (row) {
-                    row.remove();
+                    const prizeEl = row.querySelector(".prize-cell");
+                    const prizeText = "🪙 " + Number(prizes[rank] || 0).toLocaleString("en-US");
+                    if (prizeEl.textContent !== prizeText) prizeEl.textContent = prizeText;
                 });
             }
 
-            function renderLeaderboard(players, monthlyReward) {
+            function renderLeaderboard(players, monthlyReward, code) {
+                const list = Array.isArray(players) ? players : [];
                 const prizes = computePrizes(monthlyReward);
-                const top3 = players.slice(0, 3);
-                const rest = players.slice(3, 8);
+                const top3 = list.slice(0, 3);
+                const rest = list.slice(3, 8);
 
+                updateHeroTitle(monthlyReward, code);
                 renderPodium(top3, prizes);
                 renderLeaderboardRows(rest, prizes);
             }
@@ -842,28 +866,29 @@
                 }
             }
 
+            // מחזיר null בכישלון (לא DEFAULT_MONTHLY_REWARD) - כדי שהקורא יוכל להעדיף את
+            // קופת הפרסים מה-snapshot הסטטי במקום לדרוס אותה בברירת מחדל שרירותית
             async function fetchMonthlyReward() {
                 const data = await fetchJsonWithProxyFallback(`https://nickpf.com/api/prize?period=csgoroll&t=${Date.now()}`);
                 if (data && typeof data.monthlyPriceReward === "number") return data.monthlyPriceReward;
-                return DEFAULT_MONTHLY_REWARD;
+                return null;
             }
 
-            // תמונת מצב אחרונה שנשמרה ב-localStorage מקריאה חיה מוצלחת קודמת (ר' saveLeaderboardCache
-            // למטה) - עדיפה על FALLBACK_PLAYERS הסטטי לרינדור פריים-1, כי היא תמיד קרובה יותר
-            // למציאות מ-snapshot שהוקפא בזמן כתיבת הקוד. נשארת תקפה בין סגירה/פתיחה מחדש של הטאב
+            // תמונת מצב אחרונה שנשמרה ב-localStorage מקריאה חיה מוצלחת קודמת - משמשת לרינדור
+            // פריים-1 מיידי בביקור חוזר, אבל רק אם היא שייכת לחודש הנוכחי (ר' period למטה)
             const LEADERBOARD_CACHE_KEY = "leaderboard_latest_cache";
 
-            // מתעדכן ידנית בכל פעם שה-baseline הקשיח של FALLBACK_PLAYERS למעלה מתעדכן -
-            // קאש שנשמר לפני עדכון כזה תמיד ישן יותר מה-baseline החדש, אז מסמנים אותו
-            // כפג-תוקף ומוחקים אותו במקום להציג ערכים שהם בוודאות ישנים יותר מהקוד עצמו
-            const LEADERBOARD_BASELINE_VERSION = "2026-07-29";
+            // מסמן פורמט - קאש שנשמר עם ערך ישן יותר נמחק במקום להיקרא. מתעדכן כשמבנה הקאש
+            // או המקור משתנה. הועלה כאן כדי לזרוק קאש ישן מפורמט FALLBACK_PLAYERS הישן
+            const LEADERBOARD_BASELINE_VERSION = "2026-09-02-snapshot";
 
-            function saveLeaderboardCache(players, monthlyReward) {
+            function saveLeaderboardCache(players, monthlyReward, code) {
                 try {
                     localStorage.setItem(LEADERBOARD_CACHE_KEY, JSON.stringify({
                         timestamp: Date.now(),
                         baselineVersion: LEADERBOARD_BASELINE_VERSION,
-                        data: { players: players, monthlyReward: monthlyReward }
+                        period: currentPeriodKey(),
+                        data: { players: players, monthlyReward: monthlyReward, code: code }
                     }));
                 } catch {
                     // localStorage חסום/מלא (למשל מצב פרטי) - לא קריטי, פשוט ממשיכים בלי קאש
@@ -875,54 +900,98 @@
                     const raw = localStorage.getItem(LEADERBOARD_CACHE_KEY);
                     if (!raw) return null;
                     const parsed = JSON.parse(raw);
-                    if (!parsed || !parsed.data || !Array.isArray(parsed.data.players) || parsed.data.players.length === 0) return null;
+                    if (!parsed || !parsed.data || !Array.isArray(parsed.data.players)) return null;
                     if (parsed.baselineVersion !== LEADERBOARD_BASELINE_VERSION) {
                         localStorage.removeItem(LEADERBOARD_CACHE_KEY);
                         return null;
                     }
-                    return parsed.data;
+                    return {
+                        players: parsed.data.players,
+                        monthlyReward: typeof parsed.data.monthlyReward === "number" ? parsed.data.monthlyReward : DEFAULT_MONTHLY_REWARD,
+                        code: typeof parsed.data.code === "string" ? parsed.data.code : DEFAULT_CODE,
+                        period: typeof parsed.period === "string" ? parsed.period : null
+                    };
                 } catch {
                     return null;
                 }
             }
 
-            // true רק לפני ה-render הראשון אי-פעם - רק אז מציגים קאש/FALLBACK_PLAYERS באופן
-            // סינכרוני מיידי (רינדור "פריים 1"). בכל קריאה חוזרת ל-loadLeaderboard (רץ שוב
-            // כל שעה, ר' pollLeaderboard למטה) הדילוג הזה חיוני: בלעדיו, נתונים אמיתיים
-            // שכבר מוצגים על המסך היו נדרסים בחזרה לתמונת מצב ישנה יותר לפני שה-fetch השקט
-            // ברקע מסתיים - בדיוק ה"הבהוב" שאסור שיקרה גם ברענון תקופתי, לא רק בטעינה הראשונית
+            // תמונת המצב הסטטית (data/leaderboard.json) שנכתבת ע"י ה-GitHub Action. same-origin,
+            // בלי CORS/פרוקסי - מהיר ואמין כמו fetch של קובץ CSS. מחזיר null בכישלון אמיתי
+            async function loadLeaderboardSnapshot() {
+                try {
+                    const res = await fetch(`${LEADERBOARD_SNAPSHOT_URL}?t=${Date.now()}`, { headers: { "Accept": "application/json" } });
+                    if (!res.ok) return null;
+                    const data = await res.json();
+                    if (!data || !Array.isArray(data.players)) return null;
+                    return {
+                        players: data.players,
+                        monthlyReward: typeof data.monthlyReward === "number" ? data.monthlyReward : DEFAULT_MONTHLY_REWARD,
+                        code: typeof data.code === "string" ? data.code : DEFAULT_CODE,
+                        period: typeof data.period === "string" ? data.period : null
+                    };
+                } catch {
+                    return null;
+                }
+            }
+
+            // true רק לפני ה-render הראשון אי-פעם - רק אז מציגים קאש באופן סינכרוני מיידי
+            // (רינדור "פריים 1"). בכל קריאה חוזרת ל-loadLeaderboard הדילוג הזה חיוני: בלעדיו,
+            // נתונים אמיתיים שכבר מוצגים היו נדרסים בחזרה לתמונת מצב ישנה לפני שה-fetch השקט
+            // מסתיים - בדיוק ה"הבהוב" שאסור שיקרה גם ברענון תקופתי
             let leaderboardHasRenderedOnce = false;
 
             async function loadLeaderboard() {
+                const currentPeriod = currentPeriodKey();
                 const cached = loadLeaderboardCache();
+                const cacheIsCurrent = !!(cached && cached.period === currentPeriod);
 
-                // רינדור סינכרוני מיידי - לפני כל await/fetch - כדי שהלידרבורד המלא יופיע
-                // כבר בפריים הראשון, 0ms, בלי לחכות לשום קריאת רשת. אם יש קאש מקומי מביקור
-                // קודם הוא מוצג כאן; אחרת נופלים חזרה ל-FALLBACK_PLAYERS הסטטי
+                // רינדור סינכרוני מיידי - לפני כל await/fetch. קאש של חודש שעבר לא מצויר
+                // (אין יותר FALLBACK_PLAYERS מוקשח): עדיף שלד קצר עד שה-snapshot המקומי נטען
+                // מאשר להציג "מנצחי" חודש שעבר לרגע
                 if (!leaderboardHasRenderedOnce) {
-                    if (cached) {
-                        renderLeaderboard(cached.players, typeof cached.monthlyReward === "number" ? cached.monthlyReward : DEFAULT_MONTHLY_REWARD);
-                    } else {
-                        renderLeaderboard(FALLBACK_PLAYERS, DEFAULT_MONTHLY_REWARD);
+                    if (cacheIsCurrent) {
+                        renderLeaderboard(cached.players, cached.monthlyReward, cached.code);
                     }
                     leaderboardHasRenderedOnce = true;
                 }
 
-                let players = cached ? cached.players : FALLBACK_PLAYERS;
+                let players = cacheIsCurrent ? cached.players : [];
+                let monthlyReward = cacheIsCurrent ? cached.monthlyReward : DEFAULT_MONTHLY_REWARD;
+                let code = (cached && cached.code) ? cached.code : DEFAULT_CODE;
 
+                // (1) מקור אמין ראשי - התמונה הסטטית מה-Action המתוזמן
+                const snapshot = await loadLeaderboardSnapshot();
+                if (snapshot) {
+                    monthlyReward = snapshot.monthlyReward;
+                    code = snapshot.code || code;
+                    if (snapshot.period === null || snapshot.period === currentPeriod) {
+                        players = snapshot.players;
+                    } else {
+                        // החודש התחלף אבל ה-Action עדיין לא פרסם את החודש החדש - מציגים לוח
+                        // ריק לחודש החדש (גלגול אוטומטי), לא את מנצחי החודש שעבר
+                        players = [];
+                    }
+                    renderLeaderboard(players, monthlyReward, code);
+                }
+
+                // (2) שכבה חיה best-effort מעל התמונה הסטטית - טרייה יותר כשהפרוקסי עובד.
+                // תמיד מחזירה את אירוע החודש הנוכחי (אין month id), אז זה גם "מגלה" חודש חדש
+                // מיד גם אם ה-snapshot מפגר. אם היא נכשלת - התמונה הסטטית שכבר צוירה נשארת
                 const data = await fetchJsonWithProxyFallback(`https://nickpf.com/api/csgoroll-leaderboard?t=${Date.now()}`);
-                const liveFetchSucceeded = !!(data && data.success && Array.isArray(data.players) && data.players.length > 0);
+                const liveFetchSucceeded = !!(data && data.success === true && Array.isArray(data.players));
                 if (liveFetchSucceeded) {
                     players = data.players;
                 }
 
-                const monthlyReward = await fetchMonthlyReward();
-                renderLeaderboard(players, monthlyReward);
+                const liveReward = await fetchMonthlyReward();
+                if (typeof liveReward === "number") monthlyReward = liveReward;
 
-                // רק כשה-fetch החי הצליח בפועל - כישלון/ללא-שינוי משמר את הקאש הקיים כמו
-                // שהוא, כדי לא לדרוס נתונים תקינים בכישלון חולף
+                renderLeaderboard(players, monthlyReward, code);
+
+                // שומרים קאש רק כשה-fetch החי הצליח - כישלון חולף משמר את הקאש הקיים
                 if (liveFetchSucceeded) {
-                    saveLeaderboardCache(players, monthlyReward);
+                    saveLeaderboardCache(players, monthlyReward, code);
                 }
             }
 

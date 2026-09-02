@@ -1189,6 +1189,23 @@ footer {
     color: #22c55e;
 }
 
+/* משבצת פודיום/שורת טבלה בלי שחקן עדיין (תחילת חודש - הלוח מתגלגל אוטומטית ומראה מבנה
+   מלא של 3+5 מקומות עם "—" במקומות הריקים, בדיוק כמו nickpf.com). מעמעמים את התוכן
+   הדינמי בלבד (שם/סכומים), לא את מסגרת הכרטיס/השורה, וגם לא נלחמים באנימציית podiumFadeIn */
+.podium-card-empty .podium-name,
+.podium-card-empty .podium-wagered-value,
+.podium-card-empty .podium-prize-value {
+    color: #cbb98f;
+    opacity: 0.75;
+}
+
+.leaderboard-row-empty .rank-badge,
+.leaderboard-row-empty .user-cell span,
+.leaderboard-row-empty td {
+    color: #cbb98f;
+    opacity: 0.8;
+}
+
 /* === טיימר ספירה לאחור - זכוכית קרם/זהב בהירה (תואם למוקאפ), בניגוד לפודיום/hero הכהים === */
 .leaderboard-timer {
     position: relative;

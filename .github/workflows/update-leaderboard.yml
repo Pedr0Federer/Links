@@ -1,0 +1,44 @@
+name: Update CSGORoll Leaderboard
+
+on:
+  schedule:
+    # Every 15 minutes. Unlike the Kicks workflow this does NOT need a sub-15-min cadence
+    # or the self-dispatch relay - CSGORoll wagered totals move slowly, and the page also
+    # does a best-effort live fetch on top of this snapshot, so 15 min of lag on the
+    # committed file is invisible in practice. 15 min is also the shortest interval GitHub
+    # runs `schedule` at without heavy throttling.
+    - cron: '*/15 * * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+# A manual run and a scheduled run must not race on `git push`.
+concurrency:
+  group: update-leaderboard
+  cancel-in-progress: false
+
+jobs:
+  update-leaderboard:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      # No dependencies - scripts/update-leaderboard.js uses Node's built-in global fetch
+      # to call nickpf.com directly (server-side, no CORS, no proxy).
+      - name: Fetch CSGORoll leaderboard snapshot
+        run: node scripts/update-leaderboard.js
+
+      - name: Commit and push if changed
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add data/leaderboard.json
+          git diff --staged --quiet && echo "No changes to commit" || (git commit -m "Auto-update CSGORoll leaderboard snapshot" && git push)
