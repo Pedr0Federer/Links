@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-02T21:56:33.091Z",
+  "generatedAt": "2026-09-03T00:01:54.986Z",
   "period": "2026-09",
   "code": "PF5",
   "monthlyReward": 2500,
@@ -8,6 +8,11 @@
       "name": "f****k",
       "wagered": 5169,
       "avatar": "https://avatars.akamai.steamstatic.com/f20957fe41836273b5232219339c006d73a219c6_full.jpg"
+    },
+    {
+      "name": "O****\udd21",
+      "wagered": 1225,
+      "avatar": "https://avatars.fastly.steamstatic.com/b5a48bcce220189d785305c4e88e22442666a32c_full.jpg"
     }
   ]
 }
