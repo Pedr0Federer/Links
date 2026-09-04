@@ -41,4 +41,21 @@ jobs:
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
           git add data/leaderboard.json
-          git diff --staged --quiet && echo "No changes to commit" || (git commit -m "Auto-update CSGORoll leaderboard snapshot" && git push)
+          if git diff --staged --quiet; then
+            echo "No changes to commit"
+            exit 0
+          fi
+          git commit -m "Auto-update CSGORoll leaderboard snapshot"
+          # The Kicks leaderboard workflow (and manual commits) can push to main between
+          # our checkout and our push, so `git push` races and gets rejected. Rebase our
+          # single snapshot commit onto the latest remote and retry a few times.
+          for attempt in 1 2 3 4 5; do
+            if git push; then
+              echo "Pushed on attempt $attempt"
+              exit 0
+            fi
+            echo "Push rejected on attempt $attempt, rebasing on latest main..."
+            git pull --rebase --autostash origin main
+          done
+          echo "Failed to push after 5 attempts"
+          exit 1
