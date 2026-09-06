@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-06T15:19:11.641Z",
+  "generatedAt": "2026-09-06T15:24:37.584Z",
   "lifetime": [
     {
       "username": "liorbond",
@@ -65,6 +65,10 @@
     },
     {
       "username": "statbox",
+      "quantity": 500
+    },
+    {
+      "username": "itaymalka1",
       "quantity": 500
     },
     {
