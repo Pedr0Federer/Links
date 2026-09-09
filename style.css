@@ -2568,3 +2568,46 @@ body.low-perf .close-modal:hover {
         animation: none;
     }
 }
+
+/* ============================================================================
+   TEMP: HIDE "קאי קולקטורז" CARD (HOME TAB)
+   The card's HTML/assets are left fully intact in index.html - this block
+   only hides it visually and re-balances the bottom row of the 3x3 grid
+   (ר' #tab-home.tab-panel.active, שורה ~498) so the 2 remaining cards
+   ("דיסקורד בשמים" + "כלבו יהודה") sit centered instead of leaving an
+   empty gap where the 3rd card used to be.
+   TO RESTORE THE ORIGINAL 3-CARD LAYOUT: delete this entire block
+   (down to "END TEMP" below) - nothing else needs to change.
+   ============================================================================ */
+.link-btn.kai {
+    display: none !important;
+}
+
+/* Only the >640px view uses a 3-column grid (see media queries above), so
+   that's the only place hiding 1 of 9 cards leaves an uneven bottom row.
+   At <=640px the grid drops to 2 columns, and 8 visible cards fill that
+   evenly (4 full rows) with no gap - so no adjustment is needed there. */
+@media (min-width: 641px) {
+    /* Switch to a 6-column grid where every card spans 2 columns - visually
+       identical to the original 3-column grid (2/6 = 1/3 width per card),
+       but the extra column resolution lets the 2 leftover bottom-row cards
+       be offset into the center instead of being auto-placed flush to one side. */
+    #tab-home.tab-panel.active {
+        grid-template-columns: repeat(6, 1fr);
+    }
+
+    #tab-home.tab-panel.active > .link-btn {
+        grid-column: span 2;
+    }
+
+    /* 7th and 8th cards = "דיסקורד בשמים" and "כלבו יהודה" (the 9th,
+       "קאי קולקטורז", is hidden above and no longer takes a grid slot) */
+    #tab-home.tab-panel.active > .link-btn:nth-child(7) {
+        grid-column: 2 / span 2;
+    }
+
+    #tab-home.tab-panel.active > .link-btn:nth-child(8) {
+        grid-column: 4 / span 2;
+    }
+}
+/* ============================== END TEMP ================================= */
