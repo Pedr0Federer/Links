@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-20T23:55:04.711Z",
+  "generatedAt": "2026-09-21T00:00:29.746Z",
   "lifetime": [
     {
       "username": "liorbond",
@@ -42,46 +42,5 @@
       "quantity": 6000
     }
   ],
-  "weekly": [
-    {
-      "username": "TheMahvat",
-      "quantity": 7500
-    },
-    {
-      "username": "LiorSplash",
-      "quantity": 2500
-    },
-    {
-      "username": "Rashford333",
-      "quantity": 1500
-    },
-    {
-      "username": "RabbiTrump",
-      "quantity": 1000
-    },
-    {
-      "username": "kogannn",
-      "quantity": 1000
-    },
-    {
-      "username": "dedashev02",
-      "quantity": 1000
-    },
-    {
-      "username": "Shak4d",
-      "quantity": 1000
-    },
-    {
-      "username": "zekayro",
-      "quantity": 1000
-    },
-    {
-      "username": "EzioAu_D",
-      "quantity": 1000
-    },
-    {
-      "username": "muzan10",
-      "quantity": 1000
-    }
-  ]
+  "weekly": []
 }
