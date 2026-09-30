@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-30T23:48:05.765Z",
+  "generatedAt": "2026-09-30T23:53:32.519Z",
   "lifetime": [
     {
       "username": "liorbond",
@@ -64,6 +64,10 @@
       "quantity": 500
     },
     {
+      "username": "Itotem",
+      "quantity": 500
+    },
+    {
       "username": "FirefoxOG",
       "quantity": 500
     },
@@ -72,16 +76,12 @@
       "quantity": 500
     },
     {
-      "username": "refaelsvr",
+      "username": "Maxx112233",
       "quantity": 500
     },
     {
-      "username": "shawarmaland",
-      "quantity": 100
-    },
-    {
-      "username": "NOAMGI",
-      "quantity": 5
+      "username": "refaelsvr",
+      "quantity": 500
     }
   ]
 }
