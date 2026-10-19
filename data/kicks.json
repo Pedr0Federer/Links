@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-18T23:55:59.865Z",
+  "generatedAt": "2026-10-19T00:01:28.017Z",
   "lifetime": [
     {
       "username": "liorbond",
@@ -42,30 +42,5 @@
       "quantity": 7000
     }
   ],
-  "weekly": [
-    {
-      "username": "ReyBi64",
-      "quantity": 7500
-    },
-    {
-      "username": "GodNice321",
-      "quantity": 2000
-    },
-    {
-      "username": "kogannn",
-      "quantity": 1000
-    },
-    {
-      "username": "Maor_pryynty",
-      "quantity": 1000
-    },
-    {
-      "username": "FirefoxOG",
-      "quantity": 500
-    },
-    {
-      "username": "SHAHARMAN",
-      "quantity": 1
-    }
-  ]
+  "weekly": []
 }
