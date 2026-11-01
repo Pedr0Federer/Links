@@ -1,7 +1,13 @@
 {
-  "generatedAt": "2026-11-01T13:49:54.314Z",
+  "generatedAt": "2026-11-01T18:50:15.104Z",
   "period": "2026-11",
   "code": "PF5",
   "monthlyReward": 2500,
-  "players": []
+  "players": [
+    {
+      "name": "K***n",
+      "wagered": 656,
+      "avatar": "https://avatars.fastly.steamstatic.com/57bc2c458fc487a8c06666178a12204055d72592_full.jpg"
+    }
+  ]
 }
