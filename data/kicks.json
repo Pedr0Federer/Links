@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-02T16:53:30.553Z",
+  "generatedAt": "2026-11-02T16:59:09.891Z",
   "lifetime": [
     {
       "username": "liorbond",
@@ -11,7 +11,7 @@
     },
     {
       "username": "eliyahuasis",
-      "quantity": 14500
+      "quantity": 15000
     },
     {
       "username": "YanivSa",
@@ -42,5 +42,14 @@
       "quantity": 7500
     }
   ],
-  "weekly": []
+  "weekly": [
+    {
+      "username": "eliyahuasis",
+      "quantity": 500
+    },
+    {
+      "username": "TumpaX",
+      "quantity": 500
+    }
+  ]
 }
