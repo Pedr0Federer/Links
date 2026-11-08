@@ -1,12 +1,12 @@
 {
-  "generatedAt": "2026-11-08T19:54:21.525Z",
+  "generatedAt": "2026-11-08T23:34:56.548Z",
   "period": "2026-11",
   "code": "PF5",
   "monthlyReward": 2500,
   "players": [
     {
       "name": "s****o",
-      "wagered": 32253,
+      "wagered": 32273,
       "avatar": "https://avatars.akamai.steamstatic.com/da558491c706c7f445bcba3357e87412cd847d06_full.jpg"
     },
     {
@@ -15,13 +15,18 @@
       "avatar": "https://avatars.akamai.steamstatic.com/57bc2c458fc487a8c06666178a12204055d72592_full.jpg"
     },
     {
+      "name": "S****i",
+      "wagered": 3059,
+      "avatar": "https://avatars.fastly.steamstatic.com/0e2b6e31b3807090494e42a28c0412e1a4815601_full.jpg"
+    },
+    {
       "name": "l***L",
       "wagered": 1987,
       "avatar": "https://avatars.fastly.steamstatic.com/9db4379c2531f5accd95570c7ac358f7169393dc_full.jpg"
     },
     {
       "name": "Y****W",
-      "wagered": 1982,
+      "wagered": 1984,
       "avatar": "https://avatars.fastly.steamstatic.com/543bb32f9249e6738288c0d3ac6987ee25983c41_full.jpg"
     },
     {
