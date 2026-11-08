@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-08T19:30:06.075Z",
+  "generatedAt": "2026-11-08T20:59:05.339Z",
   "lifetime": [
     {
       "username": "liorbond",
@@ -7,7 +7,7 @@
     },
     {
       "username": "eliyahuasis",
-      "quantity": 30000
+      "quantity": 30500
     },
     {
       "username": "2PAC_3D",
@@ -45,7 +45,7 @@
   "weekly": [
     {
       "username": "eliyahuasis",
-      "quantity": 15500
+      "quantity": 16000
     },
     {
       "username": "ReyBi64",
@@ -72,16 +72,16 @@
       "quantity": 500
     },
     {
+      "username": "hallel",
+      "quantity": 500
+    },
+    {
       "username": "gavriel699",
       "quantity": 500
     },
     {
       "username": "TumpaX",
       "quantity": 500
-    },
-    {
-      "username": "ilia_yusufov",
-      "quantity": 80
     }
   ]
 }
