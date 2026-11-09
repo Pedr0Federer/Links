@@ -1,13 +1,13 @@
 {
-  "generatedAt": "2026-11-09T15:25:27.328Z",
+  "generatedAt": "2026-11-09T15:30:58.836Z",
   "lifetime": [
+    {
+      "username": "eliyahuasis",
+      "quantity": 32500
+    },
     {
       "username": "liorbond",
       "quantity": 31327
-    },
-    {
-      "username": "eliyahuasis",
-      "quantity": 30500
     },
     {
       "username": "2PAC_3D",
@@ -43,6 +43,10 @@
     }
   ],
   "weekly": [
+    {
+      "username": "eliyahuasis",
+      "quantity": 2000
+    },
     {
       "username": "GodNice321",
       "quantity": 500
