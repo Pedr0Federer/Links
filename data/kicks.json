@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-19T04:08:36.138Z",
+  "generatedAt": "2026-11-19T04:20:42.653Z",
   "lifetime": [
     {
       "username": "eliyahuasis",
@@ -7,7 +7,11 @@
     },
     {
       "username": "liorbond",
-      "quantity": 35428
+      "quantity": 36928
+    },
+    {
+      "username": "ReyBi64",
+      "quantity": 18000
     },
     {
       "username": "2PAC_3D",
@@ -16,10 +20,6 @@
     {
       "username": "devidtur",
       "quantity": 17500
-    },
-    {
-      "username": "ReyBi64",
-      "quantity": 16500
     },
     {
       "username": "AVIathol",
@@ -56,31 +56,31 @@
       "quantity": 5000
     },
     {
+      "username": "liorbond",
+      "quantity": 4601
+    },
+    {
       "username": "Fizxxx",
       "quantity": 4500
+    },
+    {
+      "username": "ReyBi64",
+      "quantity": 3500
     },
     {
       "username": "FirefoxOG",
       "quantity": 3500
     },
     {
-      "username": "liorbond",
-      "quantity": 3101
-    },
-    {
       "username": "yarinlmao",
       "quantity": 3000
     },
     {
-      "username": "ReyBi64",
+      "username": "Yuvalyhezkel1",
       "quantity": 2000
     },
     {
       "username": "Storm_q0",
-      "quantity": 1500
-    },
-    {
-      "username": "Yuvalyhezkel1",
       "quantity": 1500
     }
   ]
