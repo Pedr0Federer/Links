@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-20T19:13:40.489Z",
+  "generatedAt": "2026-11-21T00:50:47.933Z",
   "period": "2026-11",
   "code": "PF5",
   "monthlyReward": 2500,
@@ -22,12 +22,17 @@
     {
       "name": "k****s",
       "wagered": 11641,
-      "avatar": "https://avatars.akamai.steamstatic.com/b4ec0bf154757200fcbaa3bc11f3777d261c0c08_full.jpg"
+      "avatar": "https://avatars.fastly.steamstatic.com/b4ec0bf154757200fcbaa3bc11f3777d261c0c08_full.jpg"
     },
     {
       "name": "s****e",
       "wagered": 11389,
       "avatar": "https://avatars.fastly.steamstatic.com/d29217a1addab772c86880a9a43f6d4a8be723f1_full.jpg"
+    },
+    {
+      "name": "l****s",
+      "wagered": 9292,
+      "avatar": "https://avatars.akamai.steamstatic.com/50767cea96889a121066ed45c098873cb258f8f3_full.jpg"
     },
     {
       "name": "S****i",
@@ -43,11 +48,6 @@
       "name": "m****a",
       "wagered": 4551,
       "avatar": "https://avatars.fastly.steamstatic.com/100171c9511a83ff7d64680cf335c3ec3ef8e027_full.jpg"
-    },
-    {
-      "name": "l****s",
-      "wagered": 4333,
-      "avatar": "https://avatars.akamai.steamstatic.com/50767cea96889a121066ed45c098873cb258f8f3_full.jpg"
     },
     {
       "name": "e****a",
