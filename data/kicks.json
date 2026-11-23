@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-23T10:47:15.682Z",
+  "generatedAt": "2026-11-23T10:52:41.166Z",
   "lifetime": [
     {
       "username": "eliyahuasis",
@@ -43,6 +43,10 @@
     }
   ],
   "weekly": [
+    {
+      "username": "FirefoxOG",
+      "quantity": 1000
+    },
     {
       "username": "eliyahuasis",
       "quantity": 500
