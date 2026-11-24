@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-23T12:55:25.362Z",
+  "generatedAt": "2026-11-24T00:42:30.707Z",
   "period": "2026-11",
   "code": "PF5",
   "monthlyReward": 2500,
@@ -15,9 +15,19 @@
       "avatar": "https://avatars.fastly.steamstatic.com/da558491c706c7f445bcba3357e87412cd847d06_full.jpg"
     },
     {
+      "name": "S****A",
+      "wagered": 14109,
+      "avatar": "https://avatars.fastly.steamstatic.com/d18839225124df4a19b77a69c1f7e96b78025b6f_full.jpg"
+    },
+    {
       "name": "O****\udd21",
-      "wagered": 13782,
+      "wagered": 13891,
       "avatar": "https://avatars.akamai.steamstatic.com/b5a48bcce220189d785305c4e88e22442666a32c_full.jpg"
+    },
+    {
+      "name": "l****s",
+      "wagered": 12647,
+      "avatar": "https://avatars.fastly.steamstatic.com/50767cea96889a121066ed45c098873cb258f8f3_full.jpg"
     },
     {
       "name": "k****s",
@@ -30,18 +40,13 @@
       "avatar": "https://avatars.akamai.steamstatic.com/d29217a1addab772c86880a9a43f6d4a8be723f1_full.jpg"
     },
     {
-      "name": "l****s",
-      "wagered": 9292,
-      "avatar": "https://avatars.fastly.steamstatic.com/50767cea96889a121066ed45c098873cb258f8f3_full.jpg"
-    },
-    {
       "name": "S****i",
       "wagered": 8459,
       "avatar": "https://avatars.akamai.steamstatic.com/0e2b6e31b3807090494e42a28c0412e1a4815601_full.jpg"
     },
     {
       "name": "K***n",
-      "wagered": 5700,
+      "wagered": 5702,
       "avatar": "https://avatars.fastly.steamstatic.com/57bc2c458fc487a8c06666178a12204055d72592_full.jpg"
     },
     {
@@ -55,11 +60,6 @@
       "avatar": "https://avatars.akamai.steamstatic.com/6ad4260c75cfb2412dc11bc310ee778b30e725bb_full.jpg"
     },
     {
-      "name": "S****A",
-      "wagered": 3669,
-      "avatar": "https://avatars.fastly.steamstatic.com/d18839225124df4a19b77a69c1f7e96b78025b6f_full.jpg"
-    },
-    {
       "name": "Y****W",
       "wagered": 2515,
       "avatar": "https://avatars.fastly.steamstatic.com/543bb32f9249e6738288c0d3ac6987ee25983c41_full.jpg"
@@ -68,6 +68,11 @@
       "name": "l***L",
       "wagered": 2039,
       "avatar": "https://avatars.fastly.steamstatic.com/188d6e9e59e4ffe714ab1b71f2ec83e7674104a3_full.jpg"
+    },
+    {
+      "name": "k****y",
+      "wagered": 1579,
+      "avatar": "https://avatars.fastly.steamstatic.com/2aa11d28f73be157f51c983f9dba87a07819f36a_full.jpg"
     }
   ]
 }
