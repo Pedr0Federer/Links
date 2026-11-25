@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-25T22:06:23.201Z",
+  "generatedAt": "2026-11-25T22:11:52.167Z",
   "lifetime": [
     {
       "username": "eliyahuasis",
@@ -48,6 +48,10 @@
       "quantity": 8500
     },
     {
+      "username": "AngryBlure",
+      "quantity": 2500
+    },
+    {
       "username": "eliyahuasis",
       "quantity": 1500
     },
@@ -77,10 +81,6 @@
     },
     {
       "username": "ReyBi64",
-      "quantity": 500
-    },
-    {
-      "username": "BroKoLi013",
       "quantity": 500
     }
   ]
