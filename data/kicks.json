@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-25T15:39:04.273Z",
+  "generatedAt": "2026-11-25T21:27:50.459Z",
   "lifetime": [
     {
       "username": "eliyahuasis",
@@ -7,7 +7,7 @@
     },
     {
       "username": "liorbond",
-      "quantity": 49429
+      "quantity": 49529
     },
     {
       "username": "ReyBi64",
@@ -15,7 +15,7 @@
     },
     {
       "username": "TrizZz43",
-      "quantity": 22500
+      "quantity": 23000
     },
     {
       "username": "2PAC_3D",
@@ -45,7 +45,7 @@
   "weekly": [
     {
       "username": "TrizZz43",
-      "quantity": 8000
+      "quantity": 8500
     },
     {
       "username": "eliyahuasis",
@@ -56,8 +56,24 @@
       "quantity": 1500
     },
     {
+      "username": "benda4213",
+      "quantity": 1401
+    },
+    {
       "username": "FirefoxOG",
       "quantity": 1000
+    },
+    {
+      "username": "xXpReSs1",
+      "quantity": 1000
+    },
+    {
+      "username": "liorbond",
+      "quantity": 600
+    },
+    {
+      "username": "Katttyy1",
+      "quantity": 500
     },
     {
       "username": "ReyBi64",
@@ -66,22 +82,6 @@
     {
       "username": "BroKoLi013",
       "quantity": 500
-    },
-    {
-      "username": "liorbond",
-      "quantity": 500
-    },
-    {
-      "username": "LaOpsy",
-      "quantity": 500
-    },
-    {
-      "username": "iTeLoS",
-      "quantity": 201
-    },
-    {
-      "username": "sahar1237",
-      "quantity": 2
     }
   ]
 }
