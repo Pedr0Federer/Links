@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-27T16:52:17.092Z",
+  "generatedAt": "2026-11-27T16:57:43.399Z",
   "lifetime": [
     {
       "username": "eliyahuasis",
@@ -15,7 +15,7 @@
     },
     {
       "username": "TrizZz43",
-      "quantity": 24000
+      "quantity": 24500
     },
     {
       "username": "2PAC_3D",
@@ -49,11 +49,15 @@
     },
     {
       "username": "TrizZz43",
-      "quantity": 9500
+      "quantity": 10000
     },
     {
       "username": "eliyahuasis",
       "quantity": 5500
+    },
+    {
+      "username": "OmriMizrahi",
+      "quantity": 2500
     },
     {
       "username": "AngryBlure",
@@ -77,10 +81,6 @@
     },
     {
       "username": "BroKoLi013",
-      "quantity": 1000
-    },
-    {
-      "username": "Ornissim",
       "quantity": 1000
     }
   ]
